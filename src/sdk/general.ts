@@ -103,7 +103,7 @@ export class General {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(contentType, `application/json`)) {
-                    res.partition200ApplicationJSONAny = JSON.parse(decodedRes);
+                    res.elements = utils.objectToClass(JSON.parse(decodedRes));
                 } else {
                     throw new errors.SDKError(
                         "unknown content-type received: " + contentType,

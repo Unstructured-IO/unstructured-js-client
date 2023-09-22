@@ -9,15 +9,15 @@ export class PartitionResponse extends SpeakeasyBase {
     @SpeakeasyMetadata()
     contentType: string;
 
+    /**
+     * Successful Response
+     */
+    @SpeakeasyMetadata()
+    elements?: any[];
+
     @SpeakeasyMetadata()
     statusCode: number;
 
     @SpeakeasyMetadata()
     rawResponse?: AxiosResponse;
-
-    /**
-     * Successful Response
-     */
-    @SpeakeasyMetadata()
-    partition200ApplicationJSONAny?: any;
 }
