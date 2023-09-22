@@ -27,9 +27,6 @@ src/sdk/models/errors/index.ts
 src/sdk/models/shared/partitionparameters.ts
 src/sdk/models/shared/security.ts
 src/sdk/models/shared/index.ts
-docs/sdks/unstructured/README.md
-docs/models/utils/retryconfig.md
-docs/sdks/general/README.md
 USAGE.md
 docs/models/operations/partitionresponse.md
 docs/models/errors/httpvalidationerror.md
@@ -37,4 +34,7 @@ docs/models/errors/validationerror.md
 docs/models/shared/partitionparametersfiles.md
 docs/models/shared/partitionparameters.md
 docs/models/shared/security.md
+docs/sdks/unstructured/README.md
+docs/models/utils/retryconfig.md
+docs/sdks/general/README.md
 .gitattributes

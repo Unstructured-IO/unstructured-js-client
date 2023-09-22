@@ -24,8 +24,8 @@ sdk.general.partition({
   coordinates: false,
   encoding: "utf-8",
   files: {
-    content: "distinctio".encode(),
-    files: "quibusdam",
+    content: "unde".encode(),
+    files: "nulla",
   },
   gzUncompressedContentType: "application/pdf",
   hiResModelName: "yolox",
