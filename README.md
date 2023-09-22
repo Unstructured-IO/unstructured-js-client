@@ -5,13 +5,16 @@
   >
 </h3>
 
-# unstructured-client
-
 <div align="left">
     <a href="https://speakeasyapi.dev/"><img src="https://custom-icon-badges.demolab.com/badge/-Built%20By%20Speakeasy-212015?style=for-the-badge&logoColor=FBE331&logo=speakeasy&labelColor=545454" /></a>
     <a href="https://github.com/Unstructured-IO/unstructured-js-client.git/actions"><img src="https://img.shields.io/github/actions/workflow/status/speakeasy-sdks/bolt-php/speakeasy_sdk_generation.yml?style=for-the-badge" /></a>
-    
 </div>
+
+<h2 align="center">
+  <p>Typescript SDK for the Unstructured API</p>
+</h2>
+
+This is a Typescript client for the [Unstructured API](https://unstructured-io.github.io/unstructured/api.html). 
 
 <!-- Start SDK Installation -->
 ## SDK Installation
@@ -30,7 +33,8 @@ yarn add https://github.com/Unstructured-IO/unstructured-js-client
 <!-- End SDK Installation -->
 
 ## SDK Example Usage
-<!-- Start SDK Example Usage -->
+Only the `files` parameter is required. See the [general partition]([General](docs/sdks/general/README.md)) page for all available parameters. 
+
 ```typescript
 import { Unstructured } from "unstructured-client";
 import { PartitionResponse } from "unstructured-client/dist/sdk/models/operations";
@@ -67,42 +71,10 @@ sdk.general.partition({
   }
 });
 ```
-<!-- End SDK Example Usage -->
-
-<!-- Start SDK Available Operations -->
-## Available Resources and Operations
-
-
-### [General](docs/sdks/general/README.md)
-
-* [partition](docs/sdks/general/README.md#partition) - Pipeline 1
-<!-- End SDK Available Operations -->
-
-
 
 <!-- Start Dev Containers -->
-
-
-
 <!-- End Dev Containers -->
-
-
-
-<!-- Start Pagination -->
-# Pagination
-
-Some of the endpoints in this SDK support pagination. To use pagination, you make your SDK calls as usual, but the
-returned response object will have a `next` method that can be called to pull down the next group of results. If the
-return value of `next` is `null`, then there are no more pages to be fetched.
-
-Here's an example of one such pagination call:
-
-
-<!-- End Pagination -->
-
 <!-- Placeholder for Future Speakeasy SDK Sections -->
-
-
 
 ### Maturity
 
