@@ -34,7 +34,7 @@ docs/models/errors/validationerror.md
 docs/models/shared/partitionparametersfiles.md
 docs/models/shared/partitionparameters.md
 docs/models/shared/security.md
-docs/sdks/unstructured/README.md
+docs/sdks/unstructuredclient/README.md
 docs/models/utils/retryconfig.md
 docs/sdks/general/README.md
 .gitattributes

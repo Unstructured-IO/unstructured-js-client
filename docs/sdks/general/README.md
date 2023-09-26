@@ -1,4 +1,5 @@
 # General
+(*general*)
 
 ### Available Operations
 
@@ -11,10 +12,10 @@ Pipeline 1
 ### Example Usage
 
 ```typescript
-import { Unstructured } from "unstructured-client";
+import { UnstructuredClient } from "unstructured-client";
 import { PartitionResponse } from "unstructured-client/dist/sdk/models/operations";
 
-const sdk = new Unstructured({
+const sdk = new UnstructuredClient({
   security: {
     apiKeyAuth: "YOUR_API_KEY",
   },

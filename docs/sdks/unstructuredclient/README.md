@@ -1,4 +1,5 @@
-# Unstructured SDK
+# UnstructuredClient SDK
+
 
 ## Overview
 

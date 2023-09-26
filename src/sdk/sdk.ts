@@ -59,8 +59,8 @@ export class SDKConfiguration {
     serverDefaults: any;
     language = "typescript";
     openapiDocVersion = "0.0.1";
-    sdkVersion = "0.1.2";
-    genVersion = "2.125.1";
+    sdkVersion = "0.2.0";
+    genVersion = "2.130.1";
     retryConfig?: utils.RetryConfig;
     public constructor(init?: Partial<SDKConfiguration>) {
         Object.assign(this, init);
@@ -70,7 +70,7 @@ export class SDKConfiguration {
 /**
  * Unstructured Pipeline API: Partition documents with the Unstructured library
  */
-export class Unstructured {
+export class UnstructuredClient {
     public general: General;
 
     private sdkConfiguration: SDKConfiguration;

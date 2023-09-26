@@ -22,13 +22,13 @@ This is a Typescript client for the [Unstructured API](https://unstructured-io.g
 ### NPM
 
 ```bash
-npm add https://github.com/Unstructured-IO/unstructured-js-client
+npm add unstructured-client
 ```
 
 ### Yarn
 
 ```bash
-yarn add https://github.com/Unstructured-IO/unstructured-js-client
+yarn add unstructured-client
 ```
 <!-- End SDK Installation -->
 
@@ -75,6 +75,75 @@ sdk.general.partition({
 <!-- Start Dev Containers -->
 
 <!-- End Dev Containers -->
+
+
+
+## SDK Example Usage
+<!-- Start SDK Example Usage -->
+
+
+```typescript
+import { UnstructuredClient } from "unstructured-client";
+import { PartitionResponse } from "unstructured-client/dist/sdk/models/operations";
+
+const sdk = new UnstructuredClient({
+  security: {
+    apiKeyAuth: "YOUR_API_KEY",
+  },
+});
+
+sdk.general.partition({
+  coordinates: false,
+  encoding: "utf-8",
+  files: {
+    content: "distinctio".encode(),
+    files: "quibusdam",
+  },
+  gzUncompressedContentType: "application/pdf",
+  hiResModelName: "yolox",
+  includePageBreaks: false,
+  ocrLanguages: [
+    "eng",
+  ],
+  outputFormat: "application/json",
+  pdfInferTableStructure: false,
+  skipInferTableTypes: [
+    "pdf",
+  ],
+  strategy: "hi_res",
+  xmlKeepTags: false,
+}).then((res: PartitionResponse) => {
+  if (res.statusCode == 200) {
+    // handle response
+  }
+});
+```
+<!-- End SDK Example Usage -->
+
+
+
+<!-- Start SDK Available Operations -->
+## Available Resources and Operations
+
+
+### [general](docs/sdks/general/README.md)
+
+* [partition](docs/sdks/general/README.md#partition) - Pipeline 1
+<!-- End SDK Available Operations -->
+
+
+
+<!-- Start Pagination -->
+# Pagination
+
+Some of the endpoints in this SDK support pagination. To use pagination, you make your SDK calls as usual, but the
+returned response object will have a `next` method that can be called to pull down the next group of results. If the
+return value of `next` is `null`, then there are no more pages to be fetched.
+
+Here's an example of one such pagination call:
+
+
+<!-- End Pagination -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 
