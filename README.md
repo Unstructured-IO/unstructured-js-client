@@ -16,13 +16,12 @@
 
 This is a Typescript client for the [Unstructured API](https://unstructured-io.github.io/unstructured/api.html). 
 
-<!-- Start SDK Installation -->
 ## SDK Installation
 
 ### NPM
 
 ```bash
-npm add unstructured-client
+npm install unstructured-client
 ```
 
 ### Yarn
@@ -30,7 +29,7 @@ npm add unstructured-client
 ```bash
 yarn add unstructured-client
 ```
-<!-- End SDK Installation -->
+<!-- No SDK Installation -->
 
 ## SDK Example Usage
 Only the `files` parameter is required. See the [general partition]([General](docs/sdks/general/README.md)) page for all available parameters. 
