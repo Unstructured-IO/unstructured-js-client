@@ -22,7 +22,7 @@ This is a Typescript client for the [Unstructured API](https://unstructured-io.g
 ### NPM
 
 ```bash
-npm add unstructured-client
+npm install unstructured-client
 ```
 
 ### Yarn
