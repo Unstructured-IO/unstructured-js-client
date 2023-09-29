@@ -31,7 +31,6 @@ USAGE.md
 docs/models/operations/partitionresponse.md
 docs/models/errors/httpvalidationerror.md
 docs/models/errors/validationerror.md
-docs/models/shared/partitionparametersfiles.md
 docs/models/shared/partitionparameters.md
 docs/models/shared/security.md
 docs/sdks/unstructuredclient/README.md

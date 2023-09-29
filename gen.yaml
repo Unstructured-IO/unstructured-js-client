@@ -1,6 +1,6 @@
 configVersion: 1.0.0
 management:
-  docChecksum: db54a5de41d76029233468ef472c9676
+  docChecksum: c2feacd7346b5a78a2db180c2c404fe2
   docVersion: 0.0.1
   speakeasyVersion: 1.91.4
   generationVersion: 2.139.2
@@ -22,7 +22,7 @@ features:
     retries: 2.82.0
     serverIDs: 2.81.1
 typescript:
-  version: 0.3.1
+  version: 0.3.2
   author: Unstructured
   clientServerStatusCodesAsErrors: true
   maxMethodParams: 0

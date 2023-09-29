@@ -4,14 +4,6 @@
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../../internal/utils";
 
-export class PartitionParametersFiles extends SpeakeasyBase {
-    @SpeakeasyMetadata({ data: "multipart_form, content=true" })
-    content: Uint8Array;
-
-    @SpeakeasyMetadata({ data: "multipart_form, name=files" })
-    files: string;
-}
-
 export class PartitionParameters extends SpeakeasyBase {
     /**
      * Use one of the supported strategies to chunk the returned elements. Currently supports: by_title
@@ -38,10 +30,10 @@ export class PartitionParameters extends SpeakeasyBase {
     encoding?: string;
 
     /**
-     * The file to extract
+     * The file(s) to extract
      */
-    @SpeakeasyMetadata({ data: "multipart_form, file=true" })
-    files?: PartitionParametersFiles;
+    @SpeakeasyMetadata({ data: "multipart_form, name=files;json=true" })
+    files?: Uint8Array[];
 
     /**
      * If file is gzipped, use this content type after unzipping
