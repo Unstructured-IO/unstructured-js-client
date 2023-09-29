@@ -51,6 +51,7 @@ const filename = "sample-docs/layout-parser-paper.pdf";
 const data = fs.readFileSync(filename);
 
 client.general.partition({
+    // Note that this currently only supports a single file
     files: {
         content: data,
         files: filename,
