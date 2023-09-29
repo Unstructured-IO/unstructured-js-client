@@ -15,8 +15,8 @@ sdk.general.partition({
   coordinates: false,
   encoding: "utf-8",
   files: {
-    content: "corrupti".encode(),
-    files: "provident",
+    content: "+WmI5Q)|yy" as bytes <<<>>>,
+    files: "um",
   },
   gzUncompressedContentType: "application/pdf",
   hiResModelName: "yolox",

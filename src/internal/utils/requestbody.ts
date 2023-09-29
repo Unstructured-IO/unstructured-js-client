@@ -315,7 +315,7 @@ function encodeMultipartFormDataFile(formData: FormData, file: any): FormData {
   if (mpFormDecoratorName === "" || fileName === "" || content == null) {
     throw new Error("invalid multipart/form-data file");
   }
-  formData.append("file", Buffer.from(content), fileName);
+  formData.append(mpFormDecoratorName, Buffer.from(content), fileName);
   return formData;
 }
 
