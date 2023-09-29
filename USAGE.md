@@ -16,9 +16,10 @@ sdk.general.partition({
   combineUnderNChars: 500,
   coordinates: false,
   encoding: "utf-8",
-  files: [
-    "+WmI5Q)|yy" as bytes <<<>>>,
-  ],
+  files: {
+    content: "+WmI5Q)|yy" as bytes <<<>>>,
+    files: "um",
+  },
   gzUncompressedContentType: "application/pdf",
   hiResModelName: "yolox",
   includePageBreaks: false,
