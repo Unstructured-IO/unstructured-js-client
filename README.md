@@ -65,7 +65,28 @@ client.general.partition({
     console.log(e.statusCode);
     console.log(e.body);
 });
+```
 
+## Change the base URL
+
+If you are self hosting the API, or developing locally, you can change the server URL when setting up the client.
+
+```typescript
+const client = new UnstructuredClient({
+    serverURL: "http://localhost:8000",
+    security: {
+        apiKeyAuth: key,
+    },
+});
+
+// OR
+
+const client = new UnstructuredClient({
+    serverURL: "https://my-server-url",
+    security: {
+        apiKeyAuth: key,
+    },
+});
 ```
 
 <!-- Start Dev Containers -->
