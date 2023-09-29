@@ -76,73 +76,11 @@ sdk.general.partition({
 <!-- End Dev Containers -->
 
 
+<!-- No SDK Example Usage -->
 
-## SDK Example Usage
-<!-- Start SDK Example Usage -->
-```typescript
-import { UnstructuredClient } from "unstructured-client";
-import { PartitionResponse } from "unstructured-client/dist/sdk/models/operations";
+<!-- No SDK Available Operations -->
 
-const sdk = new UnstructuredClient({
-  security: {
-    apiKeyAuth: "YOUR_API_KEY",
-  },
-});
-
-sdk.general.partition({
-  chunkingStrategy: "by_title",
-  combineUnderNChars: 500,
-  coordinates: false,
-  encoding: "utf-8",
-  files: {
-    content: "+WmI5Q)|yy" as bytes <<<>>>,
-    files: "um",
-  },
-  gzUncompressedContentType: "application/pdf",
-  hiResModelName: "yolox",
-  includePageBreaks: false,
-  languages: [
-    "eng",
-  ],
-  multipageSections: false,
-  newAfterNChars: 1500,
-  outputFormat: "application/json",
-  pdfInferTableStructure: false,
-  skipInferTableTypes: [
-    "pdf",
-  ],
-  strategy: "hi_res",
-  xmlKeepTags: false,
-}).then((res: PartitionResponse) => {
-  if (res.statusCode == 200) {
-    // handle response
-  }
-});
-```
-<!-- End SDK Example Usage -->
-
-
-
-<!-- Start SDK Available Operations -->
-## Available Resources and Operations
-
-
-### [general](docs/sdks/general/README.md)
-
-* [partition](docs/sdks/general/README.md#partition) - Pipeline 1
-<!-- End SDK Available Operations -->
-
-
-
-<!-- Start Pagination -->
-# Pagination
-
-Some of the endpoints in this SDK support pagination. To use pagination, you make your SDK calls as usual, but the
-returned response object will have a `next` method that can be called to pull down the next group of results. If the
-return value of `next` is `null`, then there are no more pages to be fetched.
-
-Here's an example of one such pagination call:
-<!-- End Pagination -->
+<!-- No Pagination -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 
