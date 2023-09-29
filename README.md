@@ -35,40 +35,37 @@ yarn add unstructured-client
 Only the `files` parameter is required. See the [general partition]([General](docs/sdks/general/README.md)) page for all available parameters. 
 
 ```typescript
-import { Unstructured } from "unstructured-client";
+import { UnstructuredClient } from "unstructured-client";
 import { PartitionResponse } from "unstructured-client/dist/sdk/models/operations";
+import * as fs from "fs";
 
-const sdk = new Unstructured({
-  security: {
-    apiKeyAuth: "YOUR_API_KEY",
-  },
+const key = "YOUR-API-KEY";
+
+const client = new UnstructuredClient({
+    security: {
+        apiKeyAuth: key,
+    },
 });
 
-sdk.general.partition({
-  coordinates: false,
-  encoding: "utf-8",
-  files: {
-    content: "distinctio".encode(),
-    files: "quibusdam",
-  },
-  gzUncompressedContentType: "application/pdf",
-  hiResModelName: "yolox",
-  includePageBreaks: false,
-  ocrLanguages: [
-    "eng",
-  ],
-  outputFormat: "application/json",
-  pdfInferTableStructure: false,
-  skipInferTableTypes: [
-    "pdf",
-  ],
-  strategy: "hi_res",
-  xmlKeepTags: false,
+const filename = "sample-docs/layout-parser-paper.pdf";
+const data = fs.readFileSync(filename);
+
+client.general.partition({
+    files: {
+        content: data,
+        files: filename,
+    },
+    // Other partition params
+    strategy: "fast",
 }).then((res: PartitionResponse) => {
-  if (res.statusCode == 200) {
-    // handle response
-  }
+    if (res.statusCode == 200) {
+        console.log(res.elements);
+    }
+}).catch((e) => {
+    console.log(e.statusCode);
+    console.log(e.body);
 });
+
 ```
 
 <!-- Start Dev Containers -->
