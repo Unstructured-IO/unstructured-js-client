@@ -14,6 +14,18 @@ export class PartitionParametersFiles extends SpeakeasyBase {
 
 export class PartitionParameters extends SpeakeasyBase {
     /**
+     * Use one of the supported strategies to chunk the returned elements. Currently supports: by_title
+     */
+    @SpeakeasyMetadata({ data: "multipart_form, name=chunking_strategy" })
+    chunkingStrategy?: string;
+
+    /**
+     * If chunking strategy is set, combine elements until a section reaches a length of n chars. Default: 500
+     */
+    @SpeakeasyMetadata({ data: "multipart_form, name=combine_under_n_chars" })
+    combineUnderNChars?: number;
+
+    /**
      * If true, return coordinates for each element. Default: false
      */
     @SpeakeasyMetadata({ data: "multipart_form, name=coordinates" })
@@ -52,8 +64,20 @@ export class PartitionParameters extends SpeakeasyBase {
     /**
      * The languages present in the document, for use in partitioning and/or OCR
      */
-    @SpeakeasyMetadata({ data: "multipart_form, name=ocr_languages" })
-    ocrLanguages?: string[];
+    @SpeakeasyMetadata({ data: "multipart_form, name=languages" })
+    languages?: string[];
+
+    /**
+     * If chunking strategy is set, determines if sections can span multiple sections. Default: true
+     */
+    @SpeakeasyMetadata({ data: "multipart_form, name=multipage_sections" })
+    multipageSections?: boolean;
+
+    /**
+     * If chunking strategy is set, cut off new sections after reaching a length of n chars. Default: 1500
+     */
+    @SpeakeasyMetadata({ data: "multipart_form, name=new_after_n_chars" })
+    newAfterNChars?: number;
 
     /**
      * The format of the response. Supported formats are application/json and text/csv. Default: application/json.

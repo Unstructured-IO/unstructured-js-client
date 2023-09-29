@@ -22,6 +22,8 @@ const sdk = new UnstructuredClient({
 });
 
 sdk.general.partition({
+  chunkingStrategy: "by_title",
+  combineUnderNChars: 500,
   coordinates: false,
   encoding: "utf-8",
   files: {
@@ -31,9 +33,11 @@ sdk.general.partition({
   gzUncompressedContentType: "application/pdf",
   hiResModelName: "yolox",
   includePageBreaks: false,
-  ocrLanguages: [
+  languages: [
     "eng",
   ],
+  multipageSections: false,
+  newAfterNChars: 1500,
   outputFormat: "application/json",
   pdfInferTableStructure: false,
   skipInferTableTypes: [

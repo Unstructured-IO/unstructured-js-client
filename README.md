@@ -79,8 +79,6 @@ sdk.general.partition({
 
 ## SDK Example Usage
 <!-- Start SDK Example Usage -->
-
-
 ```typescript
 import { UnstructuredClient } from "unstructured-client";
 import { PartitionResponse } from "unstructured-client/dist/sdk/models/operations";
@@ -92,6 +90,8 @@ const sdk = new UnstructuredClient({
 });
 
 sdk.general.partition({
+  chunkingStrategy: "by_title",
+  combineUnderNChars: 500,
   coordinates: false,
   encoding: "utf-8",
   files: {
@@ -101,9 +101,11 @@ sdk.general.partition({
   gzUncompressedContentType: "application/pdf",
   hiResModelName: "yolox",
   includePageBreaks: false,
-  ocrLanguages: [
+  languages: [
     "eng",
   ],
+  multipageSections: false,
+  newAfterNChars: 1500,
   outputFormat: "application/json",
   pdfInferTableStructure: false,
   skipInferTableTypes: [
@@ -140,8 +142,6 @@ returned response object will have a `next` method that can be called to pull do
 return value of `next` is `null`, then there are no more pages to be fetched.
 
 Here's an example of one such pagination call:
-
-
 <!-- End Pagination -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
