@@ -1,6 +1,6 @@
 {
   "name": "unstructured-client",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "author": "Unstructured",
   "scripts": {
     "prepare": "tsc --build"
