@@ -2,8 +2,8 @@ configVersion: 1.0.0
 management:
   docChecksum: 25324f1821b1070aa4a416ec8ddca590
   docVersion: 0.0.1
-  speakeasyVersion: 1.94.0
-  generationVersion: 2.147.0
+  speakeasyVersion: 1.96.1
+  generationVersion: 2.150.0
 generation:
   comments:
     disableComments: false
@@ -14,16 +14,17 @@ generation:
   tagNamespacingDisabled: false
 features:
   typescript:
-    core: 2.90.3
+    core: 2.90.4
     examples: 2.81.2
-    globalSecurity: 2.81.1
+    globalSecurity: 2.82.0
     globalServerURLs: 2.82.0
     nameOverrides: 2.81.1
     retries: 2.82.1
     serverIDs: 2.81.1
 typescript:
-  version: 0.4.3
+  version: 0.5.0
   author: Unstructured
   clientServerStatusCodesAsErrors: true
+  flattenGlobalSecurity: false
   maxMethodParams: 0
   packageName: unstructured-client

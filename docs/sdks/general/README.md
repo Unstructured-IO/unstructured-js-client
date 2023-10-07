@@ -13,43 +13,45 @@ Pipeline 1
 
 ```typescript
 import { UnstructuredClient } from "unstructured-client";
-import { PartitionResponse } from "unstructured-client/dist/sdk/models/operations";
 
-const sdk = new UnstructuredClient({
-  security: {
-    apiKeyAuth: "YOUR_API_KEY",
-  },
-});
+(async() => {
+  const sdk = new UnstructuredClient({
+    security: {
+      apiKeyAuth: "YOUR_API_KEY",
+    },
+  });
 
-sdk.general.partition({
-  chunkingStrategy: "by_title",
-  combineUnderNChars: 500,
-  coordinates: false,
-  encoding: "utf-8",
-  files: {
-    content: "+WmI5Q)|yy" as bytes <<<>>>,
-    files: "um",
-  },
-  gzUncompressedContentType: "application/pdf",
-  hiResModelName: "yolox",
-  includePageBreaks: false,
-  languages: [
-    "eng",
-  ],
-  multipageSections: false,
-  newAfterNChars: 1500,
-  outputFormat: "application/json",
-  pdfInferTableStructure: false,
-  skipInferTableTypes: [
-    "pdf",
-  ],
-  strategy: "hi_res",
-  xmlKeepTags: false,
-}).then((res: PartitionResponse) => {
+  const res = await sdk.general.partition({
+    chunkingStrategy: "by_title",
+    combineUnderNChars: 500,
+    encoding: "utf-8",
+    files: {
+      content: "+WmI5Q)|yy" as bytes <<<>>>,
+      files: "um",
+    },
+    gzUncompressedContentType: "application/pdf",
+    hiResModelName: "yolox",
+    languages: [
+      "[",
+      "e",
+      "n",
+      "g",
+      "]",
+    ],
+    newAfterNChars: 1500,
+    outputFormat: "application/json",
+    skipInferTableTypes: [
+      "p",
+      "d",
+      "f",
+    ],
+    strategy: "hi_res",
+  });
+
   if (res.statusCode == 200) {
     // handle response
   }
-});
+})();
 ```
 
 ### Parameters
