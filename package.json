@@ -1,9 +1,12 @@
 {
   "name": "unstructured-client",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": "Unstructured",
   "scripts": {
-    "prepare": "tsc --build"
+    "prepare": "tsc --build",
+    "check:tsc": "tsc --noEmit --skipLibCheck",
+    "check:eslint": "eslint --max-warnings=0 src",
+    "check": "npm run check:tsc && npm run check:eslint"
   },
   "dependencies": {
     "axios": "^1.1.3",

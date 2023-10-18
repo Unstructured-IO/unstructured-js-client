@@ -27,7 +27,7 @@ import { UnstructuredClient } from "unstructured-client";
     encoding: "utf-8",
     files: {
       content: "+WmI5Q)|yy" as bytes <<<>>>,
-      files: "um",
+      files: "Washington",
     },
     gzUncompressedContentType: "application/pdf",
     hiResModelName: "yolox",
