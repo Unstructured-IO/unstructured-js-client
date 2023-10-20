@@ -135,7 +135,8 @@ function noExplodeSerializer(params: Record<string, any>, delimiter = ","): stri
 
           if (qpDecorator == null) return;
 
-          return `${paramKey}${delimiter}${valToString(value[paramKey])}`;
+          const key = qpDecorator.ParamName || paramKey
+          return `${key}${delimiter}${valToString(value[paramKey])}`;
         })
         .join(delimiter);
       query.push(`${key}=${encodeURIComponent(values)}`);
@@ -177,9 +178,8 @@ function formSerializerExplode(params: Record<string, any>): string {
 
             if (qpDecorator == null) return;
 
-            return `${paramKey}=${encodeURIComponent(
-              valToString(value[paramKey])
-            )}`;
+            const key = qpDecorator.ParamName || paramKey;
+            return `${key}=${encodeURIComponent(valToString(value[paramKey]))}`;
           })
           .join("&")
       );
