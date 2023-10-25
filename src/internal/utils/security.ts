@@ -179,7 +179,7 @@ function parseSecuritySchemeValue(
       properties.headers[securityDecorator.Name] = value;
       break;
     case "oauth2":
-      properties.headers[securityDecorator.Name] = value;
+      properties.headers[securityDecorator.Name] = value.toLowerCase().startsWith("bearer ") ? value : `Bearer ${value}`;
       break;
     case "http":
       switch (schemeDecorator.SubType) {
