@@ -101,6 +101,208 @@ const client = new UnstructuredClient({
 
 <!-- No Pagination -->
 
+
+
+<!-- Start Error Handling -->
+# Error Handling
+
+Handling errors in your SDK should largely match your expectations.  All operations return a response object or throw an error.  If Error objects are specified in your OpenAPI Spec, the SDK will throw the appropriate Error type.
+
+
+## Example
+
+```typescript
+import { UnstructuredClient } from "unstructured-client";
+
+(async() => {
+  const sdk = new UnstructuredClient({
+    security: {
+      apiKeyAuth: "YOUR_API_KEY",
+    },
+  });
+
+  
+  let res;
+  try {
+    res = await sdk.general.partition({
+    chunkingStrategy: "by_title",
+    combineUnderNChars: 500,
+    encoding: "utf-8",
+    files: {
+      content: "+WmI5Q)|yy" as bytes <<<>>>,
+      files: "string",
+    },
+    gzUncompressedContentType: "application/pdf",
+    hiResModelName: "yolox",
+    languages: [
+      "[",
+      "e",
+      "n",
+      "g",
+      "]",
+    ],
+    newAfterNChars: 1500,
+    outputFormat: "application/json",
+    skipInferTableTypes: [
+      "p",
+      "d",
+      "f",
+    ],
+    strategy: "hi_res",
+  });
+  } catch (e) { 
+    if (e instanceof HTTPValidationError) {
+      console.error(e) // handle exception 
+    
+  }
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+<!-- End Error Handling -->
+
+
+
+<!-- Start Server Selection -->
+# Server Selection
+
+## Select Server by Name
+
+You can override the default server globally by passing a server name to the `server: string` optional parameter when initializing the SDK client instance. The selected server will then be used as the default on the operations that use it. This table lists the names associated with the available servers:
+
+| Name | Server | Variables |
+| ----- | ------ | --------- |
+| `prod` | `https://api.unstructured.io` | None |
+| `local` | `http://localhost:8000` | None |
+
+For example:
+
+
+```typescript
+import { UnstructuredClient } from "unstructured-client";
+
+(async() => {
+  const sdk = new UnstructuredClient({
+    security: {
+      apiKeyAuth: "YOUR_API_KEY",
+    },
+    server: "local",
+  });
+
+  const res = await sdk.general.partition({
+    chunkingStrategy: "by_title",
+    combineUnderNChars: 500,
+    encoding: "utf-8",
+    files: {
+      content: "+WmI5Q)|yy" as bytes <<<>>>,
+      files: "string",
+    },
+    gzUncompressedContentType: "application/pdf",
+    hiResModelName: "yolox",
+    languages: [
+      "[",
+      "e",
+      "n",
+      "g",
+      "]",
+    ],
+    newAfterNChars: 1500,
+    outputFormat: "application/json",
+    skipInferTableTypes: [
+      "p",
+      "d",
+      "f",
+    ],
+    strategy: "hi_res",
+  });
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+
+## Override Server URL Per-Client
+
+The default server can also be overridden globally by passing a URL to the `serverURL: str` optional parameter when initializing the SDK client instance. For example:
+
+
+```typescript
+import { UnstructuredClient } from "unstructured-client";
+
+(async() => {
+  const sdk = new UnstructuredClient({
+    security: {
+      apiKeyAuth: "YOUR_API_KEY",
+    },
+    serverURL: "https://api.unstructured.io",
+  });
+
+  const res = await sdk.general.partition({
+    chunkingStrategy: "by_title",
+    combineUnderNChars: 500,
+    encoding: "utf-8",
+    files: {
+      content: "+WmI5Q)|yy" as bytes <<<>>>,
+      files: "string",
+    },
+    gzUncompressedContentType: "application/pdf",
+    hiResModelName: "yolox",
+    languages: [
+      "[",
+      "e",
+      "n",
+      "g",
+      "]",
+    ],
+    newAfterNChars: 1500,
+    outputFormat: "application/json",
+    skipInferTableTypes: [
+      "p",
+      "d",
+      "f",
+    ],
+    strategy: "hi_res",
+  });
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+<!-- End Server Selection -->
+
+
+
+<!-- Start Custom HTTP Client -->
+# Custom HTTP Client
+
+The Typescript SDK makes API calls using the (axios)[https://axios-http.com/docs/intro] HTTP library.  In order to provide a convenient way to configure timeouts, cookies, proxies, custom headers, and other low-level configuration, you can initialize the SDK client with a custom `AxiosInstance` object.
+
+
+For example, you could specify a header for every request that your sdk makes as follows:
+
+```typescript
+from unstructured-client import UnstructuredClient;
+import axios;
+
+const httpClient = axios.create({
+    headers: {'x-custom-header': 'someValue'}
+})
+
+
+const sdk = new UnstructuredClient({defaultClient: httpClient});
+```
+
+
+<!-- End Custom HTTP Client -->
+
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 
 ### Maturity

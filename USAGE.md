@@ -38,6 +38,7 @@ import { UnstructuredClient } from "unstructured-client";
     strategy: "hi_res",
   });
 
+
   if (res.statusCode == 200) {
     // handle response
   }

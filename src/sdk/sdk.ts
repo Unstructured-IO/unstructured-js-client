@@ -19,7 +19,7 @@ export const ServerLocal = "local";
 /**
  * Contains the list of servers available to the SDK
  */
-export const ServerList: Record<string, string> = {
+export const ServerList = {
     [ServerProd]: "https://api.unstructured.io",
     [ServerLocal]: "http://localhost:8000",
 } as const;
@@ -41,7 +41,7 @@ export type SDKProps = {
     /**
      * Allows overriding the default server used by the SDK
      */
-    server?: string;
+    server?: keyof typeof ServerList;
 
     /**
      * Allows overriding the default server URL used by the SDK
@@ -60,9 +60,9 @@ export class SDKConfiguration {
     serverDefaults: any;
     language = "typescript";
     openapiDocVersion = "0.0.1";
-    sdkVersion = "0.8.0";
-    genVersion = "2.171.0";
-    userAgent = "speakeasy-sdk/typescript 0.8.0 2.171.0 0.0.1 unstructured-client";
+    sdkVersion = "0.8.1";
+    genVersion = "2.172.4";
+    userAgent = "speakeasy-sdk/typescript 0.8.1 2.172.4 0.0.1 unstructured-client";
     retryConfig?: utils.RetryConfig;
     public constructor(init?: Partial<SDKConfiguration>) {
         Object.assign(this, init);
