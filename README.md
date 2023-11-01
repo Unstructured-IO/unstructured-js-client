@@ -120,8 +120,6 @@ const httpClient = axios.create({
 
 const sdk = new UnstructuredClient({defaultClient: httpClient});
 ```
-
-
 <!-- End Custom HTTP Client -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->

@@ -28,6 +28,7 @@ import { UnstructuredClient } from "unstructured-client";
       "g",
       "]",
     ],
+    maxCharacters: 1500,
     newAfterNChars: 1500,
     outputFormat: "application/json",
     skipInferTableTypes: [

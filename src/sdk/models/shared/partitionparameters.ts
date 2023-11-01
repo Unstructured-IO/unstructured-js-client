@@ -68,13 +68,19 @@ export class PartitionParameters extends SpeakeasyBase {
     languages?: string[];
 
     /**
+     * If chunking strategy is set, cut off new sections after reaching a length of n chars (hard max). Default: 1500
+     */
+    @SpeakeasyMetadata({ data: "multipart_form, name=max_characters" })
+    maxCharacters?: number;
+
+    /**
      * If chunking strategy is set, determines if sections can span multiple sections. Default: true
      */
     @SpeakeasyMetadata({ data: "multipart_form, name=multipage_sections" })
     multipageSections?: boolean;
 
     /**
-     * If chunking strategy is set, cut off new sections after reaching a length of n chars. Default: 1500
+     * If chunking strategy is set, cut off new sections after reaching a length of n chars (soft max). Default: 1500
      */
     @SpeakeasyMetadata({ data: "multipart_form, name=new_after_n_chars" })
     newAfterNChars?: number;
