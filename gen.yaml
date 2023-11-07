@@ -2,20 +2,15 @@ configVersion: 1.0.0
 management:
   docChecksum: bf57420eebd40f2b1d166092f01e3927
   docVersion: 0.0.1
-  speakeasyVersion: 1.109.2
-  generationVersion: 2.173.0
+  speakeasyVersion: 1.114.1
+  generationVersion: 2.181.1
 generation:
-  comments:
-    disableComments: false
-    omitDescriptionIfSummaryPresent: false
-  baseServerURL: ""
-  repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
+  comments: {}
   sdkClassName: unstructured_client
-  singleTagPerOp: false
-  tagNamespacingDisabled: false
+  repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
 features:
   typescript:
-    core: 2.94.0
+    core: 3.1.0
     examples: 2.81.3
     globalSecurity: 2.82.0
     globalServerURLs: 2.82.0
@@ -23,10 +18,18 @@ features:
     retries: 2.82.1
     serverIDs: 2.81.2
 typescript:
-  version: 0.8.2
+  version: 0.9.0
   author: Unstructured
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: false
+  imports:
+    option: openapi
+    paths:
+      callbacks: sdk/models/callbacks
+      errors: sdk/models/errors
+      operations: sdk/models/operations
+      shared: sdk/models/shared
+      webhooks: sdk/models/webhooks
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
   maxMethodParams: 0
   packageName: unstructured-client
