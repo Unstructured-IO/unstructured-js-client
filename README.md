@@ -122,6 +122,180 @@ const sdk = new UnstructuredClient({defaultClient: httpClient});
 ```
 <!-- End Custom HTTP Client -->
 
+
+
+<!-- Start Retries -->
+# Retries
+
+Some of the endpoints in this SDK support retries.  If you use the SDK without any configuration, it will fall back to the default retry strategy provided by the API.  However, the default retry strategy can be overridden on a per-operation basis, or across the entire SDK.
+
+To change the default retry strategy for a single API call, simply provide a retryConfig object to the call:
+
+
+## Example
+
+```typescript
+import { UnstructuredClient } from "unstructured-client";
+
+(async () => {
+    const sdk = new UnstructuredClient({
+        security: {
+            apiKeyAuth: "YOUR_API_KEY",
+        },
+    });
+
+    const res = await sdk.general.partition(
+        {
+            chunkingStrategy: "by_title",
+            combineUnderNChars: 500,
+            encoding: "utf-8",
+            files: {
+                content: new TextEncoder().encode("0x2cC94b2FEF"),
+                fileName: "um.shtml",
+            },
+            gzUncompressedContentType: "application/pdf",
+            hiResModelName: "yolox",
+            languages: ["[", "e", "n", "g", "]"],
+            maxCharacters: 1500,
+            newAfterNChars: 1500,
+            outputFormat: "application/json",
+            skipInferTableTypes: ["p", "d", "f"],
+            strategy: "hi_res",
+        },
+        {
+            strategy: "backoff",
+            backoff: {
+                initialInterval: 1,
+                maxInterval: 50,
+                exponent: 1.1,
+                maxElapsedTime: 100,
+            },
+            retryConnectionErrors: false,
+        }
+    );
+
+    if (res.statusCode == 200) {
+        // handle response
+    }
+})();
+
+```
+
+If you'd like to override the default retry strategy for all operations that support retries, you can provide a retryConfig at SDK initialization:
+
+
+## Example
+
+```typescript
+import { UnstructuredClient } from "unstructured-client";
+
+(async() => {
+  const sdk = new UnstructuredClient({
+    retry_config: {
+        strategy: "backoff",
+        backoff: {
+          initialInterval: 1,
+          maxInterval: 50,
+          exponent: 1.1,
+          maxElapsedTime: 100,
+        },
+        retryConnectionErrors: false,
+      }
+    security: {
+      apiKeyAuth: "YOUR_API_KEY",
+    },
+  });
+
+  const res = await sdk.general.partition({
+    chunkingStrategy: "by_title",
+    combineUnderNChars: 500,
+    encoding: "utf-8",
+    files: {
+      content: new TextEncoder().encode("0x2cC94b2FEF"),
+      fileName: "um.shtml",
+    },
+    gzUncompressedContentType: "application/pdf",
+    hiResModelName: "yolox",
+    languages: [
+      "[",
+      "e",
+      "n",
+      "g",
+      "]",
+    ],
+    maxCharacters: 1500,
+    newAfterNChars: 1500,
+    outputFormat: "application/json",
+    skipInferTableTypes: [
+      "p",
+      "d",
+      "f",
+    ],
+    strategy: "hi_res",
+  });
+
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+})();
+```
+
+
+<!-- End Retries -->
+
+
+
+<!-- Start Authentication -->
+
+# Authentication
+
+## Per-Client Security Schemes
+
+Your SDK supports the following security scheme globally:
+
+| Name         | Type         | Scheme       |
+| ------------ | ------------ | ------------ |
+| `apiKeyAuth` | apiKey       | API key      |
+
+You can set the security parameters through the `security` optional parameter when initializing the SDK client instance. For example:
+
+```typescript
+import { UnstructuredClient } from "unstructured-client";
+
+(async () => {
+    const sdk = new UnstructuredClient({
+        security: {
+            apiKeyAuth: "YOUR_API_KEY",
+        },
+    });
+
+    const res = await sdk.general.partition({
+        chunkingStrategy: "by_title",
+        combineUnderNChars: 500,
+        encoding: "utf-8",
+        files: {
+            content: new TextEncoder().encode("0x2cC94b2FEF"),
+            fileName: "um.shtml",
+        },
+        gzUncompressedContentType: "application/pdf",
+        hiResModelName: "yolox",
+        languages: ["[", "e", "n", "g", "]"],
+        maxCharacters: 1500,
+        newAfterNChars: 1500,
+        outputFormat: "application/json",
+        skipInferTableTypes: ["p", "d", "f"],
+        strategy: "hi_res",
+    });
+
+    if (res.statusCode == 200) {
+        // handle response
+    }
+})();
+
+```
+<!-- End Authentication -->
+
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 
 ### Maturity

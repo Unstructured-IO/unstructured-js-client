@@ -4,12 +4,12 @@
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../../internal/utils";
 
-export class PartitionParametersFiles extends SpeakeasyBase {
+export class Files extends SpeakeasyBase {
     @SpeakeasyMetadata({ data: "multipart_form, content=true" })
     content: Uint8Array;
 
     @SpeakeasyMetadata({ data: "multipart_form, name=files" })
-    files: string;
+    fileName: string;
 }
 
 export class PartitionParameters extends SpeakeasyBase {
@@ -41,7 +41,7 @@ export class PartitionParameters extends SpeakeasyBase {
      * The file to extract
      */
     @SpeakeasyMetadata({ data: "multipart_form, file=true" })
-    files?: PartitionParametersFiles;
+    files?: Files;
 
     /**
      * If file is gzipped, use this content type after unzipping

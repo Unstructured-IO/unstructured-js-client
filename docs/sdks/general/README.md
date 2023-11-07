@@ -1,5 +1,5 @@
 # General
-(*general*)
+(*.general*)
 
 ### Available Operations
 
@@ -26,8 +26,8 @@ import { UnstructuredClient } from "unstructured-client";
     combineUnderNChars: 500,
     encoding: "utf-8",
     files: {
-      content: "+WmI5Q)|yy" as bytes <<<>>>,
-      files: "string",
+      content: new TextEncoder().encode("0x2cC94b2FEF"),
+      fileName: "um.shtml",
     },
     gzUncompressedContentType: "application/pdf",
     hiResModelName: "yolox",
