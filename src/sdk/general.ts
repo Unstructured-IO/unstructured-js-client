@@ -32,7 +32,7 @@ export class General {
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const url: string = baseURL.replace(/\/$/, "") + "/general/v0/general";
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/general/v0/general";
 
         let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
 
@@ -77,7 +77,7 @@ export class General {
         const httpRes: AxiosResponse = await utils.Retry(() => {
             return client.request({
                 validateStatus: () => true,
-                url: url,
+                url: operationUrl,
                 method: "post",
                 headers: headers,
                 responseType: "arraybuffer",

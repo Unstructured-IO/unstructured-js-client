@@ -17,7 +17,7 @@ export const ppMetadataKey = "pathParam";
 export function getSimplePathParams(
   paramName: string,
   paramValue: any,
-  explode: boolean
+  explode: boolean,
 ): Map<string, string> {
   const pathParams: Map<string, string> = new Map<string, string>();
   const ppVals: string[] = [];
@@ -34,7 +34,7 @@ export function getSimplePathParams(
   ) {
     Object.getOwnPropertyNames(paramValue).forEach((paramKey: string) => {
       const paramFieldValue = encodeURIComponent(
-        valToString(paramValue[paramKey])
+        valToString(paramValue[paramKey]),
       );
 
       if (explode) ppVals.push(`${paramKey}=${paramFieldValue}`);
@@ -47,7 +47,7 @@ export function getSimplePathParams(
       const ppAnn: string = Reflect.getMetadata(
         ppMetadataKey,
         paramValue,
-        paramKey
+        paramKey,
       );
 
       if (ppAnn == null) return;
@@ -56,13 +56,13 @@ export function getSimplePathParams(
         ppAnn,
         paramKey,
         "simple",
-        explode
+        explode,
       );
 
       if (ppDecorator == null) return;
 
       const paramFieldValue = encodeURIComponent(
-        valToString(paramValue[paramKey])
+        valToString(paramValue[paramKey]),
       );
 
       if (isEmpty(paramFieldValue)) return;

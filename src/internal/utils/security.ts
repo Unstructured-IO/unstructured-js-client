@@ -5,13 +5,11 @@
 const securityMetadataKey = "security";
 
 export type SecurityProperties = {
-  params: Record<string, string>,
-  headers: Record<string, string>,
-}
+  params: Record<string, string>;
+  headers: Record<string, string>;
+};
 
-export function parseSecurityProperties(
-  security: any
-): SecurityProperties {
+export function parseSecurityProperties(security: any): SecurityProperties {
   return parseSecurityClass(security);
 }
 
@@ -48,23 +46,21 @@ function parseSecurityDecorator(securityAnn: string): SecurityDecorator {
     securityType,
     option,
     scheme,
-    securitySubType
+    securitySubType,
   );
 }
 
-function parseSecurityClass(
-  security: any
-): SecurityProperties {
+function parseSecurityClass(security: any): SecurityProperties {
   const fieldNames: string[] = Object.getOwnPropertyNames(security);
   const properties: SecurityProperties = {
     params: {},
     headers: {},
-  }
+  };
   fieldNames.forEach((fname) => {
     const securityAnn: string = Reflect.getMetadata(
       securityMetadataKey,
       security,
-      fname
+      fname,
     );
     if (securityAnn == null) return;
     const securityDecorator: SecurityDecorator =
@@ -89,27 +85,31 @@ function parseSecurityClass(
 
 function parseSecurityOption(
   properties: SecurityProperties,
-  optionType: any
+  optionType: any,
 ): void {
   const fieldNames: string[] = Object.getOwnPropertyNames(optionType);
   fieldNames.forEach((fname) => {
     const securityAnn: string = Reflect.getMetadata(
       securityMetadataKey,
       optionType,
-      fname
+      fname,
     );
     if (securityAnn == null) return;
     const securityDecorator: SecurityDecorator =
       parseSecurityDecorator(securityAnn);
     if (securityDecorator == null || !securityDecorator.Scheme) return;
-    return parseSecurityScheme(properties, securityDecorator, optionType[fname]);
+    return parseSecurityScheme(
+      properties,
+      securityDecorator,
+      optionType[fname],
+    );
   });
 }
 
 function parseSecurityScheme(
   properties: SecurityProperties,
   schemeDecorator: SecurityDecorator,
-  scheme: any
+  scheme: any,
 ): void {
   if (scheme === Object(scheme)) {
     if (
@@ -124,7 +124,7 @@ function parseSecurityScheme(
       const securityAnn: string = Reflect.getMetadata(
         securityMetadataKey,
         scheme,
-        fname
+        fname,
       );
       if (securityAnn == null) return;
       const securityDecorator: SecurityDecorator =
@@ -135,7 +135,7 @@ function parseSecurityScheme(
         properties,
         schemeDecorator,
         securityDecorator,
-        scheme[fname]
+        scheme[fname],
       );
     });
   } else {
@@ -143,7 +143,7 @@ function parseSecurityScheme(
       properties,
       schemeDecorator,
       schemeDecorator,
-      scheme
+      scheme,
     );
   }
 }
@@ -152,7 +152,7 @@ function parseSecuritySchemeValue(
   properties: SecurityProperties,
   schemeDecorator: SecurityDecorator,
   securityDecorator: SecurityDecorator,
-  value: any
+  value: any,
 ): void {
   switch (schemeDecorator.Type) {
     case "apiKey":
@@ -166,9 +166,7 @@ function parseSecuritySchemeValue(
         case "cookie": {
           const securityDecoratorName: string = securityDecorator.Name;
           const val: string = value;
-          properties.headers[
-            "Cookie"
-            ] = `${securityDecoratorName}=${val}`;
+          properties.headers["Cookie"] = `${securityDecoratorName}=${val}`;
           break;
         }
         default:
@@ -179,14 +177,22 @@ function parseSecuritySchemeValue(
       properties.headers[securityDecorator.Name] = value;
       break;
     case "oauth2":
-      properties.headers[securityDecorator.Name] = value.toLowerCase().startsWith("bearer ") ? value : `Bearer ${value}`;
+      properties.headers[securityDecorator.Name] = value
+        .toLowerCase()
+        .startsWith("bearer ")
+        ? value
+        : `Bearer ${value}`;
       break;
     case "http":
       switch (schemeDecorator.SubType) {
         case "basic":
           break;
         case "bearer":
-          properties.headers[securityDecorator.Name] = value.toLowerCase().startsWith("bearer ") ? value : `Bearer ${value}`;
+          properties.headers[securityDecorator.Name] = value
+            .toLowerCase()
+            .startsWith("bearer ")
+            ? value
+            : `Bearer ${value}`;
           break;
         default:
           throw new Error("not supported");
@@ -199,7 +205,7 @@ function parseSecuritySchemeValue(
 
 function parseBasicAuthScheme(
   properties: SecurityProperties,
-  scheme: any
+  scheme: any,
 ): void {
   let username,
     password = "";
@@ -209,7 +215,7 @@ function parseBasicAuthScheme(
     const securityAnn: string = Reflect.getMetadata(
       securityMetadataKey,
       scheme,
-      fname
+      fname,
     );
     if (securityAnn == null) return;
     const securityDecorator: SecurityDecorator =
@@ -226,7 +232,9 @@ function parseBasicAuthScheme(
     }
   });
 
-  properties.headers["Authorization"] = `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`;
+  properties.headers["Authorization"] = `Basic ${Buffer.from(
+    `${username}:${password}`,
+  ).toString("base64")}`;
 }
 
 class SecurityDecorator {
@@ -240,7 +248,7 @@ class SecurityDecorator {
     Type: string,
     Option: boolean,
     Scheme: boolean,
-    SubType: string
+    SubType: string,
   ) {
     this.Name = Name;
     this.Type = Type;
