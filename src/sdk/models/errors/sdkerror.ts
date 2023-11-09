@@ -13,7 +13,7 @@ export class SDKError extends Error {
     message: string,
     statusCode: number,
     body: string,
-    rawResponse: AxiosResponse
+    rawResponse: AxiosResponse,
   ) {
     let bodyString = "";
     if (body?.length > 0) {

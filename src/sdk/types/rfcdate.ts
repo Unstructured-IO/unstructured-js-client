@@ -5,7 +5,7 @@
 export class RFCDate {
   private date: Date;
 
-  constructor(date: Date | {date:string} | string | undefined) {
+  constructor(date: Date | { date: string } | string | undefined) {
     if (!date) {
       this.date = new Date();
       return;
@@ -16,11 +16,11 @@ export class RFCDate {
       return;
     }
     if (date instanceof Date) {
-      this.date = date as Date
+      this.date = date as Date;
       return;
     }
 
-    const anyDate = (date as any);
+    const anyDate = date as any;
     if (date && !!anyDate.date) {
       this.date = new Date(anyDate.date);
     }

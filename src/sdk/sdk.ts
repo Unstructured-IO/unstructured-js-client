@@ -60,9 +60,9 @@ export class SDKConfiguration {
     serverDefaults: any;
     language = "typescript";
     openapiDocVersion = "0.0.1";
-    sdkVersion = "0.9.0";
-    genVersion = "2.181.1";
-    userAgent = "speakeasy-sdk/typescript 0.9.0 2.181.1 0.0.1 unstructured-client";
+    sdkVersion = "0.9.1";
+    genVersion = "2.185.0";
+    userAgent = "speakeasy-sdk/typescript 0.9.1 2.185.0 0.0.1 unstructured-client";
     retryConfig?: utils.RetryConfig;
     public constructor(init?: Partial<SDKConfiguration>) {
         Object.assign(this, init);
@@ -85,7 +85,7 @@ export class UnstructuredClient {
             serverURL = ServerList[server];
         }
 
-        const defaultClient = props?.defaultClient ?? axios.create({ baseURL: serverURL });
+        const defaultClient = props?.defaultClient ?? axios.create();
         this.sdkConfiguration = new SDKConfiguration({
             defaultClient: defaultClient,
             security: props?.security,

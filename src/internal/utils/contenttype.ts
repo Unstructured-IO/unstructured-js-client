@@ -4,7 +4,7 @@
 
 export function matchContentType(
   contentType: string,
-  pattern: string
+  pattern: string,
 ): boolean {
   let res = false;
   contentType

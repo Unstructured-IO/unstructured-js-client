@@ -27,7 +27,7 @@ export function getHeadersFromRequest(headerParams: any): any {
     const requestBodyAnn: string = Reflect.getMetadata(
       requestMetadataKey,
       headerParams,
-      fname
+      fname,
     );
 
     if (requestBodyAnn) return;
@@ -35,7 +35,7 @@ export function getHeadersFromRequest(headerParams: any): any {
     const headerAnn: string = Reflect.getMetadata(
       headerMetadataKey,
       headerParams,
-      fname
+      fname,
     );
 
     if (headerAnn == null) return;
@@ -44,14 +44,14 @@ export function getHeadersFromRequest(headerParams: any): any {
       headerAnn,
       fname,
       "simple",
-      false
+      false,
     );
 
     if (headerDecorator == null) return;
 
     const value: string = serializeHeader(
       headerParams[fname],
-      headerDecorator.Explode
+      headerDecorator.Explode,
     );
 
     if (value != "") headers[headerDecorator.ParamName] = value;
@@ -61,7 +61,7 @@ export function getHeadersFromRequest(headerParams: any): any {
 }
 
 export function getHeadersFromResponse(
-  headers: RawAxiosResponseHeaders | AxiosResponseHeaders
+  headers: RawAxiosResponseHeaders | AxiosResponseHeaders,
 ): Record<string, string[]> {
   const reponseHeaders: Record<string, string[]> = {};
 
@@ -110,7 +110,7 @@ function serializeHeader(header: any, explode: boolean): string {
       const headerAnn: string = Reflect.getMetadata(
         headerMetadataKey,
         header,
-        headerKey
+        headerKey,
       );
 
       if (headerAnn == null) return;
@@ -119,7 +119,7 @@ function serializeHeader(header: any, explode: boolean): string {
         headerAnn,
         headerKey,
         "simple",
-        explode
+        explode,
       );
 
       if (headerDecorator == null) return;

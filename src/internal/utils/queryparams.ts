@@ -7,15 +7,16 @@ import {
   parseParamDecorator,
   populateFromGlobals,
   shouldQueryParamSerialize,
-  valToString
+  valToString,
 } from "./utils";
 
-import {requestMetadataKey} from "./requestbody";
+import { requestMetadataKey } from "./requestbody";
 
 export const qpMetadataKey = "queryParam";
 const queryStringPrefix = "?";
 
-const filterAndJoin = (strings: string[]):string =>  strings.filter(s => !!s).join("&")
+const filterAndJoin = (strings: string[]): string =>
+  strings.filter((s) => !!s).join("&");
 
 export function serializeQueryParams(queryParams: any, globals?: any): string {
   const queryStringParts: string[] = [];
@@ -30,7 +31,7 @@ export function serializeQueryParams(queryParams: any, globals?: any): string {
     const requestBodyAnn: string = Reflect.getMetadata(
       requestMetadataKey,
       queryParams,
-      fname
+      fname,
     );
 
     if (requestBodyAnn) return;
@@ -38,16 +39,16 @@ export function serializeQueryParams(queryParams: any, globals?: any): string {
     const qpAnn: string = Reflect.getMetadata(
       qpMetadataKey,
       queryParams,
-      fname
+      fname,
     );
 
-    if (!qpAnn) return {serialize: () => ""};
+    if (!qpAnn) return { serialize: () => "" };
 
     const qpDecorator: ParamDecorator = parseParamDecorator(
       qpAnn,
       fname,
       "form",
-      true
+      true,
     );
 
     if (!qpDecorator) return;
@@ -56,38 +57,38 @@ export function serializeQueryParams(queryParams: any, globals?: any): string {
     value = populateFromGlobals(value, fname, "queryParam", globals);
 
     if (qpDecorator.Serialization === "json")
-      queryStringParts.push(jsonSerializer({[qpDecorator.ParamName]: value}));
+      queryStringParts.push(jsonSerializer({ [qpDecorator.ParamName]: value }));
     else {
       switch (qpDecorator.Style) {
         case "deepObject":
           queryStringParts.push(
-            deepObjectSerializer({[qpDecorator.ParamName]: value})
+            deepObjectSerializer({ [qpDecorator.ParamName]: value }),
           );
           return;
         case "form":
           if (!qpDecorator.Explode)
             queryStringParts.push(
-              noExplodeSerializer({[qpDecorator.ParamName]: value})
+              noExplodeSerializer({ [qpDecorator.ParamName]: value }),
             );
           else
             queryStringParts.push(
-              formSerializerExplode({[qpDecorator.ParamName]: value})
+              formSerializerExplode({ [qpDecorator.ParamName]: value }),
             );
           return;
         case "pipeDelimited":
           if (!qpDecorator.Explode) {
             queryStringParts.push(
-              noExplodeSerializer({[qpDecorator.ParamName]: value}, "|")
+              noExplodeSerializer({ [qpDecorator.ParamName]: value }, "|"),
             );
           } else {
             queryStringParts.push(
-              formSerializerExplode({[qpDecorator.ParamName]: value})
+              formSerializerExplode({ [qpDecorator.ParamName]: value }),
             );
           }
           return;
         default:
           queryStringParts.push(
-            formSerializerExplode({[qpDecorator.ParamName]: value})
+            formSerializerExplode({ [qpDecorator.ParamName]: value }),
           );
       }
     }
@@ -106,7 +107,10 @@ function jsonSerializer(params: Record<string, any>): string {
 }
 
 // TODO: Add support for disabling percent encoding for reserved characters
-function noExplodeSerializer(params: Record<string, any>, delimiter = ","): string {
+function noExplodeSerializer(
+  params: Record<string, any>,
+  delimiter = ",",
+): string {
   const query: string[] = [];
 
   Object.entries(Object.assign({}, params)).forEach(([key, value]) => {
@@ -123,19 +127,19 @@ function noExplodeSerializer(params: Record<string, any>, delimiter = ","): stri
           const qpAnn: string = Reflect.getMetadata(
             qpMetadataKey,
             value,
-            paramKey
+            paramKey,
           );
 
           const qpDecorator: ParamDecorator = parseParamDecorator(
             qpAnn,
             paramKey,
             "form",
-            true
+            true,
           );
 
           if (qpDecorator == null) return;
 
-          const key = qpDecorator.ParamName || paramKey
+          const key = qpDecorator.ParamName || paramKey;
           return `${key}${delimiter}${valToString(value[paramKey])}`;
         })
         .join(delimiter);
@@ -155,9 +159,9 @@ function formSerializerExplode(params: Record<string, any>): string {
       query.push(`${key}=${encodeURIComponent(value)}`);
     else if (Array.isArray(value)) {
       query.push(
-          value
+        value
           .map((aValue) => `${key}=${encodeURIComponent(valToString(aValue))}`)
-              .join("&")
+          .join("&"),
       );
     } else
       query.push(
@@ -166,14 +170,14 @@ function formSerializerExplode(params: Record<string, any>): string {
             const qpAnn: string = Reflect.getMetadata(
               qpMetadataKey,
               value,
-              paramKey
+              paramKey,
             );
 
             const qpDecorator: ParamDecorator = parseParamDecorator(
               qpAnn,
               paramKey,
               "form",
-              true
+              true,
             );
 
             if (qpDecorator == null) return;
@@ -181,7 +185,7 @@ function formSerializerExplode(params: Record<string, any>): string {
             const key = qpDecorator.ParamName || paramKey;
             return `${key}=${encodeURIComponent(valToString(value[paramKey]))}`;
           })
-          .join("&")
+          .join("&"),
       );
   });
   return filterAndJoin(query);
@@ -200,9 +204,9 @@ function deepObjectSerializer(params: Record<string, any>): string {
         value
           .map(
             ([objKey, objValue]) =>
-              `${key}[${objKey}]=${encodeURIComponent(valToString(objValue))}`
+              `${key}[${objKey}]=${encodeURIComponent(valToString(objValue))}`,
           )
-          .join("&")
+          .join("&"),
       );
     } else
       query.push(
@@ -211,14 +215,14 @@ function deepObjectSerializer(params: Record<string, any>): string {
             const qpAnn: string = Reflect.getMetadata(
               qpMetadataKey,
               value,
-              paramKey
+              paramKey,
             );
 
             const qpDecorator: ParamDecorator = parseParamDecorator(
               qpAnn,
               paramKey,
               "form",
-              true
+              true,
             );
 
             if (qpDecorator == null) return;
@@ -229,15 +233,15 @@ function deepObjectSerializer(params: Record<string, any>): string {
                 .map(
                   (arrValue: any) =>
                     `${key}[${paramKey}]=${encodeURIComponent(
-                      valToString(arrValue)
-                    )}`
+                      valToString(arrValue),
+                    )}`,
                 )
                 .join("&");
             return `${key}[${paramKey}]=${encodeURIComponent(
-              valToString(value[paramKey])
+              valToString(value[paramKey]),
             )}`;
           })
-          .join("&")
+          .join("&"),
       );
   });
   return filterAndJoin(query);
