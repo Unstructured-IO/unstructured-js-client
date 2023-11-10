@@ -1,6 +1,4 @@
 <!-- Start SDK Example Usage -->
-
-
 ```typescript
 import { UnstructuredClient } from "unstructured-client";
 
