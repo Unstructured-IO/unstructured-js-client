@@ -3,14 +3,14 @@
  */
 
 import { SpeakeasyMetadata } from "../../../internal/utils";
-import { ValidationError } from "./validationerror";
+import * as shared from "../../../sdk/models/shared";
 import { classToPlain, Expose, Type } from "class-transformer";
 
 export class HTTPValidationError extends Error {
-    @SpeakeasyMetadata({ elemType: ValidationError })
+    @SpeakeasyMetadata({ elemType: shared.ValidationError })
     @Expose({ name: "detail" })
-    @Type(() => ValidationError)
-    detail?: ValidationError[];
+    @Type(() => shared.ValidationError)
+    detail?: shared.ValidationError[];
 
     constructor(err?: HTTPValidationError) {
         super();
