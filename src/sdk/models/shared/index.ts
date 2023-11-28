@@ -4,3 +4,4 @@
 
 export * from "./partitionparameters";
 export * from "./security";
+export * from "./validationerror";

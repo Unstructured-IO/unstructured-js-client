@@ -21,7 +21,7 @@ src/sdk/types/rfcdate.ts
 tsconfig.json
 src/sdk/models/operations/partition.ts
 src/sdk/models/errors/httpvalidationerror.ts
-src/sdk/models/errors/validationerror.ts
+src/sdk/models/shared/validationerror.ts
 src/sdk/models/shared/partitionparameters.ts
 src/sdk/models/shared/security.ts
 src/sdk/models/errors/index.ts
@@ -30,7 +30,7 @@ src/sdk/models/shared/index.ts
 USAGE.md
 docs/sdk/models/operations/partitionresponse.md
 docs/sdk/models/errors/httpvalidationerror.md
-docs/sdk/models/errors/validationerror.md
+docs/sdk/models/shared/validationerror.md
 docs/sdk/models/shared/files.md
 docs/sdk/models/shared/partitionparameters.md
 docs/sdk/models/shared/security.md
