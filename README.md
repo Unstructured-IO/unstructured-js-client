@@ -90,10 +90,6 @@ const client = new UnstructuredClient({
 });
 ```
 
-<!-- Start Dev Containers -->
-
-<!-- End Dev Containers -->
-
 
 <!-- No SDK Example Usage -->
 <!-- No SDK Available Operations -->
@@ -101,16 +97,16 @@ const client = new UnstructuredClient({
 <!-- No Error Handling -->
 <!-- No Server Selection -->
 
-<!-- Start Custom HTTP Client -->
+<!-- Start Custom HTTP Client [http-client] -->
 ## Custom HTTP Client
 
-The Typescript SDK makes API calls using the (axios)[https://axios-http.com/docs/intro] HTTP library.  In order to provide a convenient way to configure timeouts, cookies, proxies, custom headers, and other low-level configuration, you can initialize the SDK client with a custom `AxiosInstance` object.
+The Typescript SDK makes API calls using the [axios](https://axios-http.com/docs/intro) HTTP library.  In order to provide a convenient way to configure timeouts, cookies, proxies, custom headers, and other low-level configuration, you can initialize the SDK client with a custom `AxiosInstance` object.
 
 For example, you could specify a header for every request that your sdk makes as follows:
 
 ```typescript
-from unstructured-client import UnstructuredClient;
-import axios;
+import { unstructured-client } from "UnstructuredClient";
+import axios from "axios";
 
 const httpClient = axios.create({
     headers: {'x-custom-header': 'someValue'}
@@ -118,7 +114,7 @@ const httpClient = axios.create({
 
 const sdk = new UnstructuredClient({defaultClient: httpClient});
 ```
-<!-- End Custom HTTP Client -->
+<!-- End Custom HTTP Client [http-client] -->
 <!-- No Retries -->
 <!-- No Authentication -->
 

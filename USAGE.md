@@ -1,8 +1,8 @@
-<!-- Start SDK Example Usage -->
+<!-- Start SDK Example Usage [usage] -->
 ```typescript
 import { UnstructuredClient } from "unstructured-client";
 
-(async () => {
+async function run() {
     const sdk = new UnstructuredClient({
         security: {
             apiKeyAuth: "YOUR_API_KEY",
@@ -23,14 +23,16 @@ import { UnstructuredClient } from "unstructured-client";
         maxCharacters: 1500,
         newAfterNChars: 1500,
         outputFormat: "application/json",
-        skipInferTableTypes: ["p", "d", "f"],
+        skipInferTableTypes: ["pdf"],
         strategy: "hi_res",
     });
 
     if (res.statusCode == 200) {
         // handle response
     }
-})();
+}
+
+run();
 
 ```
-<!-- End SDK Example Usage -->
+<!-- End SDK Example Usage [usage] -->

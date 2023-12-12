@@ -2,8 +2,8 @@ configVersion: 1.0.0
 management:
   docChecksum: bf57420eebd40f2b1d166092f01e3927
   docVersion: 0.0.1
-  speakeasyVersion: 1.121.1
-  generationVersion: 2.194.1
+  speakeasyVersion: 1.126.0
+  generationVersion: 2.213.3
 generation:
   comments: {}
   sdkClassName: unstructured_client
@@ -12,15 +12,15 @@ generation:
     optionalPropertyRendering: withExample
 features:
   typescript:
-    core: 3.1.4
+    core: 3.3.0
     examples: 2.81.3
-    globalSecurity: 2.82.0
+    globalSecurity: 2.82.1
     globalServerURLs: 2.82.1
     nameOverrides: 2.81.1
     retries: 2.82.1
     serverIDs: 2.81.2
 typescript:
-  version: 0.9.4
+  version: 0.10.0
   author: Unstructured
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: false
@@ -39,3 +39,4 @@ typescript:
   packageName: unstructured-client
   published: true
   repoSubDirectory: .
+  templateVersion: v1
