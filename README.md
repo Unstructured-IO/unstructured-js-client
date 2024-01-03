@@ -32,7 +32,7 @@ yarn add unstructured-client
 <!-- No SDK Installation -->
 
 ## SDK Example Usage
-Only the `files` parameter is required. See the [general partition]([General](docs/sdks/general/README.md)) page for all available parameters. 
+Only the `files` parameter is required. See the [general partition](docs/sdks/general/README.md) page for all available parameters. 
 
 ```typescript
 import { UnstructuredClient } from "unstructured-client";
@@ -54,7 +54,7 @@ client.general.partition({
     // Note that this currently only supports a single file
     files: {
         content: data,
-        files: filename,
+        fileName: filename,
     },
     // Other partition params
     strategy: "fast",
