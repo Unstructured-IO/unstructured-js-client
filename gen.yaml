@@ -1,24 +1,10 @@
-configVersion: 1.0.0
-management:
-  docChecksum: bf57420eebd40f2b1d166092f01e3927
-  docVersion: 0.0.1
-  speakeasyVersion: 1.126.0
-  generationVersion: 2.213.3
+configVersion: 2.0.0
 generation:
-  comments: {}
   sdkClassName: unstructured_client
-  repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   usageSnippets:
     optionalPropertyRendering: withExample
-features:
-  typescript:
-    core: 3.3.0
-    examples: 2.81.3
-    globalSecurity: 2.82.1
-    globalServerURLs: 2.82.1
-    nameOverrides: 2.81.1
-    retries: 2.82.1
-    serverIDs: 2.81.2
+  fixes:
+    nameResolutionDec2023: false
 typescript:
   version: 0.10.0
   author: Unstructured
@@ -33,10 +19,7 @@ typescript:
       shared: sdk/models/shared
       webhooks: sdk/models/webhooks
   inputModelSuffix: input
-  installationURL: https://github.com/Unstructured-IO/unstructured-js-client
   maxMethodParams: 0
   outputModelSuffix: output
   packageName: unstructured-client
-  published: true
-  repoSubDirectory: .
   templateVersion: v1
