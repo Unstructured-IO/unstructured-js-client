@@ -1,0 +1,60 @@
+lockVersion: 2.0.0
+id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
+management:
+  docChecksum: bf57420eebd40f2b1d166092f01e3927
+  docVersion: 0.0.1
+  speakeasyVersion: internal
+  generationVersion: 2.225.2
+  releaseVersion: 0.10.0
+  configChecksum: a042cebb5322f57f775e41a5d4bb8f70
+  repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
+  repoSubDirectory: .
+  installationURL: https://github.com/Unstructured-IO/unstructured-js-client
+  published: true
+features:
+  typescript:
+    core: 3.4.1
+    examples: 2.81.3
+    globalSecurity: 2.82.2
+    globalServerURLs: 2.82.1
+    nameOverrides: 2.81.1
+    retries: 2.82.1
+    serverIDs: 2.81.2
+generatedFiles:
+  - src/sdk/general.ts
+  - src/sdk/sdk.ts
+  - .eslintrc.yml
+  - jest.config.js
+  - package-lock.json
+  - package.json
+  - src/index.ts
+  - src/internal/utils/contenttype.ts
+  - src/internal/utils/headers.ts
+  - src/internal/utils/index.ts
+  - src/internal/utils/pathparams.ts
+  - src/internal/utils/queryparams.ts
+  - src/internal/utils/requestbody.ts
+  - src/internal/utils/retries.ts
+  - src/internal/utils/security.ts
+  - src/internal/utils/utils.ts
+  - src/sdk/index.ts
+  - src/sdk/models/errors/sdkerror.ts
+  - src/sdk/types/index.ts
+  - src/sdk/types/rfcdate.ts
+  - tsconfig.json
+  - src/sdk/models/operations/partition.ts
+  - src/sdk/models/errors/httpvalidationerror.ts
+  - src/sdk/models/shared/validationerror.ts
+  - src/sdk/models/shared/partitionparameters.ts
+  - src/sdk/models/shared/security.ts
+  - src/sdk/models/errors/index.ts
+  - src/sdk/models/operations/index.ts
+  - src/sdk/models/shared/index.ts
+  - docs/sdk/models/operations/partitionresponse.md
+  - docs/sdk/models/errors/httpvalidationerror.md
+  - docs/sdk/models/shared/validationerror.md
+  - docs/sdk/models/shared/files.md
+  - docs/sdk/models/shared/partitionparameters.md
+  - docs/sdk/models/shared/security.md
+  - USAGE.md
+  - .gitattributes
