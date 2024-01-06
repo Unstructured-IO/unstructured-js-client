@@ -38,6 +38,12 @@ export class PartitionParameters extends SpeakeasyBase {
     encoding?: string;
 
     /**
+     * The types of elements to extract, for use in extracting image blocks as base64 encoded data stored in metadata fields
+     */
+    @SpeakeasyMetadata({ data: "multipart_form, name=extract_image_block_types" })
+    extractImageBlockTypes?: string[];
+
+    /**
      * The file to extract
      */
     @SpeakeasyMetadata({ data: "multipart_form, file=true" })

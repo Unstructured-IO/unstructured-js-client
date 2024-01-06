@@ -13,6 +13,7 @@ async function run() {
         chunkingStrategy: "by_title",
         combineUnderNChars: 500,
         encoding: "utf-8",
+        extractImageBlockTypes: ["image", "table"],
         files: {
             content: new TextEncoder().encode("0x2cC94b2FEF"),
             fileName: "um.shtml",
