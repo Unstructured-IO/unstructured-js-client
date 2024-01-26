@@ -69,7 +69,7 @@ export class General {
             } else {
                 retryConfig = new utils.RetryConfig(
                     "backoff",
-                    new utils.BackoffStrategy(500, 60000, 1.5, 3600000),
+                    new utils.BackoffStrategy(500, 60000, 1.5, 900000),
                     true
                 );
             }
