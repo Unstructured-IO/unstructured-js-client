@@ -23,3 +23,4 @@ typescript:
   outputModelSuffix: output
   packageName: unstructured-client
   templateVersion: v1
+  license: MIT
