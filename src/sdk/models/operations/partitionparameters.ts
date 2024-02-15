@@ -3,9 +3,18 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../../internal/utils";
+import * as shared from "../../../sdk/models/shared";
 import { AxiosResponse } from "axios";
 
-export class PartitionResponse extends SpeakeasyBase {
+export class PartitionParametersRequest extends SpeakeasyBase {
+    @SpeakeasyMetadata({ data: "request, media_type=multipart/form-data" })
+    bodyPartitionParameters: shared.BodyPartitionParameters;
+
+    @SpeakeasyMetadata({ data: "header, style=simple;explode=false;name=unstructured-api-key" })
+    unstructuredApiKey?: string;
+}
+
+export class PartitionParametersResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
@@ -15,8 +24,8 @@ export class PartitionResponse extends SpeakeasyBase {
     /**
      * Successful Response
      */
-    @SpeakeasyMetadata()
-    elements?: any[];
+    @SpeakeasyMetadata({ elemType: shared.Element })
+    responsePartitionParameters?: shared.Element[];
 
     /**
      * HTTP response status code for this operation
