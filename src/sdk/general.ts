@@ -17,15 +17,18 @@ export class General {
     }
 
     /**
-     * Pipeline 1
+     * Summary
+     *
+     * @remarks
+     * Description
      */
     async partition(
-        req: shared.PartitionParameters,
+        req: operations.PartitionParametersRequest,
         retries?: utils.RetryConfig,
         config?: AxiosRequestConfig
-    ): Promise<operations.PartitionResponse> {
+    ): Promise<operations.PartitionParametersResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new shared.PartitionParameters(req);
+            req = new operations.PartitionParametersRequest(req);
         }
 
         const baseURL: string = utils.templateUrl(
@@ -37,7 +40,11 @@ export class General {
         let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
 
         try {
-            [reqBodyHeaders, reqBody] = utils.serializeRequestBody(req, "request", "multipart");
+            [reqBodyHeaders, reqBody] = utils.serializeRequestBody(
+                req,
+                "bodyPartitionParameters",
+                "multipart"
+            );
         } catch (e: unknown) {
             if (e instanceof Error) {
                 throw new Error(`Error serializing request body, cause: ${e.message}`);
@@ -53,10 +60,12 @@ export class General {
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = {
+            ...utils.getHeadersFromRequest(req),
             ...reqBodyHeaders,
             ...config?.headers,
             ...properties.headers,
         };
+        if (reqBody == null) throw new Error("request body is required");
         headers["Accept"] = "application/json";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
@@ -92,16 +101,23 @@ export class General {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PartitionResponse = new operations.PartitionResponse({
-            statusCode: httpRes.status,
-            contentType: responseContentType,
-            rawResponse: httpRes,
-        });
+        const res: operations.PartitionParametersResponse =
+            new operations.PartitionParametersResponse({
+                statusCode: httpRes.status,
+                contentType: responseContentType,
+                rawResponse: httpRes,
+            });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(responseContentType, `application/json`)) {
-                    res.elements = utils.objectToClass(JSON.parse(decodedRes));
+                    res.responsePartitionParameters = [];
+                    const resFieldDepth: number = utils.getResFieldDepth(res);
+                    res.responsePartitionParameters = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        shared.Element,
+                        resFieldDepth
+                    );
                 } else {
                     throw new errors.SDKError(
                         "unknown content-type received: " + responseContentType,
