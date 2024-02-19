@@ -1,19 +1,19 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 903444f359d1dfa6342c692ae3e5c7ff
-  docVersion: 0.0.1
+  docChecksum: 8e80e4d12e16961f9061ef746c01761a
+  docVersion: 0.0.64
   speakeasyVersion: internal
-  generationVersion: 2.239.4
-  releaseVersion: 0.10.2
-  configChecksum: 12f6839ac63663b0a36dcb4370d79421
+  generationVersion: 2.262.2
+  releaseVersion: 0.10.3
+  configChecksum: 9676289ac3edb1656729e2a1c1cf21ec
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
   published: true
 features:
   typescript:
-    core: 3.4.6
+    core: 3.4.7
     examples: 2.81.3
     globalSecurity: 2.82.2
     globalServerURLs: 2.82.1
@@ -42,19 +42,24 @@ generatedFiles:
   - src/sdk/types/index.ts
   - src/sdk/types/rfcdate.ts
   - tsconfig.json
-  - src/sdk/models/operations/partition.ts
-  - src/sdk/models/errors/httpvalidationerror.ts
+  - src/sdk/models/operations/partitionparameters.ts
+  - src/sdk/models/shared/element.ts
   - src/sdk/models/shared/validationerror.ts
-  - src/sdk/models/shared/partitionparameters.ts
+  - src/sdk/models/shared/bodypartitionparameters.ts
   - src/sdk/models/shared/security.ts
+  - src/sdk/models/errors/httpvalidationerror.ts
   - src/sdk/models/errors/index.ts
   - src/sdk/models/operations/index.ts
   - src/sdk/models/shared/index.ts
-  - docs/sdk/models/operations/partitionresponse.md
-  - docs/sdk/models/errors/httpvalidationerror.md
+  - docs/sdk/models/operations/partitionparametersrequest.md
+  - docs/sdk/models/operations/partitionparametersresponse.md
+  - docs/sdk/models/shared/metadata.md
+  - docs/sdk/models/shared/element.md
   - docs/sdk/models/shared/validationerror.md
   - docs/sdk/models/shared/files.md
-  - docs/sdk/models/shared/partitionparameters.md
+  - docs/sdk/models/shared/strategy.md
+  - docs/sdk/models/shared/bodypartitionparameters.md
   - docs/sdk/models/shared/security.md
+  - docs/sdk/models/errors/httpvalidationerror.md
   - USAGE.md
   - .gitattributes
