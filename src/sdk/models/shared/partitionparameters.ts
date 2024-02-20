@@ -12,22 +12,12 @@ export class Files extends SpeakeasyBase {
     fileName: string;
 }
 
-/**
- * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: auto
- */
-export enum Strategy {
-    Fast = "fast",
-    HiRes = "hi_res",
-    Auto = "auto",
-    OcrOnly = "ocr_only",
-}
-
-export class BodyPartitionParameters extends SpeakeasyBase {
+export class PartitionParameters extends SpeakeasyBase {
     /**
      * Use one of the supported strategies to chunk the returned elements. Currently supports: by_title
      */
     @SpeakeasyMetadata({ data: "multipart_form, name=chunking_strategy" })
-    chunkingStrategy?: any;
+    chunkingStrategy?: string;
 
     /**
      * If chunking strategy is set, combine elements until a section reaches a length of n chars. Default: 500
@@ -57,7 +47,7 @@ export class BodyPartitionParameters extends SpeakeasyBase {
      * The file to extract
      */
     @SpeakeasyMetadata({ data: "multipart_form, file=true" })
-    files: Files;
+    files?: Files;
 
     /**
      * If file is gzipped, use this content type after unzipping
@@ -102,28 +92,10 @@ export class BodyPartitionParameters extends SpeakeasyBase {
     newAfterNChars?: number;
 
     /**
-     * The languages present in the document, for use in partitioning and/or OCR
-     */
-    @SpeakeasyMetadata({ data: "multipart_form, name=ocr_languages" })
-    ocrLanguages?: string[];
-
-    /**
      * The format of the response. Supported formats are application/json and text/csv. Default: application/json.
      */
     @SpeakeasyMetadata({ data: "multipart_form, name=output_format" })
     outputFormat?: string;
-
-    /**
-     * Specifies the length of a string ('tail') to be drawn from each chunk and prefixed to the next chunk as a context-preserving mechanism. By default, this only applies to split-chunks where an oversized element is divided into multiple chunks by text-splitting. Default: 0
-     */
-    @SpeakeasyMetadata({ data: "multipart_form, name=overlap" })
-    overlap?: number;
-
-    /**
-     * When `True`, apply overlap between 'normal' chunks formed from whole elements and not subject to text-splitting. Use this with caution as it entails a certain level of 'pollution' of otherwise clean semantic chunk boundaries. Default: False
-     */
-    @SpeakeasyMetadata({ data: "multipart_form, name=overlap_all" })
-    overlapAll?: boolean;
 
     /**
      * If True and strategy=hi_res, any Table Elements extracted from a PDF will include an additional metadata field, 'text_as_html', where the value (string) is a just a transformation of the data into an HTML <table>.
@@ -141,7 +113,7 @@ export class BodyPartitionParameters extends SpeakeasyBase {
      * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: auto
      */
     @SpeakeasyMetadata({ data: "multipart_form, name=strategy" })
-    strategy?: Strategy;
+    strategy?: string;
 
     /**
      * If True, will retain the XML tags in the output. Otherwise it will simply extract the text from within the tags. Only applies to partition_xml.
