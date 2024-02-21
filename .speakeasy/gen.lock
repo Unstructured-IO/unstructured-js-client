@@ -4,16 +4,16 @@ management:
   docChecksum: 903444f359d1dfa6342c692ae3e5c7ff
   docVersion: 0.0.1
   speakeasyVersion: internal
-  generationVersion: 2.239.4
-  releaseVersion: 0.10.2
-  configChecksum: 12f6839ac63663b0a36dcb4370d79421
+  generationVersion: 2.263.3
+  releaseVersion: 0.10.4
+  configChecksum: 8bee1c3960268a6f4a0ccec9c1653249
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
   published: true
 features:
   typescript:
-    core: 3.4.6
+    core: 3.4.7
     examples: 2.81.3
     globalSecurity: 2.82.2
     globalServerURLs: 2.82.1
