@@ -24,6 +24,8 @@ async function run() {
         maxCharacters: 1500,
         newAfterNChars: 1500,
         outputFormat: "application/json",
+        overlap: 25,
+        overlapAll: true,
         skipInferTableTypes: ["pdf"],
         strategy: "hi_res",
     });
