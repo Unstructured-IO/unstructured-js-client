@@ -98,6 +98,18 @@ export class PartitionParameters extends SpeakeasyBase {
     outputFormat?: string;
 
     /**
+     * A prefix of this many trailing characters from prior text-split chunk is applied to second and later chunks formed from oversized elements by text-splitting. Default: None
+     */
+    @SpeakeasyMetadata({ data: "multipart_form, name=overlap" })
+    overlap?: number;
+
+    /**
+     * When True, overlap is also applied to 'normal' chunks formed by combining whole elements. Use with caution as this can introduce noise into otherwise clean semantic units. Default: None
+     */
+    @SpeakeasyMetadata({ data: "multipart_form, name=overlap_all" })
+    overlapAll?: boolean;
+
+    /**
      * If True and strategy=hi_res, any Table Elements extracted from a PDF will include an additional metadata field, 'text_as_html', where the value (string) is a just a transformation of the data into an HTML <table>.
      */
     @SpeakeasyMetadata({ data: "multipart_form, name=pdf_infer_table_structure" })
