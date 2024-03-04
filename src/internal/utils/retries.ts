@@ -172,7 +172,6 @@ async function retryBackoff(
       );
       
       if (err instanceof TemporaryError) {
-        // Retry if status code is 5xx.
         x++;
         console.warn(
           `Response status code: ${
@@ -183,7 +182,6 @@ async function retryBackoff(
         );
         await delay(d);
       } else {
-        // Throw in case of a connection error.
         throw err;
       }
     }
