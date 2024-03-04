@@ -170,9 +170,22 @@ async function retryBackoff(
         initialInterval * Math.pow(x, exponent) + Math.random() * 1000,
         maxInterval,
       );
-
-      await delay(d);
-      x++;
+      
+      if (err instanceof TemporaryError) {
+        // Retry if status code is 5xx.
+        x++;
+        console.warn(
+          `Response status code: ${
+            err.res.status
+          }. Retry attempt #${x}. Sleeping ${Math.round(
+            d / 1000
+          )} seconds before retry.`
+        );
+        await delay(d);
+      } else {
+        // Throw in case of a connection error.
+        throw err;
+      }
     }
   }
 }
