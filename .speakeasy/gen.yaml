@@ -1,0 +1,37 @@
+configVersion: 2.0.0
+generation:
+  sdkClassName: unstructured_client
+  maintainOpenAPIOrder: true
+  usageSnippets:
+    optionalPropertyRendering: withExample
+  useClassNamesForArrayFields: true
+  fixes:
+    nameResolutionDec2023: true
+    parameterOrderingFeb2024: true
+    requestResponseComponentNamesFeb2024: true
+  auth:
+    oAuth2ClientCredentialsEnabled: true
+typescript:
+  version: 0.10.6
+  additionalDependencies:
+    dependencies: {}
+    devDependencies: {}
+    peerDependencies: {}
+  author: Unstructured
+  clientServerStatusCodesAsErrors: true
+  flattenGlobalSecurity: true
+  imports:
+    option: openapi
+    paths:
+      callbacks: sdk/models/callbacks
+      errors: sdk/models/errors
+      operations: sdk/models/operations
+      shared: sdk/models/components
+      webhooks: sdk/models/webhooks
+  inputModelSuffix: input
+  license: MIT
+  maxMethodParams: 0
+  outputModelSuffix: output
+  packageName: unstructured-client
+  responseFormat: envelope-http
+  templateVersion: v2

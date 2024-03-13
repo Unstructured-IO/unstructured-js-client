@@ -1,60 +1,70 @@
 lockVersion: 2.0.0
-id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
+id: 97ae2560-ba61-493e-b083-fef42caf7d33
 management:
   docChecksum: a112aea005467aa6818696fa4e99fcfe
   docVersion: 0.0.1
-  speakeasyVersion: internal
-  generationVersion: 2.277.0
-  releaseVersion: 0.10.5
-  configChecksum: 96a63e97d3dac8e37820f1f5fc324692
-  repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
-  repoSubDirectory: .
-  installationURL: https://github.com/Unstructured-IO/unstructured-js-client
-  published: true
+  speakeasyVersion: 1.208.0
+  generationVersion: 2.281.0
+  releaseVersion: 0.10.6
+  configChecksum: 94240d35c00bd1367d63e264138fa62d
 features:
   typescript:
-    core: 3.4.8
+    core: 3.6.1
     examples: 2.81.3
-    globalSecurity: 2.82.4
-    globalServerURLs: 2.82.1
+    globalSecurity: 2.82.5
+    globalServerURLs: 2.82.4
     nameOverrides: 2.81.1
-    retries: 2.82.1
+    responseFormat: 0.2.1
+    retries: 2.83.0
     serverIDs: 2.81.2
+    unions: 2.85.3
 generatedFiles:
   - src/sdk/general.ts
   - src/sdk/sdk.ts
-  - .eslintrc.yml
-  - jest.config.js
-  - package-lock.json
+  - .eslintrc.js
+  - .npmignore
+  - RUNTIMES.md
   - package.json
   - src/index.ts
-  - src/internal/utils/contenttype.ts
-  - src/internal/utils/headers.ts
-  - src/internal/utils/index.ts
-  - src/internal/utils/pathparams.ts
-  - src/internal/utils/queryparams.ts
-  - src/internal/utils/requestbody.ts
-  - src/internal/utils/retries.ts
-  - src/internal/utils/security.ts
-  - src/internal/utils/utils.ts
+  - src/lib/base64.ts
+  - src/lib/config.ts
+  - src/lib/encodings.ts
+  - src/lib/http.ts
+  - src/lib/retries.ts
+  - src/lib/schemas.ts
+  - src/lib/sdks.ts
+  - src/lib/security.ts
+  - src/lib/url.ts
   - src/sdk/index.ts
   - src/sdk/models/errors/sdkerror.ts
-  - src/sdk/types/index.ts
-  - src/sdk/types/rfcdate.ts
+  - src/sdk/models/errors/sdkvalidationerror.ts
+  - src/types/blobs.ts
+  - src/types/index.ts
+  - src/types/operations.ts
+  - src/types/rfcdate.ts
   - tsconfig.json
   - src/sdk/models/operations/partition.ts
+  - src/sdk/models/components/httpmetadata.ts
+  - src/sdk/models/components/validationerror.ts
+  - src/sdk/models/components/partitionparameters.ts
+  - src/sdk/models/components/security.ts
   - src/sdk/models/errors/httpvalidationerror.ts
-  - src/sdk/models/shared/validationerror.ts
-  - src/sdk/models/shared/partitionparameters.ts
-  - src/sdk/models/shared/security.ts
   - src/sdk/models/errors/index.ts
   - src/sdk/models/operations/index.ts
-  - src/sdk/models/shared/index.ts
+  - src/sdk/models/components/index.ts
   - docs/sdk/models/operations/partitionresponse.md
+  - docs/sdk/models/components/httpmetadata.md
+  - docs/sdk/models/components/loc.md
+  - docs/sdk/models/components/validationerror.md
+  - docs/sdk/models/components/files.md
+  - docs/sdk/models/components/partitionparameters.md
+  - docs/sdk/models/components/security.md
   - docs/sdk/models/errors/httpvalidationerror.md
-  - docs/sdk/models/shared/validationerror.md
-  - docs/sdk/models/shared/files.md
-  - docs/sdk/models/shared/partitionparameters.md
-  - docs/sdk/models/shared/security.md
+  - docs/sdks/unstructuredclient/README.md
+  - docs/lib/utils/retryconfig.md
+  - docs/sdks/general/README.md
   - USAGE.md
   - .gitattributes
+  - src/hooks/hooks.ts
+  - src/hooks/types.ts
+  - src/hooks/index.ts
