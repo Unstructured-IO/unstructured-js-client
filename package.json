@@ -1,13 +1,11 @@
 {
   "name": "unstructured-client",
-  "version": "0.10.6",
+  "version": "0.11.0",
   "author": "Unstructured",
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "sideEffects": false,
   "scripts": {
-    "check:tsc": "tsc --noEmit --skipLibCheck",
-    "check:eslint": "eslint --max-warnings=0 src",
-    "check": "npm run check:tsc && npm run check:eslint",
+    "lint": "eslint --max-warnings=0 src",
     "build": "tsc",
     "prepare": "npm run build"
   },
@@ -25,5 +23,7 @@
     "typescript": "^5.3.3",
     "zod": "^3.22.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    
+  }
 }
