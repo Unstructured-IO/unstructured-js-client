@@ -60,9 +60,9 @@ export class SDKConfiguration {
     serverDefaults: any;
     language = "typescript";
     openapiDocVersion = "0.0.1";
-    sdkVersion = "0.10.5";
-    genVersion = "2.277.0";
-    userAgent = "speakeasy-sdk/typescript 0.10.5 2.277.0 0.0.1 unstructured-client";
+    sdkVersion = "0.10.6";
+    genVersion = "2.280.6";
+    userAgent = "speakeasy-sdk/typescript 0.10.6 2.280.6 0.0.1 unstructured-client";
     retryConfig?: utils.RetryConfig;
     public constructor(init?: Partial<SDKConfiguration>) {
         Object.assign(this, init);
@@ -79,9 +79,9 @@ export class UnstructuredClient {
 
     constructor(props?: SDKProps) {
         let serverURL = props?.serverURL;
-        const server = props?.server ?? ServerProd;
 
         if (!serverURL) {
+            const server = props?.server ?? ServerProd;
             serverURL = ServerList[server];
         }
 

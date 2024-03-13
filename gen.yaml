@@ -10,7 +10,7 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
 typescript:
-  version: 0.10.5
+  version: 0.10.6
   author: Unstructured
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: false
