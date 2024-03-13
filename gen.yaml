@@ -27,4 +27,4 @@ typescript:
   maxMethodParams: 0
   outputModelSuffix: output
   packageName: unstructured-client
-  templateVersion: v1
+  templateVersion: v2
