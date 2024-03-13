@@ -99,23 +99,111 @@ const client = new UnstructuredClient({
 <!-- Start Custom HTTP Client [http-client] -->
 ## Custom HTTP Client
 
-The Typescript SDK makes API calls using the [axios](https://axios-http.com/docs/intro) HTTP library.  In order to provide a convenient way to configure timeouts, cookies, proxies, custom headers, and other low-level configuration, you can initialize the SDK client with a custom `AxiosInstance` object.
+The TypeScript SDK makes API calls using an `HTTPClient` that wraps the native
+[Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API). This
+client is a thin wrapper around `fetch` and provides the ability to attach hooks
+around the request lifecycle that can be used to modify the request or handle
+errors and response.
 
-For example, you could specify a header for every request that your sdk makes as follows:
+The `HTTPClient` constructor takes an optional `fetcher` argument that can be
+used to integrate a third-party HTTP client or when writing tests to mock out
+the HTTP client and feed in fixtures.
+
+The following example shows how to use the `"beforeRequest"` hook to to add a
+custom header and a timeout to requests and how to use the `"requestError"` hook
+to log errors:
 
 ```typescript
-import { unstructured-client } from "UnstructuredClient";
-import axios from "axios";
+import { UnstructuredClient } from "unstructured-client";
+import { HTTPClient } from "unstructured-client/lib/http";
 
-const httpClient = axios.create({
-    headers: {'x-custom-header': 'someValue'}
-})
+const httpClient = new HTTPClient({
+  // fetcher takes a function that has the same signature as native `fetch`.
+  fetcher: (request) => {
+    return fetch(request);
+  }
+});
 
-const sdk = new UnstructuredClient({defaultClient: httpClient});
+httpClient.addHook("beforeRequest", (request) => {
+  const nextRequest = new Request(request, {
+    signal: request.signal || AbortSignal.timeout(5000);
+  });
+
+  nextRequest.headers.set("x-custom-header", "custom value");
+
+  return nextRequest;
+});
+
+httpClient.addHook("requestError", (error, request) => {
+  console.group("Request Error");
+  console.log("Reason:", `${error}`);
+  console.log("Endpoint:", `${request.method} ${request.url}`);
+  console.groupEnd();
+});
+
+const sdk = new UnstructuredClient({ httpClient });
 ```
 <!-- End Custom HTTP Client [http-client] -->
 <!-- No Retries -->
 <!-- No Authentication -->
+
+<!-- Start Requirements [requirements] -->
+## Requirements
+
+For supported JavaScript runtimes, please consult [RUNTIMES.md](RUNTIMES.md).
+<!-- End Requirements [requirements] -->
+
+<!-- Start File uploads [file-upload] -->
+## File uploads
+
+Certain SDK methods accept files as part of a multi-part request. It is possible and typically recommended to upload files as a stream rather than reading the entire contents into memory. This avoids excessive memory consumption and potentially crashing with out-of-memory errors when working with very large files. The following example demonstrates how to attach a file stream to a request.
+
+> [!TIP]
+>
+> Depending on your JavaScript runtime, there are convenient utilities that return a handle to a file without reading the entire contents into memory:
+>
+> - **Node.js v20+:** Since v20, Node.js comes with a native `openAsBlob` function in [`node:fs`](https://nodejs.org/docs/latest-v20.x/api/fs.html#fsopenasblobpath-options).
+> - **Bun:** The native [`Bun.file`](https://bun.sh/docs/api/file-io#reading-files-bun-file) function produces a file handle that can be used for streaming file uploads.
+> - **Browsers:** All supported browsers return an instance to a [`File`](https://developer.mozilla.org/en-US/docs/Web/API/File) when reading the value from an `<input type="file">` element.
+> - **Node.js v18:** A file stream can be created using the `fileFrom` helper from [`fetch-blob/from.js`](https://www.npmjs.com/package/fetch-blob).
+
+```typescript
+import { openAsBlob } from "node:fs";
+import { UnstructuredClient } from "unstructured-client";
+
+async function run() {
+    const sdk = new UnstructuredClient({
+        security: {
+            apiKeyAuth: "YOUR_API_KEY",
+        },
+    });
+
+    const result = await sdk.general.partition({
+        chunkingStrategy: "by_title",
+        combineUnderNChars: 500,
+        encoding: "utf-8",
+        extractImageBlockTypes: ["image", "table"],
+        files: await openAsBlob("./sample-file"),
+        gzUncompressedContentType: "application/pdf",
+        hiResModelName: "yolox",
+        languages: ["[", "e", "n", "g", "]"],
+        maxCharacters: 1500,
+        newAfterNChars: 1500,
+        outputFormat: "application/json",
+        overlap: 25,
+        overlapAll: true,
+        skipInferTableTypes: ["pdf"],
+        strategy: "hi_res",
+    });
+
+    // Handle the result
+    console.log(result);
+}
+
+run();
+
+```
+<!-- End File uploads [file-upload] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 

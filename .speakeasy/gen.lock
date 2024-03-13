@@ -3,43 +3,48 @@ id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
   docChecksum: a112aea005467aa6818696fa4e99fcfe
   docVersion: 0.0.1
-  speakeasyVersion: 1.207.1
-  generationVersion: 2.280.6
-  releaseVersion: 0.10.6
-  configChecksum: 4305e59294be7a295886d59121dc5994
+  speakeasyVersion: 1.209.1
+  generationVersion: 2.281.1
+  releaseVersion: 0.11.0
+  configChecksum: 57e163669daec4e6a86420e7a91c3ea5
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
   published: true
 features:
   typescript:
-    core: 3.4.8
+    core: 3.6.1
     examples: 2.81.3
-    globalSecurity: 2.82.4
-    globalServerURLs: 2.82.2
+    globalSecurity: 2.82.5
+    globalServerURLs: 2.82.4
     nameOverrides: 2.81.1
-    retries: 2.82.1
+    responseFormat: 0.2.2
+    retries: 2.83.0
     serverIDs: 2.81.2
+    unions: 2.85.3
 generatedFiles:
   - src/sdk/general.ts
   - src/sdk/sdk.ts
-  - .eslintrc.yml
-  - jest.config.js
-  - package-lock.json
+  - .eslintrc.js
+  - .npmignore
+  - RUNTIMES.md
   - package.json
   - src/index.ts
-  - src/internal/utils/contenttype.ts
-  - src/internal/utils/headers.ts
-  - src/internal/utils/index.ts
-  - src/internal/utils/pathparams.ts
-  - src/internal/utils/queryparams.ts
-  - src/internal/utils/requestbody.ts
-  - src/internal/utils/retries.ts
-  - src/internal/utils/security.ts
-  - src/internal/utils/utils.ts
+  - src/lib/base64.ts
+  - src/lib/config.ts
+  - src/lib/encodings.ts
+  - src/lib/http.ts
+  - src/lib/retries.ts
+  - src/lib/schemas.ts
+  - src/lib/sdks.ts
+  - src/lib/security.ts
+  - src/lib/url.ts
   - src/sdk/index.ts
   - src/sdk/models/errors/sdkerror.ts
+  - src/sdk/models/errors/sdkvalidationerror.ts
+  - src/sdk/types/blobs.ts
   - src/sdk/types/index.ts
+  - src/sdk/types/operations.ts
   - src/sdk/types/rfcdate.ts
   - tsconfig.json
   - src/sdk/models/operations/partition.ts
@@ -52,9 +57,13 @@ generatedFiles:
   - src/sdk/models/shared/index.ts
   - docs/sdk/models/operations/partitionresponse.md
   - docs/sdk/models/errors/httpvalidationerror.md
+  - docs/sdk/models/shared/loc.md
   - docs/sdk/models/shared/validationerror.md
   - docs/sdk/models/shared/files.md
   - docs/sdk/models/shared/partitionparameters.md
   - docs/sdk/models/shared/security.md
   - USAGE.md
   - .gitattributes
+  - src/hooks/hooks.ts
+  - src/hooks/types.ts
+  - src/hooks/index.ts

@@ -1,5 +1,6 @@
 <!-- Start SDK Example Usage [usage] -->
 ```typescript
+import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 
 async function run() {
@@ -9,15 +10,12 @@ async function run() {
         },
     });
 
-    const res = await sdk.general.partition({
+    const result = await sdk.general.partition({
         chunkingStrategy: "by_title",
         combineUnderNChars: 500,
         encoding: "utf-8",
         extractImageBlockTypes: ["image", "table"],
-        files: {
-            content: new TextEncoder().encode("0x2cC94b2FEF"),
-            fileName: "um.shtml",
-        },
+        files: await openAsBlob("./sample-file"),
         gzUncompressedContentType: "application/pdf",
         hiResModelName: "yolox",
         languages: ["[", "e", "n", "g", "]"],
@@ -30,9 +28,8 @@ async function run() {
         strategy: "hi_res",
     });
 
-    if (res.statusCode == 200) {
-        // handle response
-    }
+    // Handle the result
+    console.log(result);
 }
 
 run();

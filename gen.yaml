@@ -10,7 +10,11 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
 typescript:
-  version: 0.10.6
+  version: 0.11.0
+  additionalDependencies:
+    dependencies: {}
+    devDependencies: {}
+    peerDependencies: {}
   author: Unstructured
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: false
@@ -27,4 +31,5 @@ typescript:
   maxMethodParams: 0
   outputModelSuffix: output
   packageName: unstructured-client
+  responseFormat: envelope
   templateVersion: v2
