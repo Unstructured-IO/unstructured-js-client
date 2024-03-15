@@ -15,6 +15,8 @@
 
 This is a Typescript client for the [Unstructured API](https://unstructured-io.github.io/unstructured/api.html). 
 
+## This is ahead of the currently published version (v0.10.6). [Please refer here for usage.](https://github.com/Unstructured-IO/unstructured-js-client/blob/v0.10.6/README.md)
+
 ## SDK Installation
 
 ### NPM
