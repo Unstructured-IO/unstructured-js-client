@@ -3,7 +3,7 @@
  */
 
 import * as b64$ from "../../../lib/base64";
-import { blobLikeSchema } from "../../../sdk/types";
+import { blobLikeSchema } from "../../types";
 import * as z from "zod";
 
 export type Files = {
