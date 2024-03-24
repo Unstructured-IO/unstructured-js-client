@@ -193,7 +193,6 @@ async function run() {
         newAfterNChars: 1500,
         outputFormat: "application/json",
         overlap: 25,
-        overlapAll: true,
         skipInferTableTypes: ["pdf"],
         strategy: "hi_res",
     });

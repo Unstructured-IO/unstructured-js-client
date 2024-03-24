@@ -17,7 +17,7 @@ export type PartitionParameters = {
      */
     chunkingStrategy?: string | undefined;
     /**
-     * If chunking strategy is set, combine elements until a section reaches a length of n chars. Default: 500
+     * If chunking strategy is set, combine elements until a section reaches a length of n chars. Default: max_characters
      */
     combineUnderNChars?: number | undefined;
     /**
@@ -45,6 +45,10 @@ export type PartitionParameters = {
      */
     hiResModelName?: string | undefined;
     /**
+     * When True (the default), the elements used to form a chunk appear in `.metadata.orig_elements` for that chunk. Only applies when chunking is specified using the `chunking_strategy` argument.
+     */
+    includeOrigElements?: boolean | undefined;
+    /**
      * If True, the output will include page breaks if the filetype supports it. Default: false
      */
     includePageBreaks?: boolean | undefined;
@@ -53,15 +57,15 @@ export type PartitionParameters = {
      */
     languages?: Array<string> | undefined;
     /**
-     * If chunking strategy is set, cut off new sections after reaching a length of n chars (hard max). Default: 1500
+     * If chunking strategy is set, cut off new sections after reaching a length of n chars (hard max). Default: 500
      */
     maxCharacters?: number | undefined;
     /**
-     * If chunking strategy is set, determines if sections can span multiple sections. Default: true
+     * If chunking strategy is set, determines if sections can span multiple pages. Only applies to by_title chunking strategy.Default: true
      */
     multipageSections?: boolean | undefined;
     /**
-     * If chunking strategy is set, cut off new sections after reaching a length of n chars (soft max). Default: 1500
+     * If chunking strategy is set, cut off new sections after reaching a length of n chars (soft max). Default: max_characters (off)
      */
     newAfterNChars?: number | undefined;
     /**
@@ -69,7 +73,7 @@ export type PartitionParameters = {
      */
     outputFormat?: string | undefined;
     /**
-     * A prefix of this many trailing characters from prior text-split chunk is applied to second and later chunks formed from oversized elements by text-splitting. Default: None
+     * A prefix of this many trailing characters from the prior text-split chunk is applied to second and later chunks formed from oversized elements by text-splitting. Default: None
      */
     overlap?: number | undefined;
     /**
@@ -142,6 +146,7 @@ export namespace PartitionParameters$ {
         files?: Files$.Inbound | undefined;
         gz_uncompressed_content_type?: string | undefined;
         hi_res_model_name?: string | undefined;
+        include_orig_elements?: boolean | undefined;
         include_page_breaks?: boolean | undefined;
         languages?: Array<string> | undefined;
         max_characters?: number | undefined;
@@ -166,6 +171,7 @@ export namespace PartitionParameters$ {
             files: z.lazy(() => Files$.inboundSchema).optional(),
             gz_uncompressed_content_type: z.string().optional(),
             hi_res_model_name: z.string().optional(),
+            include_orig_elements: z.boolean().optional(),
             include_page_breaks: z.boolean().optional(),
             languages: z.array(z.string()).optional(),
             max_characters: z.number().int().optional(),
@@ -199,6 +205,9 @@ export namespace PartitionParameters$ {
                 ...(v.hi_res_model_name === undefined
                     ? null
                     : { hiResModelName: v.hi_res_model_name }),
+                ...(v.include_orig_elements === undefined
+                    ? null
+                    : { includeOrigElements: v.include_orig_elements }),
                 ...(v.include_page_breaks === undefined
                     ? null
                     : { includePageBreaks: v.include_page_breaks }),
@@ -233,6 +242,7 @@ export namespace PartitionParameters$ {
         files?: Files$.Outbound | Blob | undefined;
         gz_uncompressed_content_type?: string | undefined;
         hi_res_model_name?: string | undefined;
+        include_orig_elements?: boolean | undefined;
         include_page_breaks?: boolean | undefined;
         languages?: Array<string> | undefined;
         max_characters?: number | undefined;
@@ -260,6 +270,7 @@ export namespace PartitionParameters$ {
                 .optional(),
             gzUncompressedContentType: z.string().optional(),
             hiResModelName: z.string().optional(),
+            includeOrigElements: z.boolean().optional(),
             includePageBreaks: z.boolean().optional(),
             languages: z.array(z.string()).optional(),
             maxCharacters: z.number().int().optional(),
@@ -293,6 +304,9 @@ export namespace PartitionParameters$ {
                 ...(v.hiResModelName === undefined
                     ? null
                     : { hi_res_model_name: v.hiResModelName }),
+                ...(v.includeOrigElements === undefined
+                    ? null
+                    : { include_orig_elements: v.includeOrigElements }),
                 ...(v.includePageBreaks === undefined
                     ? null
                     : { include_page_breaks: v.includePageBreaks }),

@@ -96,6 +96,9 @@ export class General extends ClientSDK {
             if (payload$?.hi_res_model_name !== undefined) {
                 body$.append("hi_res_model_name", payload$?.hi_res_model_name);
             }
+            if (payload$?.include_orig_elements !== undefined) {
+                body$.append("include_orig_elements", String(payload$?.include_orig_elements));
+            }
             if (payload$?.include_page_breaks !== undefined) {
                 body$.append("include_page_breaks", String(payload$?.include_page_breaks));
             }
