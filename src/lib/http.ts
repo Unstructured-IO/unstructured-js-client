@@ -7,15 +7,17 @@ export type Fetcher = (
   init?: RequestInit,
 ) => Promise<Response>;
 
+type Awaitable<T> = T | Promise<T>;
+
 const DEFAULT_FETCHER: Fetcher = (input, init) => fetch(input, init);
 
 export interface HTTPClientOptions {
   fetcher?: Fetcher;
 }
 
-type BeforeRequestHook = (req: Request) => Request | void;
-type RequestErrorHook = (err: unknown, req: Request) => void;
-type ResponseHook = (res: Response, req: Request) => void;
+type BeforeRequestHook = (req: Request) => Awaitable<Request | void>;
+type RequestErrorHook = (err: unknown, req: Request) => Awaitable<void>;
+type ResponseHook = (res: Response, req: Request) => Awaitable<void>;
 
 export class HTTPClient {
   private fetcher: Fetcher;
@@ -28,17 +30,27 @@ export class HTTPClient {
   }
 
   async request(request: Request): Promise<Response> {
-    const req = this.requestHooks.reduce((currentReq, fn) => {
-      const nextRequest = fn(currentReq);
-      return nextRequest || currentReq;
-    }, request);
+    let req = request;
+    for (const hook of this.requestHooks) {
+      const nextRequest = await hook(req);
+      if (nextRequest) {
+        req = nextRequest;
+      }
+    }
 
     try {
       const res = await this.fetcher(req);
-      this.responseHooks.forEach((fn) => fn(res, req));
+
+      for (const hook of this.responseHooks) {
+        await hook(res, req);
+      }
+
       return res;
     } catch (err) {
-      this.requestErrorHooks.forEach((fn) => fn(err, req));
+      for (const hook of this.requestErrorHooks) {
+        await hook(err, req);
+      }
+
       throw err;
     }
   }
