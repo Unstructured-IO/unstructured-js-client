@@ -10,3 +10,7 @@
 /.tsbuildinfo
 dist/
 node_modules/
+
+# Custom ignores
+openapi.json
+openapi_client.json
