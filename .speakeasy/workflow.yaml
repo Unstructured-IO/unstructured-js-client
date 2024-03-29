@@ -1,0 +1,12 @@
+workflowVersion: 1.0.0
+sources:
+    my-source:
+        inputs:
+            - location: https://raw.githubusercontent.com/Unstructured-IO/unstructured-api/main/openapi.json
+targets:
+    unstructed-typescript:
+        target: typescript
+        source: my-source
+        publish:
+            npm:
+                token: $NPM_TOKEN
