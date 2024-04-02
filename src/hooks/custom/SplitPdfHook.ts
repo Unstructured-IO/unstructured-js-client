@@ -112,9 +112,13 @@ export class SplitPdfHook
 
     this.#partitionRequests[operationID] = async.parallelLimit(
       requests.slice(0, -1).map((req, i) => async () => {
-        const response = await this.#client!.request(req);
-        if (response.status === 200) {
-          (this.#partitionResponses[operationID] as Response[])[i] = response;
+        try {
+          const response = await this.#client!.request(req);
+          if (response.status === 200) {
+            (this.#partitionResponses[operationID] as Response[])[i] = response;
+          }
+        } catch (e) {
+          console.error(`Failed to send request for page ${i + 1}.`);
         }
       }),
       SplitPdfHook.parallelLimit
@@ -209,12 +213,12 @@ export class SplitPdfHook
   }
 
   /**
-    * Retrieves an array of individual page files from a PDF file.
-    * 
-    * @param file - The PDF file to extract pages from.
-    * @returns A promise that resolves to an array of Blob objects, each representing
-    * an individual page of the PDF.
-    */
+   * Retrieves an array of individual page files from a PDF file.
+   *
+   * @param file - The PDF file to extract pages from.
+   * @returns A promise that resolves to an array of Blob objects, each representing
+   * an individual page of the PDF.
+   */
   async #getPdfPages(file: File | Blob): Promise<Blob[]> {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await PDFDocument.load(arrayBuffer);
@@ -230,7 +234,7 @@ export class SplitPdfHook
 
   /**
    * Removes the "content-length" header from the passed response headers.
-   * 
+   *
    * @param response - The response object.
    * @returns The modified headers object.
    */
@@ -243,7 +247,7 @@ export class SplitPdfHook
   /**
    * Prepares the response body by extracting and flattening the JSON elements from
    * an array of responses.
-   * 
+   *
    * @param responses - An array of Response objects.
    * @returns A Promise that resolves to a string representation of the flattened
    * JSON elements.
@@ -259,7 +263,7 @@ export class SplitPdfHook
 
   /**
    * Removes the "content-type" header from the given request headers.
-   * 
+   *
    * @param request - The request object containing the headers.
    * @returns The modified headers object.
    */
@@ -270,12 +274,12 @@ export class SplitPdfHook
   }
 
   /**
-    * Prepares the request body for splitted PDF pages.
-    * 
-    * @param request - The request object.
-    * @returns A promise that resolves to a FormData object representing
-    * the prepared request body.
-    */
+   * Prepares the request body for splitted PDF pages.
+   *
+   * @param request - The request object.
+   * @returns A promise that resolves to a FormData object representing
+   * the prepared request body.
+   */
   async #prepareRequestBody(request: Request): Promise<FormData> {
     const formData = await request.clone().formData();
     formData.delete(PARTITION_FORM_SPLIT_PDF_PAGE_KEY);
@@ -287,7 +291,7 @@ export class SplitPdfHook
   /**
    * Clears the parallel requests and response data associated with the given
    * operation ID.
-   * 
+   *
    * @param operationID - The ID of the operation to clear.
    */
   #clearOperation(operationID: string) {
