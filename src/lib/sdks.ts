@@ -71,10 +71,10 @@ export class ClientSDK {
 
         const headers = new Headers(opHeaders);
 
-        const username = security?.basic.username || "";
-        const password = security?.basic.password || "";
-        if (username || password) {
-            const encoded = stringToBase64([username, password].join(":"));
+        const username = security?.basic.username;
+        const password = security?.basic.password;
+        if (username != null || password != null) {
+            const encoded = stringToBase64([username || "", password || ""].join(":"));
             headers.set("Authorization", `Basic ${encoded}`);
         }
 

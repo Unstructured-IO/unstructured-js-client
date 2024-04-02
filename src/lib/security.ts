@@ -30,21 +30,15 @@ export class SecurityError extends Error {
 }
 
 export type SecurityState = {
-    basic: { username: string; password?: string };
+    basic: { username?: string | undefined; password?: string | undefined };
     headers: Record<string, string>;
     queryParams: Record<string, string>;
     cookies: Record<string, string>;
 };
 
-type SecurityInputBasicPacked = {
-    type: "http:basic";
-    value: { username: string; password?: string } | null | undefined;
-};
-
 type SecurityInputBasic = {
     type: "http:basic";
-    value: string | null | undefined;
-    fieldName: "username" | "password";
+    value: { username?: string | undefined; password?: string | undefined } | null | undefined;
 };
 
 type SecurityInputBearer = {
@@ -79,7 +73,6 @@ type SecurityInputOAuth2ClientCredentials = {
 
 export type SecurityInput =
     | SecurityInputBasic
-    | SecurityInputBasicPacked
     | SecurityInputBearer
     | SecurityInputAPIKey
     | SecurityInputOAuth2
@@ -94,7 +87,22 @@ export function resolveSecurity(...options: SecurityInput[][]): SecurityState | 
         cookies: {},
     };
 
-    const option = options.find((opts) => opts.every((o) => Boolean(o.value)));
+    const option = options.find((opts) => {
+        return opts.every((o) => {
+            switch (true) {
+                case o.value == null:
+                    return false;
+                case o.type === "http:basic":
+                    return o.value.username != null || o.value.password != null;
+                case typeof o.value === "string":
+                    return !!o.value;
+                default:
+                    throw new Error(
+                        `Unrecognized security type: ${o.type} (value type: ${typeof o.value})`
+                    );
+            }
+        });
+    });
     if (option == null) {
         return null;
     }
@@ -139,16 +147,12 @@ export function resolveSecurity(...options: SecurityInput[][]): SecurityState | 
     return state;
 }
 
-function applyBasic(state: SecurityState, spec: SecurityInputBasic | SecurityInputBasicPacked) {
+function applyBasic(state: SecurityState, spec: SecurityInputBasic) {
     if (spec.value == null) {
         return;
     }
 
-    if ("fieldName" in spec) {
-        state.basic[spec.fieldName] = spec.value;
-    } else {
-        state.basic = spec.value;
-    }
+    state.basic = spec.value;
 }
 
 function applyBearer(
@@ -168,6 +172,10 @@ function applyBearer(
 }
 export function resolveGlobalSecurity(security: Partial<shared.Security> | null | undefined) {
     return resolveSecurity([
-        { value: security?.apiKeyAuth, fieldName: "unstructured-api-key", type: "apiKey:header" },
+        {
+            fieldName: "unstructured-api-key",
+            type: "apiKey:header",
+            value: security?.apiKeyAuth,
+        },
     ]);
 }
