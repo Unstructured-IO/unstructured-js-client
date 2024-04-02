@@ -1,0 +1,54 @@
+overlay: 1.0.0
+info:
+  title: CodeSamples overlay for typescript target
+  version: 0.0.0
+actions:
+  - target: $["paths"]["/general/v0/general"]["post"]
+    update:
+      "x-codeSamples":
+        - "lang": "typescript"
+          "label": "partition"
+          "source": |-
+            import { openAsBlob } from "node:fs";
+            import { UnstructuredClient } from "unstructured-client";
+
+            async function run() {
+              const sdk = new UnstructuredClient({
+                security: {
+                  apiKeyAuth: "YOUR_API_KEY",
+                },
+              });
+
+              const result = await sdk.partition({
+                chunkingStrategy: "by_title",
+                combineUnderNChars: 500,
+                encoding: "utf-8",
+                extractImageBlockTypes: [
+                  "image",
+                  "table",
+                ],
+                files: await openAsBlob("./sample-file"),
+                gzUncompressedContentType: "application/pdf",
+                hiResModelName: "yolox",
+                languages: [
+                  "[",
+                  "e",
+                  "n",
+                  "g",
+                  "]",
+                ],
+                maxCharacters: 1500,
+                newAfterNChars: 1500,
+                outputFormat: "application/json",
+                overlap: 25,
+                skipInferTableTypes: [
+                  "pdf",
+                ],
+                strategy: "hi_res",
+              });
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
