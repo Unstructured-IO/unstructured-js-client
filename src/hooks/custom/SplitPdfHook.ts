@@ -17,20 +17,57 @@ import { stringToBoolean } from "./utils";
 const PARTITION_FORM_FILES_KEY = "files";
 const PARTITION_FORM_SPLIT_PDF_PAGE_KEY = "split_pdf_page";
 
+/**
+ * Represents a hook for splitting and sending PDF files as per page requests.
+ * This hook implements the SDKInitHook, BeforeRequestHook, AfterSuccessHook,
+ * and AfterErrorHook interfaces.
+ */
 export class SplitPdfHook
   implements SDKInitHook, BeforeRequestHook, AfterSuccessHook, AfterErrorHook
 {
+  /**
+   * The HTTP client used for making requests.
+   */
   #client: HTTPClient | undefined;
+
+  /**
+   * Maps lists responses to client operation.
+   */
   #partitionResponses: Record<string, Response[]> = {};
+
+  /**
+   * Maps parallel requests to client operation.
+   */
   #partitionRequests: Record<string, Promise<unknown>> = {};
+
+  /**
+   * The maximum number of parallel operations allowed.
+   */
   static parallelLimit = 5;
 
+  /**
+   * Initializes Split PDF Hook.
+   * @param opts - The options for SDK initialization.
+   * @returns The initialized SDK options.
+   */
   sdkInit(opts: SDKInitOptions): SDKInitOptions {
     const { baseURL, client } = opts;
     this.#client = client;
     return { baseURL: baseURL, client: client };
   }
 
+  /**
+   * If `splitPdfPage` is set to `true` in the request, the PDF file is split into
+   * separate pages. Each page is sent as a separate request in parallel. The last
+   * page request is returned by this method. It will return the original request
+   * when: `splitPdfPage` is set to `false`, the file is not a PDF, or the HTTP
+   * has not been initialized.
+   *
+   * @param hookCtx - The hook context containing information about the operation.
+   * @param request - The request object.
+   * @returns If `splitPdfPage` is set to `true`, the last page request; otherwise,
+   * the original request.
+   */
   async beforeRequest(
     hookCtx: BeforeRequestContext,
     request: Request
@@ -86,6 +123,14 @@ export class SplitPdfHook
     return requests.at(-1) as Request;
   }
 
+  /**
+   * Executes after a successful API request. Awaits all parallel requests and combines
+   * the responses into a single response object.
+   * @param hookCtx - The context object containing information about the hook execution.
+   * @param response - The response object returned from the API request.
+   * @returns If requests were run in parallel, a combined response object; otherwise,
+   * the original response.
+   */
   async afterSuccess(
     hookCtx: AfterSuccessContext,
     response: Response
@@ -109,6 +154,16 @@ export class SplitPdfHook
     });
   }
 
+  /**
+   * Executes after an unsuccessful API request. Awaits all parallel requests, if at least one
+   * request was successful, combines the responses into a single response object and doesn't
+   * throw an error. It will return an error only if all requests failed, or there was no PDF split.
+   * @param hookCtx - The AfterErrorContext object containing information about the hook context.
+   * @param response - The Response object representing the response received before the error occurred.
+   * @param error - The error object that was thrown.
+   * @returns If requests were run in parallel, and at least one was successful, a combined response
+   * object; otherwise, the original response and error.
+   */
   async afterError(
     hookCtx: AfterErrorContext,
     response: Response | null,
@@ -137,6 +192,12 @@ export class SplitPdfHook
     return { response: finalResponse, error: null };
   }
 
+  /**
+   * Converts a page of a PDF document to a Blob object.
+   * @param pdf - The PDF document.
+   * @param pageIndex - The index of the page to convert.
+   * @returns A Promise that resolves to a Blob object representing the converted page.
+   */
   async #pdfPageToBlob(pdf: PDFDocument, pageIndex: number): Promise<Blob> {
     const subPdf = await PDFDocument.create();
     const [page] = await subPdf.copyPages(pdf, [pageIndex]);
@@ -147,6 +208,13 @@ export class SplitPdfHook
     });
   }
 
+  /**
+    * Retrieves an array of individual page files from a PDF file.
+    * 
+    * @param file - The PDF file to extract pages from.
+    * @returns A promise that resolves to an array of Blob objects, each representing
+    * an individual page of the PDF.
+    */
   async #getPdfPages(file: File | Blob): Promise<Blob[]> {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await PDFDocument.load(arrayBuffer);
@@ -160,12 +228,26 @@ export class SplitPdfHook
     return pagesFiles;
   }
 
+  /**
+   * Removes the "content-length" header from the passed response headers.
+   * 
+   * @param response - The response object.
+   * @returns The modified headers object.
+   */
   #prepareResponseHeaders(response: Response): Headers {
     const headers = new Headers(response.headers);
     headers.delete("content-length");
     return headers;
   }
 
+  /**
+   * Prepares the response body by extracting and flattening the JSON elements from
+   * an array of responses.
+   * 
+   * @param responses - An array of Response objects.
+   * @returns A Promise that resolves to a string representation of the flattened
+   * JSON elements.
+   */
   async #prepareResponseBody(responses: Response[]): Promise<string> {
     const allElements: any[] = [];
     for (const res of responses) {
@@ -175,12 +257,25 @@ export class SplitPdfHook
     return JSON.stringify(allElements.flat());
   }
 
+  /**
+   * Removes the "content-type" header from the given request headers.
+   * 
+   * @param request - The request object containing the headers.
+   * @returns The modified headers object.
+   */
   #prepareRequestHeaders(request: Request): Headers {
     const headers = new Headers(request.headers);
     headers.delete("content-type");
     return headers;
   }
 
+  /**
+    * Prepares the request body for splitted PDF pages.
+    * 
+    * @param request - The request object.
+    * @returns A promise that resolves to a FormData object representing
+    * the prepared request body.
+    */
   async #prepareRequestBody(request: Request): Promise<FormData> {
     const formData = await request.clone().formData();
     formData.delete(PARTITION_FORM_SPLIT_PDF_PAGE_KEY);
@@ -189,11 +284,24 @@ export class SplitPdfHook
     return formData;
   }
 
+  /**
+   * Clears the parallel requests and response data associated with the given
+   * operation ID.
+   * 
+   * @param operationID - The ID of the operation to clear.
+   */
   #clearOperation(operationID: string) {
     delete this.#partitionResponses[operationID];
     delete this.#partitionRequests[operationID];
   }
 
+  /**
+   * Awaits all parallel requests for a given operation ID and returns the
+   * responses.
+   * @param operationID - The ID of the operation.
+   * @returns A promise that resolves to an array of responses, or undefined
+   * if there are no requests for the given operation ID.
+   */
   async #awaitAllRequests(
     operationID: string
   ): Promise<Response[] | undefined> {
