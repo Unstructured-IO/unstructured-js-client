@@ -22,14 +22,8 @@ export class SplitPdfHook
 {
   #client: HTTPClient | undefined;
   #partitionResponses: Record<string, Response[]> = {};
-  #partitionQueues: Record<
-    string,
-    async.QueueObject<{
-      req: Request;
-      i: number;
-    }>
-  > = {};
-  static concurrentLimit = 5;
+  #partitionRequests: Record<string, Promise<unknown>> = {};
+  static parallelLimit = 5;
 
   sdkInit(opts: SDKInitOptions): SDKInitOptions {
     const { baseURL, client } = opts;
@@ -79,20 +73,14 @@ export class SplitPdfHook
 
     this.#partitionResponses[operationID] = new Array(requests.length);
 
-    this.#partitionQueues[operationID] = async.queue<{
-      req: Request;
-      i: number;
-    }>(async (task) => {
-      const response = await this.#client!.request(task.req);
-      console.log(response.status);
-      if (response.status === 200) {
-        (this.#partitionResponses[operationID] as Response[])[task.i] =
-          response;
-      }
-    }, SplitPdfHook.concurrentLimit);
-    this.#partitionQueues[operationID]!.drain(() => console.log("FINISHED!"));
-    this.#partitionQueues[operationID]!.push(
-      requests.slice(0, -1).map((req, i) => ({ req, i }))
+    this.#partitionRequests[operationID] = async.parallelLimit(
+      requests.slice(0, -1).map((req, i) => async () => {
+        const response = await this.#client!.request(req);
+        if (response.status === 200) {
+          (this.#partitionResponses[operationID] as Response[])[i] = response;
+        }
+      }),
+      SplitPdfHook.parallelLimit
     );
 
     return requests.at(-1) as Request;
@@ -105,7 +93,6 @@ export class SplitPdfHook
     const { operationID } = hookCtx;
     const responses = await this.#awaitAllRequests(operationID);
 
-    console.log(responses);
     if (!responses) {
       return response;
     }
@@ -129,8 +116,6 @@ export class SplitPdfHook
   ): Promise<{ response: Response | null; error: unknown }> {
     const { operationID } = hookCtx;
     const responses = await this.#awaitAllRequests(operationID);
-
-    console.log(responses);
 
     if (!responses?.length) {
       this.#clearOperation(operationID);
@@ -206,24 +191,19 @@ export class SplitPdfHook
 
   #clearOperation(operationID: string) {
     delete this.#partitionResponses[operationID];
-    delete this.#partitionQueues[operationID];
+    delete this.#partitionRequests[operationID];
   }
 
   async #awaitAllRequests(
     operationID: string
   ): Promise<Response[] | undefined> {
-    const queue = this.#partitionQueues[operationID];
+    const requests = this.#partitionRequests[operationID];
 
-    if (!queue) {
+    if (!requests) {
       return;
     }
 
-
-    let idle = queue.idle();
-    while (!idle) {
-      idle = queue.idle();
-      console.log("idle!");
-    }
+    await requests;
 
     return this.#partitionResponses[operationID]?.filter((e) => e) ?? [];
   }
