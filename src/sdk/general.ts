@@ -135,6 +135,9 @@ export class General extends ClientSDK {
             if (payload$?.strategy !== undefined) {
                 body$.append("strategy", payload$?.strategy);
             }
+            if (payload$?.unique_element_ids !== undefined) {
+                body$.append("unique_element_ids", String(payload$?.unique_element_ids));
+            }
             if (payload$?.xml_keep_tags !== undefined) {
                 body$.append("xml_keep_tags", String(payload$?.xml_keep_tags));
             }
