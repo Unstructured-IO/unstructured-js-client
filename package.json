@@ -1,6 +1,6 @@
 {
   "name": "unstructured-client",
-  "version": "0.11.2",
+  "version": "0.12.2",
   "author": "Unstructured",
   "main": "./index.js",
   "sideEffects": false,

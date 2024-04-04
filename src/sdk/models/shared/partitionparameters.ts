@@ -97,6 +97,10 @@ export type PartitionParameters = {
      */
     strategy?: string | undefined;
     /**
+     * When True, assign UUIDs to element IDs, which guarantees their uniqueness (useful when using them as primary keys in database). Otherwise a SHA-256 of element text is used. Default: False
+     */
+    uniqueElementIds?: boolean | undefined;
+    /**
      * If True, will retain the XML tags in the output. Otherwise it will simply extract the text from within the tags. Only applies to partition_xml.
      */
     xmlKeepTags?: boolean | undefined;
@@ -163,6 +167,7 @@ export namespace PartitionParameters$ {
         skip_infer_table_types?: Array<string> | undefined;
         split_pdf_page?: boolean | undefined;
         strategy?: string | undefined;
+        unique_element_ids?: boolean | undefined;
         xml_keep_tags?: boolean | undefined;
     };
 
@@ -189,6 +194,7 @@ export namespace PartitionParameters$ {
             skip_infer_table_types: z.array(z.string()).optional(),
             split_pdf_page: z.boolean().optional(),
             strategy: z.string().optional(),
+            unique_element_ids: z.boolean().optional(),
             xml_keep_tags: z.boolean().optional(),
         })
         .transform((v) => {
@@ -236,6 +242,9 @@ export namespace PartitionParameters$ {
                     : { skipInferTableTypes: v.skip_infer_table_types }),
                 ...(v.split_pdf_page === undefined ? null : { splitPdfPage: v.split_pdf_page }),
                 ...(v.strategy === undefined ? null : { strategy: v.strategy }),
+                ...(v.unique_element_ids === undefined
+                    ? null
+                    : { uniqueElementIds: v.unique_element_ids }),
                 ...(v.xml_keep_tags === undefined ? null : { xmlKeepTags: v.xml_keep_tags }),
             };
         });
@@ -262,6 +271,7 @@ export namespace PartitionParameters$ {
         skip_infer_table_types?: Array<string> | undefined;
         split_pdf_page?: boolean | undefined;
         strategy?: string | undefined;
+        unique_element_ids?: boolean | undefined;
         xml_keep_tags?: boolean | undefined;
     };
 
@@ -291,6 +301,7 @@ export namespace PartitionParameters$ {
             skipInferTableTypes: z.array(z.string()).optional(),
             splitPdfPage: z.boolean().optional(),
             strategy: z.string().optional(),
+            uniqueElementIds: z.boolean().optional(),
             xmlKeepTags: z.boolean().optional(),
         })
         .transform((v) => {
@@ -338,6 +349,9 @@ export namespace PartitionParameters$ {
                     : { skip_infer_table_types: v.skipInferTableTypes }),
                 ...(v.splitPdfPage === undefined ? null : { split_pdf_page: v.splitPdfPage }),
                 ...(v.strategy === undefined ? null : { strategy: v.strategy }),
+                ...(v.uniqueElementIds === undefined
+                    ? null
+                    : { unique_element_ids: v.uniqueElementIds }),
                 ...(v.xmlKeepTags === undefined ? null : { xml_keep_tags: v.xmlKeepTags }),
             };
         });
