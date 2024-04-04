@@ -16,11 +16,10 @@ import { stringToBoolean } from "./utils";
 
 const PARTITION_FORM_FILES_KEY = "files";
 const PARTITION_FORM_SPLIT_PDF_PAGE_KEY = "split_pdf_page";
+const MAX_NUMBER_OF_PARALLEL_REQUESTS = 15;
 
 /**
  * Represents a hook for splitting and sending PDF files as per page requests.
- * This hook implements the SDKInitHook, BeforeRequestHook, AfterSuccessHook,
- * and AfterErrorHook interfaces.
  */
 export class SplitPdfHook
   implements SDKInitHook, BeforeRequestHook, AfterSuccessHook, AfterErrorHook
@@ -42,6 +41,7 @@ export class SplitPdfHook
 
   /**
    * The maximum number of parallel operations allowed.
+   * Max value is 15.
    */
   static parallelLimit = 5;
 
@@ -108,6 +108,16 @@ export class SplitPdfHook
       requests.push(req);
     }
 
+    if (SplitPdfHook.parallelLimit > MAX_NUMBER_OF_PARALLEL_REQUESTS) {
+      console.warn(
+        `'parallelLimit' was set to '${SplitPdfHook.parallelLimit}'. Max number of parallel request can't be higher then '${MAX_NUMBER_OF_PARALLEL_REQUESTS}'. Using the maximum value instead.`
+      );
+    }
+    const parallelLimit =
+      SplitPdfHook.parallelLimit > MAX_NUMBER_OF_PARALLEL_REQUESTS
+        ? MAX_NUMBER_OF_PARALLEL_REQUESTS
+        : SplitPdfHook.parallelLimit;
+
     this.#partitionResponses[operationID] = new Array(requests.length);
 
     this.#partitionRequests[operationID] = async.parallelLimit(
@@ -121,7 +131,7 @@ export class SplitPdfHook
           console.error(`Failed to send request for page ${i + 1}.`);
         }
       }),
-      SplitPdfHook.parallelLimit
+      parallelLimit
     );
 
     return requests.at(-1) as Request;
