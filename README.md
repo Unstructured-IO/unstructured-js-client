@@ -160,6 +160,8 @@ const sdk = new UnstructuredClient({ httpClient });
 
 ## PartitionParameters
 
+See the [general partition](docs/sdk/models/shared/partitionparameters.md) page for all available parameters. 
+
 ### Splitting PDF by pages
 
 In order to speed up processing of long PDF files, set `splitPdfPage` parameter to `true`. It will cause the PDF to be split page-by-page at client side, before sending to API, and combining individual responses as single result. This will work only for PDF files, so don't set it for other types of files.
