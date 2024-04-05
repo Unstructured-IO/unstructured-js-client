@@ -12,8 +12,11 @@ generation:
 typescript:
   version: 0.12.2
   additionalDependencies:
-    dependencies: {}
-    devDependencies: {}
+    dependencies:
+      async: ^3.2.5
+      pdf-lib: ^1.17.1
+    devDependencies:
+      '@types/async': ^3.2.24
     peerDependencies: {}
   author: Unstructured
   clientServerStatusCodesAsErrors: true

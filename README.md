@@ -158,6 +158,43 @@ const sdk = new UnstructuredClient({ httpClient });
 <!-- No Retries -->
 <!-- No Authentication -->
 
+## PartitionParameters
+
+See the [general partition](docs/sdk/models/shared/partitionparameters.md) page for all available parameters. 
+
+### Splitting PDF by pages
+
+In order to speed up processing of long PDF files, set `splitPdfPage` parameter to `true`. It will cause the PDF to be split page-by-page at client side, before sending to API, and combining individual responses as single result. This will work only for PDF files, so don't set it for other types of files.
+
+Warning: this feature causes the `parent_id` metadata generation in elements to be disabled, as it requires having context of multiple pages.
+
+The amount of parallel requests is controlled by `SplitPdfHook.parallelLimit`. By default it equals to 5. It can't be more than 15, to avoid too high resource usage and costs.
+
+```typescript
+import { SplitPdfHook } from "unstructured-client/hooks/custom/SplitPdfHook";
+
+...
+
+// Modify this parameter to change the limit of parallel request
+SplitPdfHook.parallelLimit = 10;
+
+client.general.partition({
+    files: {
+        content: data,
+        fileName: filename,
+    },
+    // Set `splitPdfPage` parameter to `true` in order to split the PDF file
+    splitPdfPage: true
+}).then((res: PartitionResponse) => {
+    if (res.statusCode == 200) {
+        console.log(res.elements);
+    }
+}).catch((e) => {
+    console.log(e.statusCode);
+    console.log(e.body);
+});
+```
+
 <!-- Start Requirements [requirements] -->
 ## Requirements
 
