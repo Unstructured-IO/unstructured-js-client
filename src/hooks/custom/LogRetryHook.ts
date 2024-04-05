@@ -1,4 +1,4 @@
-import { AfterErrorContext, AfterErrorHook } from "./types";
+import { AfterErrorContext, AfterErrorHook } from "../types";
 
 /**
  * Represents a hook that logs status and information that the request will be retried

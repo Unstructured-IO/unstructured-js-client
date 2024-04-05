@@ -29,4 +29,7 @@ build:
 ## client-generate:			generate speakeasy client locally
 .PHONY: client-generate
 client-generate:
-	speakeasy generate sdk -s ${OPENAPI_DOCS_URL} -o ./ -l typescript
+	wget -nv -q -O openapi.json ${OPENAPI_DOCS_URL}
+	speakeasy overlay validate -o ./overlay_client.yaml
+	speakeasy overlay apply -s ./openapi.json -o ./overlay_client.yaml > ./openapi_client.json
+	speakeasy generate sdk -s ./openapi_client.json -o ./ -l typescript

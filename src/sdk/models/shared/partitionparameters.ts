@@ -89,6 +89,10 @@ export type PartitionParameters = {
      */
     skipInferTableTypes?: Array<string> | undefined;
     /**
+     * Should the pdf file be split at client. Ignored on backend.
+     */
+    splitPdfPage?: boolean | undefined;
+    /**
      * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: auto
      */
     strategy?: string | undefined;
@@ -161,6 +165,7 @@ export namespace PartitionParameters$ {
         overlap_all?: boolean | undefined;
         pdf_infer_table_structure?: boolean | undefined;
         skip_infer_table_types?: Array<string> | undefined;
+        split_pdf_page?: boolean | undefined;
         strategy?: string | undefined;
         unique_element_ids?: boolean | undefined;
         xml_keep_tags?: boolean | undefined;
@@ -187,6 +192,7 @@ export namespace PartitionParameters$ {
             overlap_all: z.boolean().optional(),
             pdf_infer_table_structure: z.boolean().optional(),
             skip_infer_table_types: z.array(z.string()).optional(),
+            split_pdf_page: z.boolean().optional(),
             strategy: z.string().optional(),
             unique_element_ids: z.boolean().optional(),
             xml_keep_tags: z.boolean().optional(),
@@ -234,6 +240,7 @@ export namespace PartitionParameters$ {
                 ...(v.skip_infer_table_types === undefined
                     ? null
                     : { skipInferTableTypes: v.skip_infer_table_types }),
+                ...(v.split_pdf_page === undefined ? null : { splitPdfPage: v.split_pdf_page }),
                 ...(v.strategy === undefined ? null : { strategy: v.strategy }),
                 ...(v.unique_element_ids === undefined
                     ? null
@@ -262,6 +269,7 @@ export namespace PartitionParameters$ {
         overlap_all?: boolean | undefined;
         pdf_infer_table_structure?: boolean | undefined;
         skip_infer_table_types?: Array<string> | undefined;
+        split_pdf_page?: boolean | undefined;
         strategy?: string | undefined;
         unique_element_ids?: boolean | undefined;
         xml_keep_tags?: boolean | undefined;
@@ -291,6 +299,7 @@ export namespace PartitionParameters$ {
             overlapAll: z.boolean().optional(),
             pdfInferTableStructure: z.boolean().optional(),
             skipInferTableTypes: z.array(z.string()).optional(),
+            splitPdfPage: z.boolean().optional(),
             strategy: z.string().optional(),
             uniqueElementIds: z.boolean().optional(),
             xmlKeepTags: z.boolean().optional(),
@@ -338,6 +347,7 @@ export namespace PartitionParameters$ {
                 ...(v.skipInferTableTypes === undefined
                     ? null
                     : { skip_infer_table_types: v.skipInferTableTypes }),
+                ...(v.splitPdfPage === undefined ? null : { split_pdf_page: v.splitPdfPage }),
                 ...(v.strategy === undefined ? null : { strategy: v.strategy }),
                 ...(v.uniqueElementIds === undefined
                     ? null

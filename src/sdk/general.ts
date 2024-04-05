@@ -132,6 +132,9 @@ export class General extends ClientSDK {
             if (payload$?.skip_infer_table_types !== undefined) {
                 body$.append("skip_infer_table_types", String(payload$?.skip_infer_table_types));
             }
+            if (payload$?.split_pdf_page !== undefined) {
+                body$.append("split_pdf_page", String(payload$?.split_pdf_page));
+            }
             if (payload$?.strategy !== undefined) {
                 body$.append("strategy", payload$?.strategy);
             }

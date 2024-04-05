@@ -19,6 +19,7 @@
     "zod": ">= 3"
   },
   "devDependencies": {
+    "@types/async": "^3.2.24",
     "@types/jsonpath": "^0.2.4",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
@@ -29,6 +30,7 @@
     "zod": "^3.22.4"
   },
   "dependencies": {
-    
+    "async": "^3.2.5",
+    "pdf-lib": "^1.17.1"
   }
 }
