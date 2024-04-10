@@ -29,6 +29,7 @@ export class HttpsCheckHook implements SDKInitHook {
       BASE_HOSTNAME_REGEX.test(baseURL.hostname) &&
       baseURL.protocol !== BASE_PROTOCOL
     ) {
+      console.warn("Base URL protocol is not HTTPS. Updating to HTTPS.");
       const newBaseURL = baseURL.href.replace(baseURL.protocol, BASE_PROTOCOL);
       return { baseURL: new URL(newBaseURL), client: client };
     }
