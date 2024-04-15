@@ -2,6 +2,7 @@ import { Hooks } from "./types";
 
 import { LogRetryHook } from "./custom/LogRetryHook";
 import { SplitPdfHook } from "./custom/SplitPdfHook";
+import { HttpsCheckHook } from "./custom/HttpsCheckHook";
 
 /*
  * This file is only ever generated once on the first generation and then is free to be modified.
@@ -17,8 +18,10 @@ export function initHooks(hooks: Hooks) {
   // Initialize hooks
   const logErrorHook = new LogRetryHook();
   const splitPdfHook = new SplitPdfHook();
+  const httpsCheckHook = new HttpsCheckHook();
 
   // Register SDK init hooks
+  hooks.registerSDKInitHook(httpsCheckHook);
   hooks.registerSDKInitHook(splitPdfHook);
 
   // Register before request hooks

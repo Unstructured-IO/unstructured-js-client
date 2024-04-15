@@ -23,6 +23,19 @@ build:
 	npm run build
 
 #############
+# Test 		#
+#############
+
+## test-unit:					run unit tests
+.PHONY: test-unit
+test-unit:
+	npx jest --config jest.config.js test/unit
+
+## test:					run all tests
+.PHONY: test
+test: test-unit
+
+#############
 # Speakeasy #
 #############
 
