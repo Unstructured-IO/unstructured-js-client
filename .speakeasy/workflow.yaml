@@ -1,4 +1,5 @@
 workflowVersion: 1.0.0
+speakeasyVersion: latest
 sources:
     my-source:
         inputs:
@@ -7,6 +8,3 @@ targets:
     unstructed-typescript:
         target: typescript
         source: my-source
-        # publish:
-        #     npm:
-        #         token: $NPM_TOKEN

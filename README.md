@@ -218,29 +218,24 @@ Certain SDK methods accept files as part of a multi-part request. It is possible
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
+import { Strategy } from "unstructured-client/sdk/models/shared";
+
+const unstructuredClient = new UnstructuredClient({
+    security: {
+        apiKeyAuth: "YOUR_API_KEY",
+    },
+});
 
 async function run() {
-    const sdk = new UnstructuredClient({
-        security: {
-            apiKeyAuth: "YOUR_API_KEY",
+    const result = await unstructuredClient.general.partition({
+        partitionParameters: {
+            files: await openAsBlob("./sample-file"),
+            extractImageBlockTypes: ["<value>"],
+            languages: ["<value>"],
+            ocrLanguages: ["<value>"],
+            skipInferTableTypes: ["<value>"],
+            strategy: Strategy.Auto,
         },
-    });
-
-    const result = await sdk.general.partition({
-        chunkingStrategy: "by_title",
-        combineUnderNChars: 500,
-        encoding: "utf-8",
-        extractImageBlockTypes: ["image", "table"],
-        files: await openAsBlob("./sample-file"),
-        gzUncompressedContentType: "application/pdf",
-        hiResModelName: "yolox",
-        languages: ["[", "e", "n", "g", "]"],
-        maxCharacters: 1500,
-        newAfterNChars: 1500,
-        outputFormat: "application/json",
-        overlap: 25,
-        skipInferTableTypes: ["pdf"],
-        strategy: "hi_res",
     });
 
     // Handle the result

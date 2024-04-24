@@ -4,13 +4,13 @@
 
 import { SDKHooks } from "../hooks";
 import { SDK_METADATA, SDKOptions, serverURLFromOptions } from "../lib/config";
+import * as enc$ from "../lib/encodings";
 import { HTTPClient } from "../lib/http";
 import * as retries$ from "../lib/retries";
 import * as schemas$ from "../lib/schemas";
 import { ClientSDK, RequestOptions } from "../lib/sdks";
 import * as errors from "./models/errors";
 import * as operations from "./models/operations";
-import * as shared from "./models/shared";
 import { isBlobLike } from "./types";
 
 export class General extends ClientSDK {
@@ -41,10 +41,13 @@ export class General extends ClientSDK {
     }
 
     /**
-     * Pipeline 1
+     * Summary
+     *
+     * @remarks
+     * Description
      */
     async partition(
-        input: shared.PartitionParameters | undefined,
+        input: operations.PartitionRequest,
         options?: RequestOptions & { retries?: retries$.RetryConfig }
     ): Promise<operations.PartitionResponse> {
         const headers$ = new Headers();
@@ -53,102 +56,142 @@ export class General extends ClientSDK {
 
         const payload$ = schemas$.parse(
             input,
-            (value$) => shared.PartitionParameters$.outboundSchema.optional().parse(value$),
+            (value$) => operations.PartitionRequest$.outboundSchema.parse(value$),
             "Input validation failed"
         );
         const body$ = new FormData();
-        if (payload$ != null) {
-            if (payload$?.chunking_strategy !== undefined) {
-                body$.append("chunking_strategy", payload$?.chunking_strategy);
-            }
-            if (payload$?.combine_under_n_chars !== undefined) {
-                body$.append("combine_under_n_chars", String(payload$?.combine_under_n_chars));
-            }
-            if (payload$?.coordinates !== undefined) {
-                body$.append("coordinates", String(payload$?.coordinates));
-            }
-            if (payload$?.encoding !== undefined) {
-                body$.append("encoding", payload$?.encoding);
-            }
-            if (payload$?.extract_image_block_types !== undefined) {
-                body$.append(
-                    "extract_image_block_types",
-                    String(payload$?.extract_image_block_types)
-                );
-            }
-            if (payload$?.files !== undefined) {
-                if (isBlobLike(payload$?.files)) {
-                    body$.append("files", payload$?.files);
-                } else {
-                    body$.append(
-                        "files",
-                        new Blob([payload$?.files.content], { type: "application/octet-stream" }),
-                        payload$?.files.fileName
-                    );
-                }
-            }
-            if (payload$?.gz_uncompressed_content_type !== undefined) {
-                body$.append(
-                    "gz_uncompressed_content_type",
-                    payload$?.gz_uncompressed_content_type
-                );
-            }
-            if (payload$?.hi_res_model_name !== undefined) {
-                body$.append("hi_res_model_name", payload$?.hi_res_model_name);
-            }
-            if (payload$?.include_orig_elements !== undefined) {
-                body$.append("include_orig_elements", String(payload$?.include_orig_elements));
-            }
-            if (payload$?.include_page_breaks !== undefined) {
-                body$.append("include_page_breaks", String(payload$?.include_page_breaks));
-            }
-            if (payload$?.languages !== undefined) {
-                body$.append("languages", String(payload$?.languages));
-            }
-            if (payload$?.max_characters !== undefined) {
-                body$.append("max_characters", String(payload$?.max_characters));
-            }
-            if (payload$?.multipage_sections !== undefined) {
-                body$.append("multipage_sections", String(payload$?.multipage_sections));
-            }
-            if (payload$?.new_after_n_chars !== undefined) {
-                body$.append("new_after_n_chars", String(payload$?.new_after_n_chars));
-            }
-            if (payload$?.output_format !== undefined) {
-                body$.append("output_format", payload$?.output_format);
-            }
-            if (payload$?.overlap !== undefined) {
-                body$.append("overlap", String(payload$?.overlap));
-            }
-            if (payload$?.overlap_all !== undefined) {
-                body$.append("overlap_all", String(payload$?.overlap_all));
-            }
-            if (payload$?.pdf_infer_table_structure !== undefined) {
-                body$.append(
-                    "pdf_infer_table_structure",
-                    String(payload$?.pdf_infer_table_structure)
-                );
-            }
-            if (payload$?.skip_infer_table_types !== undefined) {
-                body$.append("skip_infer_table_types", String(payload$?.skip_infer_table_types));
-            }
-            if (payload$?.split_pdf_page !== undefined) {
-                body$.append("split_pdf_page", String(payload$?.split_pdf_page));
-            }
-            if (payload$?.strategy !== undefined) {
-                body$.append("strategy", payload$?.strategy);
-            }
-            if (payload$?.unique_element_ids !== undefined) {
-                body$.append("unique_element_ids", String(payload$?.unique_element_ids));
-            }
-            if (payload$?.xml_keep_tags !== undefined) {
-                body$.append("xml_keep_tags", String(payload$?.xml_keep_tags));
-            }
+
+        if (isBlobLike(payload$.partition_parameters.files)) {
+            body$.append("files", payload$.partition_parameters.files);
+        } else {
+            body$.append(
+                "files",
+                new Blob([payload$.partition_parameters.files.content], {
+                    type: "application/octet-stream",
+                }),
+                payload$.partition_parameters.files.fileName
+            );
+        }
+        if (payload$.partition_parameters.chunking_strategy !== undefined) {
+            body$.append(
+                "chunking_strategy",
+                String(payload$.partition_parameters.chunking_strategy)
+            );
+        }
+        if (payload$.partition_parameters.combine_under_n_chars !== undefined) {
+            body$.append(
+                "combine_under_n_chars",
+                String(payload$.partition_parameters.combine_under_n_chars)
+            );
+        }
+        if (payload$.partition_parameters.coordinates !== undefined) {
+            body$.append("coordinates", String(payload$.partition_parameters.coordinates));
+        }
+        if (payload$.partition_parameters.encoding !== undefined) {
+            body$.append("encoding", String(payload$.partition_parameters.encoding));
+        }
+        if (payload$.partition_parameters.extract_image_block_types !== undefined) {
+            body$.append(
+                "extract_image_block_types",
+                String(payload$.partition_parameters.extract_image_block_types)
+            );
+        }
+        if (payload$.partition_parameters.gz_uncompressed_content_type !== undefined) {
+            body$.append(
+                "gz_uncompressed_content_type",
+                String(payload$.partition_parameters.gz_uncompressed_content_type)
+            );
+        }
+        if (payload$.partition_parameters.hi_res_model_name !== undefined) {
+            body$.append(
+                "hi_res_model_name",
+                String(payload$.partition_parameters.hi_res_model_name)
+            );
+        }
+        if (payload$.partition_parameters.include_orig_elements !== undefined) {
+            body$.append(
+                "include_orig_elements",
+                String(payload$.partition_parameters.include_orig_elements)
+            );
+        }
+        if (payload$.partition_parameters.include_page_breaks !== undefined) {
+            body$.append(
+                "include_page_breaks",
+                String(payload$.partition_parameters.include_page_breaks)
+            );
+        }
+        if (payload$.partition_parameters.languages !== undefined) {
+            body$.append("languages", String(payload$.partition_parameters.languages));
+        }
+        if (payload$.partition_parameters.max_characters !== undefined) {
+            body$.append("max_characters", String(payload$.partition_parameters.max_characters));
+        }
+        if (payload$.partition_parameters.multipage_sections !== undefined) {
+            body$.append(
+                "multipage_sections",
+                String(payload$.partition_parameters.multipage_sections)
+            );
+        }
+        if (payload$.partition_parameters.new_after_n_chars !== undefined) {
+            body$.append(
+                "new_after_n_chars",
+                String(payload$.partition_parameters.new_after_n_chars)
+            );
+        }
+        if (payload$.partition_parameters.ocr_languages !== undefined) {
+            body$.append("ocr_languages", String(payload$.partition_parameters.ocr_languages));
+        }
+        if (payload$.partition_parameters.output_format !== undefined) {
+            body$.append("output_format", payload$.partition_parameters.output_format);
+        }
+        if (payload$.partition_parameters.overlap !== undefined) {
+            body$.append("overlap", String(payload$.partition_parameters.overlap));
+        }
+        if (payload$.partition_parameters.overlap_all !== undefined) {
+            body$.append("overlap_all", String(payload$.partition_parameters.overlap_all));
+        }
+        if (payload$.partition_parameters.pdf_infer_table_structure !== undefined) {
+            body$.append(
+                "pdf_infer_table_structure",
+                String(payload$.partition_parameters.pdf_infer_table_structure)
+            );
+        }
+        if (payload$.partition_parameters.similarity_threshold !== undefined) {
+            body$.append(
+                "similarity_threshold",
+                String(payload$.partition_parameters.similarity_threshold)
+            );
+        }
+        if (payload$.partition_parameters.skip_infer_table_types !== undefined) {
+            body$.append(
+                "skip_infer_table_types",
+                String(payload$.partition_parameters.skip_infer_table_types)
+            );
+        }
+        if (payload$.partition_parameters.strategy !== undefined) {
+            body$.append("strategy", String(payload$.partition_parameters.strategy));
+        }
+        if (payload$.partition_parameters.unique_element_ids !== undefined) {
+            body$.append(
+                "unique_element_ids",
+                String(payload$.partition_parameters.unique_element_ids)
+            );
+        }
+        if (payload$.partition_parameters.xml_keep_tags !== undefined) {
+            body$.append("xml_keep_tags", String(payload$.partition_parameters.xml_keep_tags));
         }
 
         const path$ = this.templateURLComponent("/general/v0/general")();
 
         const query$ = "";
+
+        headers$.set(
+            "unstructured-api-key",
+            enc$.encodeSimple("unstructured-api-key", payload$["unstructured-api-key"], {
+                explode: false,
+                charEncoding: "none",
+            })
+        );
 
         const security$ =
             typeof this.options$.security === "function"
@@ -208,7 +251,7 @@ export class General extends ClientSDK {
                 (val$) => {
                     return operations.PartitionResponse$.inboundSchema.parse({
                         ...responseFields$,
-                        Elements: val$,
+                        "Response Partition Parameters": val$,
                     });
                 },
                 "Response validation failed"

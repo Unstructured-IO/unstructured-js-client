@@ -1,0 +1,14 @@
+speakeasyVersion: 1.271.0
+sources: {}
+targets: {}
+workflow:
+    workflowVersion: 1.0.0
+    speakeasyVersion: latest
+    sources:
+        my-source:
+            inputs:
+                - location: https://api.unstructured.io/general/openapi.json
+    targets:
+        unstructed-typescript:
+            target: typescript
+            source: my-source
