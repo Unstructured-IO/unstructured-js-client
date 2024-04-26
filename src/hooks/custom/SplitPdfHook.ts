@@ -435,14 +435,16 @@ export class SplitPdfHook
   #getStartingPageNumber(formData: FormData): number {
     let startingPageNumber = DEFAULT_STARTING_PAGE_NUMBER;
 
-    try {
-      startingPageNumber = parseInt(
-        formData.get(PARTITION_FORM_STARTING_PAGE_NUMBER_KEY) as string
-      );
-    } catch {
+    const formDataPageNumber = parseInt(
+      formData.get(PARTITION_FORM_STARTING_PAGE_NUMBER_KEY) as string
+    );
+
+    if (isNaN(formDataPageNumber)) {
       console.warn(
         `'${PARTITION_FORM_STARTING_PAGE_NUMBER_KEY}' is not a valid integer. Using default value '${DEFAULT_STARTING_PAGE_NUMBER}'.`
       );
+    } else {
+      startingPageNumber = formDataPageNumber;
     }
 
     if (startingPageNumber < 1) {
