@@ -29,11 +29,16 @@ build:
 ## test-unit:					run unit tests
 .PHONY: test-unit
 test-unit:
-	npx jest --config jest.config.js test/unit
+	npx jest --detectOpenHandles --config jest.config.js test/unit
+
+## test-integration:			run integration tests
+.PHONY: test-integration
+test-integration:
+	npx jest --detectOpenHandles --config jest.config.js test/integration
 
 ## test:					run all tests
 .PHONY: test
-test: test-unit
+test: test-unit test-integration
 
 #############
 # Speakeasy #
