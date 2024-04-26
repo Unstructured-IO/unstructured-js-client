@@ -437,7 +437,7 @@ export class SplitPdfHook
 
     try {
       startingPageNumber = parseInt(
-        formData.get(PARTITION_FORM_SPLIT_PDF_PAGE_KEY) as string
+        formData.get(PARTITION_FORM_STARTING_PAGE_NUMBER_KEY) as string
       );
     } catch {
       console.warn(
