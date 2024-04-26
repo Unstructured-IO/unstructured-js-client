@@ -169,7 +169,6 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
         metadata: {
           ...el.metadata,
           parent_id: undefined,
-          page_number: undefined,
         },
       }));
       const singleElements = respSingle.elements?.map((el) => ({
@@ -177,7 +176,6 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
         metadata: {
           ...el.metadata,
           parent_id: undefined,
-          page_number: undefined,
         },
       }));
 
