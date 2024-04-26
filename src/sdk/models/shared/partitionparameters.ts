@@ -81,17 +81,21 @@ export type PartitionParameters = {
      */
     overlapAll?: boolean | undefined;
     /**
-     * If True and strategy=hi_res, any Table Elements extracted from a PDF will include an additional metadata field, 'text_as_html', where the value (string) is a just a transformation of the data into an HTML <table>.
+     * Deprecated! Use skip_infer_table_types to opt out of table extraction for any file type. If False and strategy=hi_res, no Table Elements will be extracted from pdf files regardless of skip_infer_table_types contents.
      */
     pdfInferTableStructure?: boolean | undefined;
     /**
-     * The document types that you want to skip table extraction with. Default: ['pdf', 'jpg', 'png']
+     * The document types that you want to skip table extraction with. Default: []
      */
     skipInferTableTypes?: Array<string> | undefined;
     /**
      * Should the pdf file be split at client. Ignored on backend.
      */
     splitPdfPage?: boolean | undefined;
+    /**
+     * The real number of the first PDF page.
+     */
+    startingPageNumber?: number | undefined;
     /**
      * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: auto
      */
@@ -166,6 +170,7 @@ export namespace PartitionParameters$ {
         pdf_infer_table_structure?: boolean | undefined;
         skip_infer_table_types?: Array<string> | undefined;
         split_pdf_page?: boolean | undefined;
+        starting_page_number?: number | undefined;
         strategy?: string | undefined;
         unique_element_ids?: boolean | undefined;
         xml_keep_tags?: boolean | undefined;
@@ -193,6 +198,7 @@ export namespace PartitionParameters$ {
             pdf_infer_table_structure: z.boolean().optional(),
             skip_infer_table_types: z.array(z.string()).optional(),
             split_pdf_page: z.boolean().optional(),
+            starting_page_number: z.number().int().optional(),
             strategy: z.string().optional(),
             unique_element_ids: z.boolean().optional(),
             xml_keep_tags: z.boolean().optional(),
@@ -241,6 +247,9 @@ export namespace PartitionParameters$ {
                     ? null
                     : { skipInferTableTypes: v.skip_infer_table_types }),
                 ...(v.split_pdf_page === undefined ? null : { splitPdfPage: v.split_pdf_page }),
+                ...(v.starting_page_number === undefined
+                    ? null
+                    : { startingPageNumber: v.starting_page_number }),
                 ...(v.strategy === undefined ? null : { strategy: v.strategy }),
                 ...(v.unique_element_ids === undefined
                     ? null
@@ -270,6 +279,7 @@ export namespace PartitionParameters$ {
         pdf_infer_table_structure?: boolean | undefined;
         skip_infer_table_types?: Array<string> | undefined;
         split_pdf_page?: boolean | undefined;
+        starting_page_number?: number | undefined;
         strategy?: string | undefined;
         unique_element_ids?: boolean | undefined;
         xml_keep_tags?: boolean | undefined;
@@ -300,6 +310,7 @@ export namespace PartitionParameters$ {
             pdfInferTableStructure: z.boolean().optional(),
             skipInferTableTypes: z.array(z.string()).optional(),
             splitPdfPage: z.boolean().optional(),
+            startingPageNumber: z.number().int().optional(),
             strategy: z.string().optional(),
             uniqueElementIds: z.boolean().optional(),
             xmlKeepTags: z.boolean().optional(),
@@ -348,6 +359,9 @@ export namespace PartitionParameters$ {
                     ? null
                     : { skip_infer_table_types: v.skipInferTableTypes }),
                 ...(v.splitPdfPage === undefined ? null : { split_pdf_page: v.splitPdfPage }),
+                ...(v.startingPageNumber === undefined
+                    ? null
+                    : { starting_page_number: v.startingPageNumber }),
                 ...(v.strategy === undefined ? null : { strategy: v.strategy }),
                 ...(v.uniqueElementIds === undefined
                     ? null

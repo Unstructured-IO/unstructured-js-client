@@ -36,7 +36,7 @@ export class UnstructuredClient extends ClientSDK {
     }
 
     private _general?: General;
-    get general() {
+    get general(): General {
         return (this._general ??= new General(this.options$));
     }
 }

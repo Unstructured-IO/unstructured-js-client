@@ -219,14 +219,14 @@ Certain SDK methods accept files as part of a multi-part request. It is possible
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 
-async function run() {
-    const sdk = new UnstructuredClient({
-        security: {
-            apiKeyAuth: "YOUR_API_KEY",
-        },
-    });
+const unstructuredClient = new UnstructuredClient({
+    security: {
+        apiKeyAuth: "YOUR_API_KEY",
+    },
+});
 
-    const result = await sdk.general.partition({
+async function run() {
+    const result = await unstructuredClient.general.partition({
         chunkingStrategy: "by_title",
         combineUnderNChars: 500,
         encoding: "utf-8",
