@@ -16,7 +16,16 @@ import { stringToBoolean } from "./utils";
 
 const PARTITION_FORM_FILES_KEY = "files";
 const PARTITION_FORM_SPLIT_PDF_PAGE_KEY = "split_pdf_page";
+const PARTITION_FORM_STARTING_PAGE_NUMBER_KEY = "starting_page_number";
+
+const UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS =
+  "UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS";
+
+const DEFAULT_STARTING_PAGE_NUMBER = 1;
 const MAX_NUMBER_OF_PARALLEL_REQUESTS = 15;
+const DEFAULT_NUMBER_OF_PARALLEL_REQUESTS = 5;
+
+// TODO: (Marek Połom) - Update documentation before merging
 
 /**
  * Represents a hook for splitting and sending PDF files as per page requests.
@@ -38,12 +47,6 @@ export class SplitPdfHook
    * Maps parallel requests to client operation.
    */
   #partitionRequests: Record<string, Promise<unknown>> = {};
-
-  /**
-   * The maximum number of parallel operations allowed.
-   * Max value is 15.
-   */
-  static parallelLimit = 5;
 
   /**
    * Initializes Split PDF Hook.
@@ -78,12 +81,14 @@ export class SplitPdfHook
       (formData.get(PARTITION_FORM_SPLIT_PDF_PAGE_KEY) as string) ?? "false"
     );
     const file = formData.get(PARTITION_FORM_FILES_KEY) as File | null;
+    const startingPageNumber = this.#getStartingPageNumber(formData);
 
     if (!splitPdfPage) {
       return request;
     }
 
-    if (!file?.name.endsWith(".pdf")) {
+    const isPdf = file !== null && (await this.#isPdf(file));
+    if (!isPdf) {
       console.warn("Given file is not a PDF. Continuing without splitting.");
       return request;
     }
@@ -93,45 +98,44 @@ export class SplitPdfHook
       return request;
     }
 
-    const fileName = file.name.replace(".pdf", "");
     const pages = await this.#getPdfPages(file);
     const headers = this.#prepareRequestHeaders(request);
 
+    const requestClone = request.clone();
     const requests: Request[] = [];
-    for (const [i, page] of pages.entries()) {
-      const body = await this.#prepareRequestBody(request);
-      body.append(PARTITION_FORM_FILES_KEY, page, `${fileName}-${i + 1}.pdf`);
-      const req = new Request(request.clone(), {
+    for (const [pageIndex, pageContent] of pages.entries()) {
+      const pageNumber = pageIndex + startingPageNumber;
+      const body = await this.#prepareRequestBody(
+        formData,
+        pageContent,
+        file.name,
+        pageNumber
+      );
+      const req = new Request(requestClone, {
         headers,
         body,
       });
       requests.push(req);
     }
 
-    if (SplitPdfHook.parallelLimit > MAX_NUMBER_OF_PARALLEL_REQUESTS) {
-      console.warn(
-        `'parallelLimit' was set to '${SplitPdfHook.parallelLimit}'. Max number of parallel request can't be higher then '${MAX_NUMBER_OF_PARALLEL_REQUESTS}'. Using the maximum value instead.`
-      );
-    }
-    const parallelLimit =
-      SplitPdfHook.parallelLimit > MAX_NUMBER_OF_PARALLEL_REQUESTS
-        ? MAX_NUMBER_OF_PARALLEL_REQUESTS
-        : SplitPdfHook.parallelLimit;
+    const requestsLimit = this.#getSplitPdfCallThreads();
 
     this.#partitionResponses[operationID] = new Array(requests.length);
 
     this.#partitionRequests[operationID] = async.parallelLimit(
-      requests.slice(0, -1).map((req, i) => async () => {
+      requests.slice(0, -1).map((req, pageIndex) => async () => {
+        const pageNumber = pageIndex + startingPageNumber;
         try {
           const response = await this.#client!.request(req);
           if (response.status === 200) {
-            (this.#partitionResponses[operationID] as Response[])[i] = response;
+            (this.#partitionResponses[operationID] as Response[])[pageIndex] =
+              response;
           }
         } catch (e) {
-          console.error(`Failed to send request for page ${i + 1}.`);
+          console.error(`Failed to send request for page ${pageNumber}.`);
         }
       }),
-      parallelLimit
+      requestsLimit
     );
 
     return requests.at(-1) as Request;
@@ -290,12 +294,32 @@ export class SplitPdfHook
    * @returns A promise that resolves to a FormData object representing
    * the prepared request body.
    */
-  async #prepareRequestBody(request: Request): Promise<FormData> {
-    const formData = await request.clone().formData();
-    formData.delete(PARTITION_FORM_SPLIT_PDF_PAGE_KEY);
-    formData.delete(PARTITION_FORM_FILES_KEY);
-    formData.append(PARTITION_FORM_SPLIT_PDF_PAGE_KEY, "false");
-    return formData;
+  async #prepareRequestBody(
+    formData: FormData,
+    pageContent: Blob,
+    fileName: string,
+    pageNumber: number
+  ): Promise<FormData> {
+    const newFormData = new FormData();
+    for (const [key, value] of formData.entries()) {
+      if (
+        ![
+          PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
+          PARTITION_FORM_SPLIT_PDF_PAGE_KEY,
+          PARTITION_FORM_FILES_KEY,
+        ].includes(key)
+      ) {
+        newFormData.append(key, value);
+      }
+    }
+
+    newFormData.append(PARTITION_FORM_SPLIT_PDF_PAGE_KEY, "false");
+    newFormData.append(PARTITION_FORM_FILES_KEY, pageContent, fileName);
+    newFormData.append(
+      PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
+      pageNumber.toString()
+    );
+    return newFormData;
   }
 
   /**
@@ -328,5 +352,81 @@ export class SplitPdfHook
     await requests;
 
     return this.#partitionResponses[operationID]?.filter((e) => e) ?? [];
+  }
+
+  async #isPdf(file: File): Promise<boolean> {
+    if (!file.name.endsWith(".pdf")) {
+      console.warn("Given file is not a PDF. Continuing without splitting.");
+      return false;
+    }
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      await PDFDocument.load(arrayBuffer);
+    } catch (e) {
+      console.error(e);
+      console.warn(
+        "Attempted to interpret file as pdf, but error arose when splitting by pages. Reverting to non-split pdf handling path."
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  #getSplitPdfCallThreads(): number {
+    let callThreads = DEFAULT_NUMBER_OF_PARALLEL_REQUESTS;
+
+    try {
+      callThreads = parseInt(
+        process.env[UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS] ??
+          DEFAULT_NUMBER_OF_PARALLEL_REQUESTS.toString()
+      );
+    } catch {
+      console.error(
+        `${UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS} has invalid value.`
+      );
+    }
+
+    if (callThreads > MAX_NUMBER_OF_PARALLEL_REQUESTS) {
+      console.warn(
+        `Clipping ${UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS} to ${MAX_NUMBER_OF_PARALLEL_REQUESTS}.`
+      );
+      callThreads = MAX_NUMBER_OF_PARALLEL_REQUESTS;
+    } else if (callThreads < 1) {
+      console.warn(`${UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS} is less than 1.`);
+      callThreads = DEFAULT_NUMBER_OF_PARALLEL_REQUESTS;
+    }
+
+    console.info(
+      `Splitting PDF by page on client. Using ${callThreads} threads when calling API.`
+    );
+    console.info(
+      `Set ${UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS} env var if you want to change that.`
+    );
+    return callThreads;
+  }
+
+  #getStartingPageNumber(formData: FormData): number {
+    let startingPageNumber = DEFAULT_STARTING_PAGE_NUMBER;
+
+    try {
+      startingPageNumber = parseInt(
+        formData.get(PARTITION_FORM_SPLIT_PDF_PAGE_KEY) as string
+      );
+    } catch {
+      console.warn(
+        `'${PARTITION_FORM_STARTING_PAGE_NUMBER_KEY}' is not a valid integer. Using default value '${DEFAULT_STARTING_PAGE_NUMBER}'.`
+      );
+    }
+
+    if (startingPageNumber < 1) {
+      console.warn(
+        `'${PARTITION_FORM_STARTING_PAGE_NUMBER_KEY}' is less than 1. Using default value '${DEFAULT_STARTING_PAGE_NUMBER}'.`
+      );
+      startingPageNumber = DEFAULT_STARTING_PAGE_NUMBER;
+    }
+
+    return startingPageNumber;
   }
 }
