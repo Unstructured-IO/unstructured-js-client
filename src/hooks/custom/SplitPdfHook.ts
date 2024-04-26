@@ -25,8 +25,6 @@ const DEFAULT_STARTING_PAGE_NUMBER = 1;
 const MAX_NUMBER_OF_PARALLEL_REQUESTS = 15;
 const DEFAULT_NUMBER_OF_PARALLEL_REQUESTS = 5;
 
-// TODO: (Marek Połom) - Update documentation before merging
-
 /**
  * Represents a hook for splitting and sending PDF files as per page requests.
  */
@@ -288,10 +286,13 @@ export class SplitPdfHook
   }
 
   /**
-   * Prepares the request body for splitted PDF pages.
+   * Prepares the request body for splitting a PDF.
    *
-   * @param request - The request object.
-   * @returns A promise that resolves to a FormData object representing
+   * @param formData - The original form data.
+   * @param pageContent - The content of the page to be split.
+   * @param fileName - The name of the file.
+   * @param pageNumber - Real page number from the document.
+   * @returns A Promise that resolves to a FormData object representing
    * the prepared request body.
    */
   async #prepareRequestBody(
@@ -354,6 +355,12 @@ export class SplitPdfHook
     return this.#partitionResponses[operationID]?.filter((e) => e) ?? [];
   }
 
+  /**
+   * Checks if the given file is a PDF. First it checks the `.pdf` file extension, then
+   * it tries to load the file as a PDF using the `PDFDocument.load` method.
+   * @param file - The file to check.
+   * @returns A promise that resolves to `true` if the file is a PDF, or `false` otherwise.
+   */
   async #isPdf(file: File): Promise<boolean> {
     if (!file.name.endsWith(".pdf")) {
       console.warn("Given file is not a PDF. Continuing without splitting.");
@@ -374,6 +381,16 @@ export class SplitPdfHook
     return true;
   }
 
+  /**
+   * Gets the number of call threads to use when splitting a PDF.
+   * The number of call threads is determined by the value of the environment variable
+   * UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS. If the environment variable is not set or has an invalid value,
+   * the default number of parallel requests (5) is used.
+   * If the number of call threads is greater than the maximum allowed (15), it is clipped to the maximum value.
+   * If the number of call threads is less than 1, the default number of parallel requests is used.
+   *
+   * @returns The number of call threads to use when calling the API to split a PDF.
+   */
   #getSplitPdfCallThreads(): number {
     let callThreads = DEFAULT_NUMBER_OF_PARALLEL_REQUESTS;
 
@@ -407,6 +424,14 @@ export class SplitPdfHook
     return callThreads;
   }
 
+  /**
+   * Retrieves the starting page number from the provided form data.
+   * If the starting page number is not a valid integer or less than 1,
+   * it will use the default value `1`.
+   *
+   * @param formData - Request form data.
+   * @returns The starting page number.
+   */
   #getStartingPageNumber(formData: FormData): number {
     let startingPageNumber = DEFAULT_STARTING_PAGE_NUMBER;
 
