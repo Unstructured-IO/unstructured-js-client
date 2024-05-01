@@ -5,7 +5,7 @@
 import * as shared from "../sdk/models/shared";
 import { HTTPClient } from "./http";
 import { RetryConfig } from "./retries";
-import { pathToFunc } from "./url";
+import { Params, pathToFunc } from "./url";
 
 /**
  * Hosted API
@@ -47,7 +47,7 @@ export type SDKOptions = {
 export function serverURLFromOptions(options: SDKOptions): URL | null {
     let serverURL = options.serverURL;
 
-    const params: Record<string, string> = {};
+    const params: Params = {};
 
     if (!serverURL) {
         const server = options.server ?? ServerProd;
@@ -58,10 +58,10 @@ export function serverURLFromOptions(options: SDKOptions): URL | null {
     return new URL(u);
 }
 
-export const SDK_METADATA = Object.freeze({
+export const SDK_METADATA = {
     language: "typescript",
     openapiDocVersion: "0.0.1",
-    sdkVersion: "0.12.2",
-    genVersion: "2.298.0",
-    userAgent: "speakeasy-sdk/typescript 0.12.2 2.298.0 0.0.1 unstructured-client",
-});
+    sdkVersion: "0.13.0",
+    genVersion: "2.312.1",
+    userAgent: "speakeasy-sdk/typescript 0.13.0 2.312.1 0.0.1 unstructured-client",
+} as const;

@@ -1,0 +1,26 @@
+
+
+{
+  "name": "unstructured-client",
+  "version": "0.13.0",
+  "exports": {
+    ".": "./src/index.ts",    
+    "./sdk/models/errors": "./src/sdk/models/errors/index.ts",    
+    "./sdk/models/shared": "./src/sdk/models/shared/index.ts",    
+    "./sdk/models/operations": "./src/sdk/models/operations/index.ts",
+    "./lib/config": "./src/lib/config.ts",
+    "./lib/http": "./src/lib/http.ts",
+    "./lib/retries": "./src/lib/retries.ts",
+    "./lib/sdks": "./src/lib/sdks.ts",
+    "./types": "./src/sdk/types/index.ts"
+  },
+  "publish": {
+    "include": [
+      "LICENSE",
+      "README.md",
+      "RUNTIMES.md",
+      "USAGE.md",
+      "src/**/*.ts"
+    ]
+  }
+}

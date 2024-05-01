@@ -1,7 +1,7 @@
 {
   "name": "unstructured-client",
-  "version": "0.12.2",
-  "author": "Unstructured",
+  "version": "0.13.0",
+  "author": "Unstructured",  
   "main": "./index.js",
   "sideEffects": false,
   "repository": {
@@ -14,7 +14,6 @@
     "build": "tsc",
     "prepare": "npm run build"
   },
-  "keywords": [],
   "peerDependencies": {
     "zod": ">= 3"
   },

@@ -168,15 +168,15 @@ In order to speed up processing of long PDF files, set `splitPdfPage` parameter 
 
 Warning: this feature causes the `parent_id` metadata generation in elements to be disabled, as it requires having context of multiple pages.
 
-The amount of parallel requests is controlled by `SplitPdfHook.parallelLimit`. By default it equals to 5. It can't be more than 15, to avoid too high resource usage and costs.
+The amount of parallel requests is controlled by `UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS` environmental variable. By default it equals to 5. It can't be more than 15, to avoid too high resource usage and costs.
 
 ```typescript
 import { SplitPdfHook } from "unstructured-client/hooks/custom/SplitPdfHook";
 
 ...
 
-// Modify this parameter to change the limit of parallel request
-SplitPdfHook.parallelLimit = 10;
+// Modify this environmental variable to change the limit of parallel requests
+process.env["UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS"] = "10";
 
 client.general.partition({
     files: {
@@ -219,14 +219,14 @@ Certain SDK methods accept files as part of a multi-part request. It is possible
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 
-async function run() {
-    const sdk = new UnstructuredClient({
-        security: {
-            apiKeyAuth: "YOUR_API_KEY",
-        },
-    });
+const unstructuredClient = new UnstructuredClient({
+    security: {
+        apiKeyAuth: "YOUR_API_KEY",
+    },
+});
 
-    const result = await sdk.general.partition({
+async function run() {
+    const result = await unstructuredClient.general.partition({
         chunkingStrategy: "by_title",
         combineUnderNChars: 500,
         encoding: "utf-8",

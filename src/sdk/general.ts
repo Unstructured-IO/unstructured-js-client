@@ -135,6 +135,9 @@ export class General extends ClientSDK {
             if (payload$?.split_pdf_page !== undefined) {
                 body$.append("split_pdf_page", String(payload$?.split_pdf_page));
             }
+            if (payload$?.starting_page_number !== undefined) {
+                body$.append("starting_page_number", String(payload$?.starting_page_number));
+            }
             if (payload$?.strategy !== undefined) {
                 body$.append("strategy", payload$?.strategy);
             }
