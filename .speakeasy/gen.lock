@@ -1,19 +1,20 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 666d45deb8d9066b8e19e04a305ca734
-  docVersion: 0.0.1
-  speakeasyVersion: 1.272.0
-  generationVersion: 2.312.1
-  releaseVersion: 0.13.0
-  configChecksum: 738cdd9408fdcef300989dc711ba3cd0
+  docChecksum: 3f55bccf027ff88314082c29f29f0b3b
+  docVersion: 1.0.25
+  speakeasyVersion: 1.277.8
+  generationVersion: 2.319.10
+  releaseVersion: 0.14.0
+  configChecksum: 5808660fe8e0b2122a195bf2bb98045d
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
   published: true
 features:
   typescript:
-    core: 3.8.0
+    constsAndDefaults: 0.1.5
+    core: 3.9.3
     examples: 2.81.3
     globalSecurity: 2.82.9
     globalServerURLs: 2.82.4
@@ -21,7 +22,7 @@ features:
     responseFormat: 0.2.3
     retries: 2.83.0
     serverIDs: 2.81.2
-    unions: 2.85.3
+    unions: 2.85.4
 generatedFiles:
   - src/sdk/general.ts
   - src/sdk/sdk.ts
@@ -49,20 +50,26 @@ generatedFiles:
   - src/sdk/types/rfcdate.ts
   - tsconfig.json
   - src/sdk/models/operations/partition.ts
-  - src/sdk/models/errors/httpvalidationerror.ts
+  - src/sdk/models/shared/element.ts
   - src/sdk/models/shared/validationerror.ts
   - src/sdk/models/shared/partitionparameters.ts
   - src/sdk/models/shared/security.ts
+  - src/sdk/models/errors/httpvalidationerror.ts
   - src/sdk/models/errors/index.ts
   - src/sdk/models/operations/index.ts
   - src/sdk/models/shared/index.ts
+  - docs/sdk/models/operations/partitionrequest.md
   - docs/sdk/models/operations/partitionresponse.md
-  - docs/sdk/models/errors/httpvalidationerror.md
+  - docs/sdk/models/shared/metadata.md
+  - docs/sdk/models/shared/element.md
   - docs/sdk/models/shared/loc.md
   - docs/sdk/models/shared/validationerror.md
+  - docs/sdk/models/shared/chunkingstrategy.md
   - docs/sdk/models/shared/files.md
+  - docs/sdk/models/shared/strategy.md
   - docs/sdk/models/shared/partitionparameters.md
   - docs/sdk/models/shared/security.md
+  - docs/sdk/models/errors/httpvalidationerror.md
   - USAGE.md
   - .gitattributes
   - src/hooks/hooks.ts

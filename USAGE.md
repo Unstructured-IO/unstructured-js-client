@@ -2,6 +2,7 @@
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
+import { Strategy } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient({
     security: {
@@ -11,20 +12,10 @@ const unstructuredClient = new UnstructuredClient({
 
 async function run() {
     const result = await unstructuredClient.general.partition({
-        chunkingStrategy: "by_title",
-        combineUnderNChars: 500,
-        encoding: "utf-8",
-        extractImageBlockTypes: ["image", "table"],
-        files: await openAsBlob("./sample-file"),
-        gzUncompressedContentType: "application/pdf",
-        hiResModelName: "yolox",
-        languages: ["[", "e", "n", "g", "]"],
-        maxCharacters: 1500,
-        newAfterNChars: 1500,
-        outputFormat: "application/json",
-        overlap: 25,
-        skipInferTableTypes: ["pdf"],
-        strategy: "hi_res",
+        partitionParameters: {
+            files: await openAsBlob("./sample-file"),
+            strategy: Strategy.Auto,
+        },
     });
 
     // Handle the result

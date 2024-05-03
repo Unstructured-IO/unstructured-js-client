@@ -9,7 +9,28 @@ export type Fetcher = (
 
 export type Awaitable<T> = T | Promise<T>;
 
-const DEFAULT_FETCHER: Fetcher = (input, init) => fetch(input, init);
+const DEFAULT_FETCHER: Fetcher = (input, init) => {
+  // If input is a Request and init is undefined, Bun will discard the method,
+  // headers, body and other options that were set on the request object.
+  // Node.js and browers would ignore an undefined init value. This check is
+  // therefore needed for interop with Bun.
+  if (init == null) {
+    return fetch(input);
+  } else {
+    return fetch(input, init);
+  }
+};
+
+export type RequestInput = {
+  /**
+   * The URL the request will use.
+   */
+  url: URL;
+  /**
+   * Options used to create a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request).
+   */
+  options?: RequestInit | undefined;
+};
 
 export interface HTTPClientOptions {
   fetcher?: Fetcher;
@@ -130,29 +151,56 @@ export class HTTPClient {
   }
 }
 
-export function matchContentType(response: Response, pattern: string): boolean {
-  if (pattern === "*" || pattern === "*/*") {
+// A semicolon surrounded by optional whitespace characters is used to separate
+// segments in a media type string.
+const mediaParamSeparator = /\s*;\s*/g;
+
+function matchContentType(response: Response, pattern: string): boolean {
+  // `*` is a special case which means anything is acceptable.
+  if (pattern === "*") {
     return true;
   }
 
-  const contentType =
-    response.headers.get("content-type") ?? "application/octet-stream";
+  let contentType =
+    response.headers.get("content-type")?.trim() || "application/octet-stream";
+  contentType = contentType.toLowerCase();
 
-  const idx = contentType.split(";").findIndex((raw) => {
-    const ctype = raw.trim();
-    if (ctype === pattern) {
-      return true;
-    }
+  const wantParts = pattern.toLowerCase().trim().split(mediaParamSeparator);
+  const [wantType = "", ...wantParams] = wantParts;
 
-    const parts = ctype.split("/");
-    if (parts.length !== 2) {
+  if (wantType.split("/").length !== 2) {
+    return false;
+  }
+
+  const gotParts = contentType.split(mediaParamSeparator);
+  const [gotType = "", ...gotParams] = gotParts;
+
+  const [type = "", subtype = ""] = gotType.split("/");
+  if (!type || !subtype) {
+    return false;
+  }
+
+  if (
+    wantType !== "*/*" &&
+    gotType !== wantType &&
+    `${type}/*` !== wantType &&
+    `*/${subtype}` !== wantType
+  ) {
+    return false;
+  }
+
+  if (gotParams.length < wantParams.length) {
+    return false;
+  }
+
+  const params = new Set(gotParams);
+  for (const wantParam of wantParams) {
+    if (!params.has(wantParam)) {
       return false;
     }
+  }
 
-    return `${parts[0]}/*` === pattern || `*/${parts[1]}` === pattern;
-  });
-
-  return idx >= 0;
+  return true;
 }
 
 const codeRangeRE = new RegExp("^[0-9]xx$", "i");
