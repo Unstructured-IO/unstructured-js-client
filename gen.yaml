@@ -10,7 +10,7 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
 typescript:
-  version: 0.14.1
+  version: 0.15.0
   additionalDependencies:
     dependencies:
       async: ^3.2.5
@@ -37,6 +37,7 @@ typescript:
   inputModelSuffix: input
   license: MIT
   maxMethodParams: 0
+  methodArguments: require-security-and-request
   outputModelSuffix: output
   packageName: unstructured-client
   responseFormat: envelope

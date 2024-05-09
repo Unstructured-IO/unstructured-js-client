@@ -47,15 +47,16 @@ export class General extends ClientSDK {
      * Description
      */
     async partition(
-        input: operations.PartitionRequest,
+        request: operations.PartitionRequest,
         options?: RequestOptions & { retries?: retries$.RetryConfig }
     ): Promise<operations.PartitionResponse> {
+        const input$ = request;
         const headers$ = new Headers();
         headers$.set("user-agent", SDK_METADATA.userAgent);
         headers$.set("Accept", "application/json");
 
         const payload$ = schemas$.parse(
-            input,
+            input$,
             (value$) => operations.PartitionRequest$.outboundSchema.parse(value$),
             "Input validation failed"
         );
@@ -206,7 +207,7 @@ export class General extends ClientSDK {
         const securitySettings$ = this.resolveGlobalSecurity(security$);
 
         const doOptions = { context, errorCodes: ["422", "4XX", "5XX"] };
-        const request = this.createRequest$(
+        const request$ = this.createRequest$(
             context,
             {
                 security: securitySettings$,
@@ -233,7 +234,7 @@ export class General extends ClientSDK {
 
         const response = await retries$.retry(
             () => {
-                const cloned = request.clone();
+                const cloned = request$.clone();
                 return this.do$(cloned, doOptions);
             },
             { config: retryConfig, statusCodes: ["5xx"] }
