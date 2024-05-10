@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 0e4bd887688ce33a92685fbb033a7526
-  docVersion: 1.0.26
-  speakeasyVersion: 1.285.1
+  docChecksum: f6f734e7469f072182baccaf467d2766
+  docVersion: 1.0.30
+  speakeasyVersion: 1.285.4
   generationVersion: 2.326.3
-  releaseVersion: 0.15.0
-  configChecksum: 1022dec9ac2ac5ec4030edd9a72dbd22
+  releaseVersion: 0.15.1
+  configChecksum: 85d0e93e01f22bade3e4ffcc5eac3ef4
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -70,6 +70,7 @@ generatedFiles:
   - docs/sdk/models/shared/validationerror.md
   - docs/sdk/models/shared/chunkingstrategy.md
   - docs/sdk/models/shared/files.md
+  - docs/sdk/models/shared/outputformat.md
   - docs/sdk/models/shared/strategy.md
   - docs/sdk/models/shared/partitionparameters.md
   - docs/sdk/models/shared/security.md

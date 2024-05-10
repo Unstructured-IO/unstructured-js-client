@@ -143,7 +143,7 @@ export class General extends ClientSDK {
             body$.append("ocr_languages", String(payload$.partition_parameters.ocr_languages));
         }
         if (payload$.partition_parameters.output_format !== undefined) {
-            body$.append("output_format", payload$.partition_parameters.output_format);
+            body$.append("output_format", String(payload$.partition_parameters.output_format));
         }
         if (payload$.partition_parameters.overlap !== undefined) {
             body$.append("overlap", String(payload$.partition_parameters.overlap));
@@ -167,6 +167,12 @@ export class General extends ClientSDK {
             body$.append(
                 "skip_infer_table_types",
                 String(payload$.partition_parameters.skip_infer_table_types)
+            );
+        }
+        if (payload$.partition_parameters.starting_page_number !== undefined) {
+            body$.append(
+                "starting_page_number",
+                String(payload$.partition_parameters.starting_page_number)
             );
         }
         if (payload$.partition_parameters.strategy !== undefined) {
@@ -254,7 +260,7 @@ export class General extends ClientSDK {
                 (val$) => {
                     return operations.PartitionResponse$.inboundSchema.parse({
                         ...responseFields$,
-                        "Response Partition Parameters": val$,
+                        Elements: val$,
                     });
                 },
                 "Response validation failed"

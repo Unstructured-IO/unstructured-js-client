@@ -19,6 +19,14 @@ export type Files = {
 };
 
 /**
+ * The format of the response. Supported formats are application/json and text/csv. Default: application/json.
+ */
+export enum OutputFormat {
+    ApplicationJson = "application/json",
+    TextCsv = "text/csv",
+}
+
+/**
  * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: auto
  */
 export enum Strategy {
@@ -92,7 +100,7 @@ export type PartitionParameters = {
     /**
      * The format of the response. Supported formats are application/json and text/csv. Default: application/json.
      */
-    outputFormat?: string | undefined;
+    outputFormat?: OutputFormat | undefined;
     /**
      * Specifies the length of a string ('tail') to be drawn from each chunk and prefixed to the next chunk as a context-preserving mechanism. By default, this only applies to split-chunks where an oversized element is divided into multiple chunks by text-splitting. Default: 0
      */
@@ -113,6 +121,10 @@ export type PartitionParameters = {
      * The document types that you want to skip table extraction with. Default: []
      */
     skipInferTableTypes?: Array<string> | undefined;
+    /**
+     * When PDF is split into pages before sending it into the API, providing this information will allow the page number to be assigned correctly. Introduced in 1.0.27.
+     */
+    startingPageNumber?: number | null | undefined;
     /**
      * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: auto
      */
@@ -172,6 +184,9 @@ export namespace Files$ {
 }
 
 /** @internal */
+export const OutputFormat$: z.ZodNativeEnum<typeof OutputFormat> = z.nativeEnum(OutputFormat);
+
+/** @internal */
 export const Strategy$: z.ZodNativeEnum<typeof Strategy> = z.nativeEnum(Strategy);
 
 /** @internal */
@@ -192,12 +207,13 @@ export namespace PartitionParameters$ {
         multipage_sections?: boolean | undefined;
         new_after_n_chars?: number | null | undefined;
         ocr_languages?: Array<string> | undefined;
-        output_format?: string | undefined;
+        output_format?: OutputFormat | undefined;
         overlap?: number | undefined;
         overlap_all?: boolean | undefined;
         pdf_infer_table_structure?: boolean | undefined;
         similarity_threshold?: number | null | undefined;
         skip_infer_table_types?: Array<string> | undefined;
+        starting_page_number?: number | null | undefined;
         strategy?: Strategy | undefined;
         unique_element_ids?: boolean | undefined;
         xml_keep_tags?: boolean | undefined;
@@ -206,26 +222,27 @@ export namespace PartitionParameters$ {
     export const inboundSchema: z.ZodType<PartitionParameters, z.ZodTypeDef, Inbound> = z
         .object({
             files: z.lazy(() => Files$.inboundSchema),
-            chunking_strategy: z.nullable(ChunkingStrategy$).optional(),
-            combine_under_n_chars: z.nullable(z.number().int()).optional(),
+            chunking_strategy: z.nullable(ChunkingStrategy$).default(null),
+            combine_under_n_chars: z.nullable(z.number().int()).default(null),
             coordinates: z.boolean().default(false),
-            encoding: z.nullable(z.string()).optional(),
+            encoding: z.nullable(z.string()).default(null),
             extract_image_block_types: z.array(z.string()).optional(),
-            gz_uncompressed_content_type: z.nullable(z.string()).optional(),
-            hi_res_model_name: z.nullable(z.string()).optional(),
-            include_orig_elements: z.nullable(z.boolean()).optional(),
+            gz_uncompressed_content_type: z.nullable(z.string()).default(null),
+            hi_res_model_name: z.nullable(z.string()).default(null),
+            include_orig_elements: z.nullable(z.boolean()).default(null),
             include_page_breaks: z.boolean().default(false),
             languages: z.array(z.string()).optional(),
-            max_characters: z.nullable(z.number().int()).optional(),
+            max_characters: z.nullable(z.number().int()).default(null),
             multipage_sections: z.boolean().default(true),
-            new_after_n_chars: z.nullable(z.number().int()).optional(),
+            new_after_n_chars: z.nullable(z.number().int()).default(null),
             ocr_languages: z.array(z.string()).optional(),
-            output_format: z.string().default("application/json"),
+            output_format: OutputFormat$.default(OutputFormat.ApplicationJson),
             overlap: z.number().int().default(0),
             overlap_all: z.boolean().default(false),
             pdf_infer_table_structure: z.boolean().default(true),
-            similarity_threshold: z.nullable(z.number()).optional(),
+            similarity_threshold: z.nullable(z.number()).default(null),
             skip_infer_table_types: z.array(z.string()).optional(),
+            starting_page_number: z.nullable(z.number().int()).default(null),
             strategy: Strategy$.default(Strategy.Auto),
             unique_element_ids: z.boolean().default(false),
             xml_keep_tags: z.boolean().default(false),
@@ -233,44 +250,31 @@ export namespace PartitionParameters$ {
         .transform((v) => {
             return {
                 files: v.files,
-                ...(v.chunking_strategy === undefined
-                    ? null
-                    : { chunkingStrategy: v.chunking_strategy }),
-                ...(v.combine_under_n_chars === undefined
-                    ? null
-                    : { combineUnderNChars: v.combine_under_n_chars }),
+                chunkingStrategy: v.chunking_strategy,
+                combineUnderNChars: v.combine_under_n_chars,
                 coordinates: v.coordinates,
-                ...(v.encoding === undefined ? null : { encoding: v.encoding }),
+                encoding: v.encoding,
                 ...(v.extract_image_block_types === undefined
                     ? null
                     : { extractImageBlockTypes: v.extract_image_block_types }),
-                ...(v.gz_uncompressed_content_type === undefined
-                    ? null
-                    : { gzUncompressedContentType: v.gz_uncompressed_content_type }),
-                ...(v.hi_res_model_name === undefined
-                    ? null
-                    : { hiResModelName: v.hi_res_model_name }),
-                ...(v.include_orig_elements === undefined
-                    ? null
-                    : { includeOrigElements: v.include_orig_elements }),
+                gzUncompressedContentType: v.gz_uncompressed_content_type,
+                hiResModelName: v.hi_res_model_name,
+                includeOrigElements: v.include_orig_elements,
                 includePageBreaks: v.include_page_breaks,
                 ...(v.languages === undefined ? null : { languages: v.languages }),
-                ...(v.max_characters === undefined ? null : { maxCharacters: v.max_characters }),
+                maxCharacters: v.max_characters,
                 multipageSections: v.multipage_sections,
-                ...(v.new_after_n_chars === undefined
-                    ? null
-                    : { newAfterNChars: v.new_after_n_chars }),
+                newAfterNChars: v.new_after_n_chars,
                 ...(v.ocr_languages === undefined ? null : { ocrLanguages: v.ocr_languages }),
                 outputFormat: v.output_format,
                 overlap: v.overlap,
                 overlapAll: v.overlap_all,
                 pdfInferTableStructure: v.pdf_infer_table_structure,
-                ...(v.similarity_threshold === undefined
-                    ? null
-                    : { similarityThreshold: v.similarity_threshold }),
+                similarityThreshold: v.similarity_threshold,
                 ...(v.skip_infer_table_types === undefined
                     ? null
                     : { skipInferTableTypes: v.skip_infer_table_types }),
+                startingPageNumber: v.starting_page_number,
                 strategy: v.strategy,
                 uniqueElementIds: v.unique_element_ids,
                 xmlKeepTags: v.xml_keep_tags,
@@ -279,26 +283,27 @@ export namespace PartitionParameters$ {
 
     export type Outbound = {
         files: Files$.Outbound | Blob;
-        chunking_strategy?: ChunkingStrategy | null | undefined;
-        combine_under_n_chars?: number | null | undefined;
+        chunking_strategy: ChunkingStrategy | null;
+        combine_under_n_chars: number | null;
         coordinates: boolean;
-        encoding?: string | null | undefined;
+        encoding: string | null;
         extract_image_block_types?: Array<string> | undefined;
-        gz_uncompressed_content_type?: string | null | undefined;
-        hi_res_model_name?: string | null | undefined;
-        include_orig_elements?: boolean | null | undefined;
+        gz_uncompressed_content_type: string | null;
+        hi_res_model_name: string | null;
+        include_orig_elements: boolean | null;
         include_page_breaks: boolean;
         languages?: Array<string> | undefined;
-        max_characters?: number | null | undefined;
+        max_characters: number | null;
         multipage_sections: boolean;
-        new_after_n_chars?: number | null | undefined;
+        new_after_n_chars: number | null;
         ocr_languages?: Array<string> | undefined;
-        output_format: string;
+        output_format: OutputFormat;
         overlap: number;
         overlap_all: boolean;
         pdf_infer_table_structure: boolean;
-        similarity_threshold?: number | null | undefined;
+        similarity_threshold: number | null;
         skip_infer_table_types?: Array<string> | undefined;
+        starting_page_number: number | null;
         strategy: Strategy;
         unique_element_ids: boolean;
         xml_keep_tags: boolean;
@@ -307,26 +312,27 @@ export namespace PartitionParameters$ {
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, PartitionParameters> = z
         .object({
             files: z.lazy(() => Files$.outboundSchema).or(blobLikeSchema),
-            chunkingStrategy: z.nullable(ChunkingStrategy$).optional(),
-            combineUnderNChars: z.nullable(z.number().int()).optional(),
+            chunkingStrategy: z.nullable(ChunkingStrategy$).default(null),
+            combineUnderNChars: z.nullable(z.number().int()).default(null),
             coordinates: z.boolean().default(false),
-            encoding: z.nullable(z.string()).optional(),
+            encoding: z.nullable(z.string()).default(null),
             extractImageBlockTypes: z.array(z.string()).optional(),
-            gzUncompressedContentType: z.nullable(z.string()).optional(),
-            hiResModelName: z.nullable(z.string()).optional(),
-            includeOrigElements: z.nullable(z.boolean()).optional(),
+            gzUncompressedContentType: z.nullable(z.string()).default(null),
+            hiResModelName: z.nullable(z.string()).default(null),
+            includeOrigElements: z.nullable(z.boolean()).default(null),
             includePageBreaks: z.boolean().default(false),
             languages: z.array(z.string()).optional(),
-            maxCharacters: z.nullable(z.number().int()).optional(),
+            maxCharacters: z.nullable(z.number().int()).default(null),
             multipageSections: z.boolean().default(true),
-            newAfterNChars: z.nullable(z.number().int()).optional(),
+            newAfterNChars: z.nullable(z.number().int()).default(null),
             ocrLanguages: z.array(z.string()).optional(),
-            outputFormat: z.string().default("application/json"),
+            outputFormat: OutputFormat$.default(OutputFormat.ApplicationJson),
             overlap: z.number().int().default(0),
             overlapAll: z.boolean().default(false),
             pdfInferTableStructure: z.boolean().default(true),
-            similarityThreshold: z.nullable(z.number()).optional(),
+            similarityThreshold: z.nullable(z.number()).default(null),
             skipInferTableTypes: z.array(z.string()).optional(),
+            startingPageNumber: z.nullable(z.number().int()).default(null),
             strategy: Strategy$.default(Strategy.Auto),
             uniqueElementIds: z.boolean().default(false),
             xmlKeepTags: z.boolean().default(false),
@@ -334,44 +340,31 @@ export namespace PartitionParameters$ {
         .transform((v) => {
             return {
                 files: v.files,
-                ...(v.chunkingStrategy === undefined
-                    ? null
-                    : { chunking_strategy: v.chunkingStrategy }),
-                ...(v.combineUnderNChars === undefined
-                    ? null
-                    : { combine_under_n_chars: v.combineUnderNChars }),
+                chunking_strategy: v.chunkingStrategy,
+                combine_under_n_chars: v.combineUnderNChars,
                 coordinates: v.coordinates,
-                ...(v.encoding === undefined ? null : { encoding: v.encoding }),
+                encoding: v.encoding,
                 ...(v.extractImageBlockTypes === undefined
                     ? null
                     : { extract_image_block_types: v.extractImageBlockTypes }),
-                ...(v.gzUncompressedContentType === undefined
-                    ? null
-                    : { gz_uncompressed_content_type: v.gzUncompressedContentType }),
-                ...(v.hiResModelName === undefined
-                    ? null
-                    : { hi_res_model_name: v.hiResModelName }),
-                ...(v.includeOrigElements === undefined
-                    ? null
-                    : { include_orig_elements: v.includeOrigElements }),
+                gz_uncompressed_content_type: v.gzUncompressedContentType,
+                hi_res_model_name: v.hiResModelName,
+                include_orig_elements: v.includeOrigElements,
                 include_page_breaks: v.includePageBreaks,
                 ...(v.languages === undefined ? null : { languages: v.languages }),
-                ...(v.maxCharacters === undefined ? null : { max_characters: v.maxCharacters }),
+                max_characters: v.maxCharacters,
                 multipage_sections: v.multipageSections,
-                ...(v.newAfterNChars === undefined
-                    ? null
-                    : { new_after_n_chars: v.newAfterNChars }),
+                new_after_n_chars: v.newAfterNChars,
                 ...(v.ocrLanguages === undefined ? null : { ocr_languages: v.ocrLanguages }),
                 output_format: v.outputFormat,
                 overlap: v.overlap,
                 overlap_all: v.overlapAll,
                 pdf_infer_table_structure: v.pdfInferTableStructure,
-                ...(v.similarityThreshold === undefined
-                    ? null
-                    : { similarity_threshold: v.similarityThreshold }),
+                similarity_threshold: v.similarityThreshold,
                 ...(v.skipInferTableTypes === undefined
                     ? null
                     : { skip_infer_table_types: v.skipInferTableTypes }),
+                starting_page_number: v.startingPageNumber,
                 strategy: v.strategy,
                 unique_element_ids: v.uniqueElementIds,
                 xml_keep_tags: v.xmlKeepTags,
