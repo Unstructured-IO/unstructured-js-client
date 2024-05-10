@@ -8,19 +8,19 @@ import { RetryConfig } from "./retries";
 import { Params, pathToFunc } from "./url";
 
 /**
- * Hosted API
+ * Hosted API Free
  */
-export const ServerProd = "prod";
+export const ServerFreeApi = "free-api";
 /**
  * Development server
  */
-export const ServerLocal = "local";
+export const ServerDevelopment = "development";
 /**
  * Contains the list of servers available to the SDK
  */
 export const ServerList = {
-    [ServerProd]: "https://api.unstructured.io",
-    [ServerLocal]: "http://localhost:8000",
+    [ServerFreeApi]: "https://api.unstructured.io",
+    [ServerDevelopment]: "http://localhost:8000",
 } as const;
 
 export type SDKOptions = {
@@ -50,7 +50,7 @@ export function serverURLFromOptions(options: SDKOptions): URL | null {
     const params: Params = {};
 
     if (!serverURL) {
-        const server = options.server ?? ServerProd;
+        const server = options.server ?? ServerFreeApi;
         serverURL = ServerList[server] || "";
     }
 
@@ -60,8 +60,8 @@ export function serverURLFromOptions(options: SDKOptions): URL | null {
 
 export const SDK_METADATA = {
     language: "typescript",
-    openapiDocVersion: "1.0.26",
-    sdkVersion: "0.15.0",
+    openapiDocVersion: "1.0.30",
+    sdkVersion: "0.15.1",
     genVersion: "2.326.3",
-    userAgent: "speakeasy-sdk/typescript 0.15.0 2.326.3 1.0.26 unstructured-client",
+    userAgent: "speakeasy-sdk/typescript 0.15.1 2.326.3 1.0.30 unstructured-client",
 } as const;

@@ -18,7 +18,7 @@ export type PartitionResponse = {
     /**
      * Successful Response
      */
-    responsePartitionParameters?: Array<shared.Element> | undefined;
+    elements?: Array<shared.Element> | undefined;
     /**
      * HTTP response status code for this operation
      */
@@ -74,7 +74,7 @@ export namespace PartitionRequest$ {
 export namespace PartitionResponse$ {
     export type Inbound = {
         ContentType: string;
-        "Response Partition Parameters"?: Array<shared.Element$.Inbound> | undefined;
+        Elements?: Array<shared.Element$.Inbound> | undefined;
         StatusCode: number;
         RawResponse: Response;
     };
@@ -82,16 +82,14 @@ export namespace PartitionResponse$ {
     export const inboundSchema: z.ZodType<PartitionResponse, z.ZodTypeDef, Inbound> = z
         .object({
             ContentType: z.string(),
-            "Response Partition Parameters": z.array(shared.Element$.inboundSchema).optional(),
+            Elements: z.array(shared.Element$.inboundSchema).optional(),
             StatusCode: z.number().int(),
             RawResponse: z.instanceof(Response),
         })
         .transform((v) => {
             return {
                 contentType: v.ContentType,
-                ...(v["Response Partition Parameters"] === undefined
-                    ? null
-                    : { responsePartitionParameters: v["Response Partition Parameters"] }),
+                ...(v.Elements === undefined ? null : { elements: v.Elements }),
                 statusCode: v.StatusCode,
                 rawResponse: v.RawResponse,
             };
@@ -99,7 +97,7 @@ export namespace PartitionResponse$ {
 
     export type Outbound = {
         ContentType: string;
-        "Response Partition Parameters"?: Array<shared.Element$.Outbound> | undefined;
+        Elements?: Array<shared.Element$.Outbound> | undefined;
         StatusCode: number;
         RawResponse: never;
     };
@@ -107,7 +105,7 @@ export namespace PartitionResponse$ {
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, PartitionResponse> = z
         .object({
             contentType: z.string(),
-            responsePartitionParameters: z.array(shared.Element$.outboundSchema).optional(),
+            elements: z.array(shared.Element$.outboundSchema).optional(),
             statusCode: z.number().int(),
             rawResponse: z.instanceof(Response).transform(() => {
                 throw new Error("Response cannot be serialized");
@@ -116,9 +114,7 @@ export namespace PartitionResponse$ {
         .transform((v) => {
             return {
                 ContentType: v.contentType,
-                ...(v.responsePartitionParameters === undefined
-                    ? null
-                    : { "Response Partition Parameters": v.responsePartitionParameters }),
+                ...(v.elements === undefined ? null : { Elements: v.elements }),
                 StatusCode: v.statusCode,
                 RawResponse: v.rawResponse,
             };
