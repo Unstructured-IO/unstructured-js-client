@@ -2,7 +2,7 @@ PACKAGE_NAME := unstructured-js-client
 CURRENT_DIR := $(shell pwd)
 ARCH := $(shell uname -m)
 DOCKER_IMAGE ?= quay.io/unstructured-io/unstructured-api:latest
-OPENAPI_DOCS_URL ?= https://raw.githubusercontent.com/Unstructured-IO/unstructured-api/main/openapi.json
+OPENAPI_DOCS_URL ?= https://api.unstructured.io/general/openapi.json
 
 ###########
 # Install #
