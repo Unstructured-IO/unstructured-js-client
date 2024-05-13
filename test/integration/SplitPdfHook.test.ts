@@ -163,7 +163,7 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
       expect(respSplit.contentType).toEqual(respSingle.contentType);
       expect(respSplit.statusCode).toEqual(respSingle.statusCode);
 
-      // Remove 'parent_id' and (temporarily) 'page_number' metadata
+      // Remove 'parent_id' metadata
       const splitElements = respSplit.elements?.map((el) => ({
         ...el,
         metadata: {
