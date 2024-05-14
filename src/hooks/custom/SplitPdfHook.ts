@@ -28,7 +28,8 @@ const MAX_PAGES = 20;
 
 interface PdfSplit {
   content: Blob;
-  pagesCount: number;
+  startPage: number;
+  endPage: number;
 }
 
 /**
@@ -115,14 +116,15 @@ export class SplitPdfHook
     const requestClone = request.clone();
     const requests: Request[] = [];
 
-    // Fix page numbering
-    for (const [pageIndex, pagesContent] of splits.entries()) {
-      const pageNumber = pageIndex + startingPageNumber;
+    // TODO: Marek Połom - Fix page numbering
+    for (const { content, startPage } of splits) {
+      // Both startPage and startingPageNumber are 1-based, so we need to subtract 1
+      const firstPageNumber = startPage + startingPageNumber - 1;
       const body = await this.#prepareRequestBody(
         formData,
-        pagesContent,
+        content,
         file.name,
-        pageNumber
+        firstPageNumber
       );
       const req = new Request(requestClone, {
         headers,
@@ -268,7 +270,7 @@ export class SplitPdfHook
       // If it's the last split, take the rest of the pages
       const endPage = Math.min(pagesCount, startPage + splitSize);
       const pdfSplit = await this.#pdfPagesToBlob(pdf, startPage, endPage);
-      pdfSplits.push({ content: pdfSplit, pagesCount: endPage - startPage });
+      pdfSplits.push({ content: pdfSplit, startPage, endPage });
     }
 
     return pdfSplits;
@@ -315,21 +317,22 @@ export class SplitPdfHook
     return headers;
   }
 
+  // TODO: Marek Połom - Update function documentation
   /**
    * Prepares the request body for splitting a PDF.
    *
    * @param formData - The original form data.
-   * @param pageContent - The content of the page to be split.
+   * @param fileContent - The content of the page to be split.
    * @param fileName - The name of the file.
-   * @param pageNumber - Real page number from the document.
+   * @param startingPageNumber - Real page number from the document.
    * @returns A Promise that resolves to a FormData object representing
    * the prepared request body.
    */
   async #prepareRequestBody(
     formData: FormData,
-    pageContent: Blob,
+    fileContent: Blob,
     fileName: string,
-    pageNumber: number
+    startingPageNumber: number
   ): Promise<FormData> {
     const newFormData = new FormData();
     for (const [key, value] of formData.entries()) {
@@ -345,10 +348,10 @@ export class SplitPdfHook
     }
 
     newFormData.append(PARTITION_FORM_SPLIT_PDF_PAGE_KEY, "false");
-    newFormData.append(PARTITION_FORM_FILES_KEY, pageContent, fileName);
+    newFormData.append(PARTITION_FORM_FILES_KEY, fileContent, fileName);
     newFormData.append(
       PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
-      pageNumber.toString()
+      startingPageNumber.toString()
     );
     return newFormData;
   }
