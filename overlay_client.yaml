@@ -10,4 +10,13 @@ actions:
           "type": "boolean",
           "title": "Split Pdf Page",
           "description": "Should the pdf file be split at client. Ignored on backend.",
+          "default": true,
+        }
+  - target: $["components"]["schemas"]["partition_parameters"]["properties"]
+    update:
+      "split_pdf_threads":
+        {
+          "type": "integer",
+          "title": "Split Pdf Threads",
+          "description": "Number of threads used when sending requests of splitted PDF. Ignored on backend.",
         }
