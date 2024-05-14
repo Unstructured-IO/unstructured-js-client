@@ -19,4 +19,5 @@ actions:
           "type": "integer",
           "title": "Split Pdf Threads",
           "description": "Number of threads used when sending requests of splitted PDF. Ignored on backend.",
+          "default": 5,
         }
