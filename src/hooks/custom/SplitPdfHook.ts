@@ -261,8 +261,9 @@ export class SplitPdfHook
   async #splitPdf(pdf: PDFDocument, threadsCount: number): Promise<PdfSplit[]> {
     const pdfSplits: PdfSplit[] = [];
     const pagesCount = pdf.getPages().length;
-    let splitSize = Math.max(pagesCount / threadsCount, MIN_PAGES);
-    splitSize = Math.min(splitSize, MAX_PAGES);
+    let splitSize = Math.floor(pagesCount / threadsCount);  // Compute the max split size to distribute between each thread
+    splitSize = Math.max(splitSize, MIN_PAGES);             // Ensure the split size is at least MIN_PAGES
+    splitSize = Math.min(splitSize, MAX_PAGES);             // Ensure the split size is at most MAX_PAGES
     const numberOfSplits = Math.ceil(pagesCount / splitSize);
 
     for (let i = 0; i < numberOfSplits; ++i) {
