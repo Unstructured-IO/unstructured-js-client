@@ -17,13 +17,19 @@ import { stringToBoolean } from "./utils";
 const PARTITION_FORM_FILES_KEY = "files";
 const PARTITION_FORM_SPLIT_PDF_PAGE_KEY = "split_pdf_page";
 const PARTITION_FORM_STARTING_PAGE_NUMBER_KEY = "starting_page_number";
-
-const UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS =
-  "UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS";
+const PARTITION_FORM_SPLIT_PDF_THREADS = "split_pdf_threads";
 
 const DEFAULT_STARTING_PAGE_NUMBER = 1;
 const MAX_NUMBER_OF_PARALLEL_REQUESTS = 15;
 const DEFAULT_NUMBER_OF_PARALLEL_REQUESTS = 5;
+
+const MIN_PAGES = 2;
+const MAX_PAGES = 20;
+
+interface PdfSplit {
+  content: Blob;
+  pagesCount: number;
+}
 
 /**
  * Represents a hook for splitting and sending PDF files as per page requests.
@@ -85,27 +91,36 @@ export class SplitPdfHook
       return request;
     }
 
-    const isPdf = file !== null && (await this.#isPdf(file));
-    if (!isPdf) {
-      console.warn("Given file is not a PDF. Continuing without splitting.");
-      return request;
-    }
-
     if (!this.#client) {
       console.warn("HTTP client not accessible! Continuing without splitting.");
       return request;
     }
 
-    const pages = await this.#getPdfPages(file);
+    const [error, pdf, pagesCount] = await this.#loadPdf(file);
+    if (file === null || pdf === null || error) {
+      return request;
+    }
+
+    if (pagesCount < MIN_PAGES) {
+      console.warn(
+        `PDF has less than ${MIN_PAGES} pages. Continuing without splitting.`
+      );
+      return request;
+    }
+
+    const requestsLimit = this.#getSplitPdfCallThreads(formData);
+    const splits = await this.#splitPdf(pdf, requestsLimit);
     const headers = this.#prepareRequestHeaders(request);
 
     const requestClone = request.clone();
     const requests: Request[] = [];
-    for (const [pageIndex, pageContent] of pages.entries()) {
+
+    // Fix page numbering
+    for (const [pageIndex, pagesContent] of splits.entries()) {
       const pageNumber = pageIndex + startingPageNumber;
       const body = await this.#prepareRequestBody(
         formData,
-        pageContent,
+        pagesContent,
         file.name,
         pageNumber
       );
@@ -115,8 +130,6 @@ export class SplitPdfHook
       });
       requests.push(req);
     }
-
-    const requestsLimit = this.#getSplitPdfCallThreads();
 
     this.#partitionResponses[operationID] = new Array(requests.length);
 
@@ -208,15 +221,26 @@ export class SplitPdfHook
     return { response: finalResponse, error: null };
   }
 
+  // TODO: Marek Połom - Update function documentation (min max pages)
   /**
    * Converts a page of a PDF document to a Blob object.
    * @param pdf - The PDF document.
    * @param pageIndex - The index of the page to convert.
    * @returns A Promise that resolves to a Blob object representing the converted page.
    */
-  async #pdfPageToBlob(pdf: PDFDocument, pageIndex: number): Promise<Blob> {
+  async #pdfPagesToBlob(
+    pdf: PDFDocument,
+    startPage: number,
+    endPage: number
+  ): Promise<Blob> {
     const subPdf = await PDFDocument.create();
-    const [page] = await subPdf.copyPages(pdf, [pageIndex]);
+    // Create an array with page indices to copy
+    // Converts 1-based page numbers to 0-based page indices
+    const pageIndices = Array.from(
+      { length: endPage - startPage + 1 },
+      (_, index) => startPage + index - 1
+    );
+    const [page] = await subPdf.copyPages(pdf, pageIndices);
     subPdf.addPage(page);
     const subPdfBytes = await subPdf.save();
     return new Blob([subPdfBytes], {
@@ -224,6 +248,7 @@ export class SplitPdfHook
     });
   }
 
+  // TODO: Marek Połom - Update function documentation (min max pages)
   /**
    * Retrieves an array of individual page files from a PDF file.
    *
@@ -231,17 +256,22 @@ export class SplitPdfHook
    * @returns A promise that resolves to an array of Blob objects, each representing
    * an individual page of the PDF.
    */
-  async #getPdfPages(file: File | Blob): Promise<Blob[]> {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await PDFDocument.load(arrayBuffer);
+  async #splitPdf(pdf: PDFDocument, threadsCount: number): Promise<PdfSplit[]> {
+    const pdfSplits: PdfSplit[] = [];
+    const pagesCount = pdf.getPages().length;
+    let splitSize = Math.max(pagesCount / threadsCount, MIN_PAGES);
+    splitSize = Math.min(splitSize, MAX_PAGES);
+    const numberOfSplits = Math.ceil(pagesCount / splitSize);
 
-    const pagesFiles: Blob[] = [];
-    for (let i = 0; i < pdf.getPages().length; ++i) {
-      const pageFile = await this.#pdfPageToBlob(pdf, i);
-      pagesFiles.push(pageFile);
+    for (let i = 0; i < numberOfSplits; ++i) {
+      const startPage = i * splitSize + 1;
+      // If it's the last split, take the rest of the pages
+      const endPage = Math.min(pagesCount, startPage + splitSize);
+      const pdfSplit = await this.#pdfPagesToBlob(pdf, startPage, endPage);
+      pdfSplits.push({ content: pdfSplit, pagesCount: endPage - startPage });
     }
 
-    return pagesFiles;
+    return pdfSplits;
   }
 
   /**
@@ -361,67 +391,87 @@ export class SplitPdfHook
    * @param file - The file to check.
    * @returns A promise that resolves to `true` if the file is a PDF, or `false` otherwise.
    */
-  async #isPdf(file: File): Promise<boolean> {
-    if (!file.name.endsWith(".pdf")) {
+  async #loadPdf(
+    file: File | null
+  ): Promise<[boolean, PDFDocument | null, number]> {
+    if (!file?.name.endsWith(".pdf")) {
       console.warn("Given file is not a PDF. Continuing without splitting.");
-      return false;
+      return [true, null, 0];
     }
 
     try {
       const arrayBuffer = await file.arrayBuffer();
-      await PDFDocument.load(arrayBuffer);
+      const pdf = await PDFDocument.load(arrayBuffer);
+      const pagesCount = pdf.getPages().length;
+      return [false, pdf, pagesCount];
     } catch (e) {
       console.error(e);
       console.warn(
         "Attempted to interpret file as pdf, but error arose when splitting by pages. Reverting to non-split pdf handling path."
       );
-      return false;
+      return [true, null, 0];
+    }
+  }
+
+  // TODO: Marek Połom - Update function documentation
+  #getIntegerParameter(
+    formData: FormData,
+    parameterName: string,
+    defaultValue: number
+  ): number {
+    let numberParameter = defaultValue;
+    const formDataNumberParameter = parseInt(
+      formData.get(parameterName) as string
+    );
+
+    if (isNaN(formDataNumberParameter)) {
+      console.warn(
+        `'${parameterName}' is not a valid integer. Using default value '${defaultValue}'.`
+      );
+    } else {
+      numberParameter = formDataNumberParameter;
     }
 
-    return true;
+    return numberParameter;
   }
 
   /**
    * Gets the number of call threads to use when splitting a PDF.
-   * The number of call threads is determined by the value of the environment variable
-   * UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS. If the environment variable is not set or has an invalid value,
-   * the default number of parallel requests (5) is used.
-   * If the number of call threads is greater than the maximum allowed (15), it is clipped to the maximum value.
-   * If the number of call threads is less than 1, the default number of parallel requests is used.
+   * - The number of call threads is determined by the value of the request parameter
+   * `split_pdf_thread`.
+   * - If the parameter is not set or has an invalid value, the default number of
+   * parallel requests (5) is used.
+   * - If the number of call threads is greater than the maximum allowed (15), it is
+   * clipped to the maximum value.
+   * - If the number of call threads is less than 1, the default number of parallel
+   * requests (5) is used.
    *
    * @returns The number of call threads to use when calling the API to split a PDF.
    */
-  #getSplitPdfCallThreads(): number {
-    let callThreads = DEFAULT_NUMBER_OF_PARALLEL_REQUESTS;
+  #getSplitPdfCallThreads(formData: FormData): number {
+    let splitPdfThreads = this.#getIntegerParameter(
+      formData,
+      PARTITION_FORM_SPLIT_PDF_THREADS,
+      DEFAULT_NUMBER_OF_PARALLEL_REQUESTS
+    );
 
-    try {
-      callThreads = parseInt(
-        process.env[UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS] ??
-          DEFAULT_NUMBER_OF_PARALLEL_REQUESTS.toString()
-      );
-    } catch {
-      console.error(
-        `${UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS} has invalid value.`
-      );
-    }
-
-    if (callThreads > MAX_NUMBER_OF_PARALLEL_REQUESTS) {
+    if (splitPdfThreads > MAX_NUMBER_OF_PARALLEL_REQUESTS) {
       console.warn(
-        `Clipping ${UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS} to ${MAX_NUMBER_OF_PARALLEL_REQUESTS}.`
+        `Clipping '${PARTITION_FORM_SPLIT_PDF_THREADS}' to ${MAX_NUMBER_OF_PARALLEL_REQUESTS}.`
       );
-      callThreads = MAX_NUMBER_OF_PARALLEL_REQUESTS;
-    } else if (callThreads < 1) {
-      console.warn(`${UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS} is less than 1.`);
-      callThreads = DEFAULT_NUMBER_OF_PARALLEL_REQUESTS;
+      splitPdfThreads = MAX_NUMBER_OF_PARALLEL_REQUESTS;
+    } else if (splitPdfThreads < 1) {
+      console.warn(`'${PARTITION_FORM_SPLIT_PDF_THREADS}' is less than 1.`);
+      splitPdfThreads = DEFAULT_NUMBER_OF_PARALLEL_REQUESTS;
     }
 
     console.info(
-      `Splitting PDF by page on client. Using ${callThreads} threads when calling API.`
+      `Splitting PDF by page on client. Using ${splitPdfThreads} threads when calling API.`
     );
     console.info(
-      `Set ${UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS} env var if you want to change that.`
+      `Set ${PARTITION_FORM_SPLIT_PDF_THREADS} parameter if you want to change that.`
     );
-    return callThreads;
+    return splitPdfThreads;
   }
 
   /**
@@ -433,19 +483,11 @@ export class SplitPdfHook
    * @returns The starting page number.
    */
   #getStartingPageNumber(formData: FormData): number {
-    let startingPageNumber = DEFAULT_STARTING_PAGE_NUMBER;
-
-    const formDataPageNumber = parseInt(
-      formData.get(PARTITION_FORM_STARTING_PAGE_NUMBER_KEY) as string
+    let startingPageNumber = this.#getIntegerParameter(
+      formData,
+      PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
+      DEFAULT_STARTING_PAGE_NUMBER
     );
-
-    if (isNaN(formDataPageNumber)) {
-      console.warn(
-        `'${PARTITION_FORM_STARTING_PAGE_NUMBER_KEY}' is not a valid integer. Using default value '${DEFAULT_STARTING_PAGE_NUMBER}'.`
-      );
-    } else {
-      startingPageNumber = formDataPageNumber;
-    }
 
     if (startingPageNumber < 1) {
       console.warn(
