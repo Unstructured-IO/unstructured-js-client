@@ -261,9 +261,13 @@ export class SplitPdfHook
   async #splitPdf(pdf: PDFDocument, threadsCount: number): Promise<PdfSplit[]> {
     const pdfSplits: PdfSplit[] = [];
     const pagesCount = pdf.getPages().length;
-    let splitSize = Math.floor(pagesCount / threadsCount);  // Compute the max split size to distribute between each thread
-    splitSize = Math.max(splitSize, MIN_PAGES);             // Ensure the split size is at least MIN_PAGES
-    splitSize = Math.min(splitSize, MAX_PAGES);             // Ensure the split size is at most MAX_PAGES
+
+    let splitSize = MAX_PAGES;
+    if (pagesCount < MAX_PAGES * threadsCount) {
+      splitSize = Math.ceil(pagesCount / threadsCount);
+    }
+    splitSize = Math.max(splitSize, MIN_PAGES);
+
     const numberOfSplits = Math.ceil(pagesCount / splitSize);
 
     for (let i = 0; i < numberOfSplits; ++i) {
@@ -350,6 +354,7 @@ export class SplitPdfHook
 
     newFormData.append(PARTITION_FORM_SPLIT_PDF_PAGE_KEY, "false");
     newFormData.append(PARTITION_FORM_FILES_KEY, fileContent, fileName);
+    console.warn(startingPageNumber);
     newFormData.append(
       PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
       startingPageNumber.toString()
@@ -424,9 +429,17 @@ export class SplitPdfHook
     defaultValue: number
   ): number {
     let numberParameter = defaultValue;
-    const formDataNumberParameter = parseInt(
-      formData.get(parameterName) as string
-    );
+    const formDataParameter = formData.get(parameterName);
+
+    console.error(typeof formDataParameter);
+    console.error(formDataParameter === null);
+
+    if (formDataParameter === null) {
+      return numberParameter;
+    }
+    console.error(formDataParameter);
+
+    const formDataNumberParameter = parseInt(formDataParameter as string);
 
     if (isNaN(formDataNumberParameter)) {
       console.warn(
