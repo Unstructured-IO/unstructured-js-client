@@ -1,6 +1,5 @@
 import { PDFDocument } from "pdf-lib";
 import async from "async";
-import {writeFileSync} from "node:fs"
 
 import { HTTPClient } from "../../lib/http";
 import {
@@ -249,7 +248,6 @@ export class SplitPdfHook
       subPdf.addPage(page);
     }
     const subPdfBytes = await subPdf.save();
-    writeFileSync(`test/data/split_${startPage}-${endPage}.pdf`, subPdfBytes);
     return new Blob([subPdfBytes], {
       type: "application/pdf",
     });
