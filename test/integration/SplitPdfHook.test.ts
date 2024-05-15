@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 import { UnstructuredClient } from "../../src";
 import { PartitionResponse } from "../../src/sdk/models/operations";
@@ -128,9 +128,6 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
         file.fileName += ".pdf";
       }
 
-      process.env["UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS"] =
-        requestsLimit.toString();
-
       const requestParams = {
         files: file,
         strategy: Strategy.Fast,
@@ -143,6 +140,7 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
           partitionParameters: {
             ...requestParams,
             splitPdfPage: true,
+            splitPdfThreads: requestsLimit,
           },
         });
       } catch (e) {
@@ -183,6 +181,9 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
           parent_id: undefined,
         },
       }));
+      
+      // writeFileSync("test/data/split.json", JSON.stringify(splitElements));
+      // writeFileSync("test/data/single.json", JSON.stringify(singleElements));
 
       expect(JSON.stringify(splitElements)).toEqual(
         JSON.stringify(singleElements)
