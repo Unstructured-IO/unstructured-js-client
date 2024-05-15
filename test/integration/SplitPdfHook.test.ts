@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync } from "fs";
 
 import { UnstructuredClient } from "../../src";
 import { PartitionResponse } from "../../src/sdk/models/operations";
@@ -182,9 +182,6 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
         },
       }));
       
-      // writeFileSync("test/data/split.json", JSON.stringify(splitElements));
-      // writeFileSync("test/data/single.json", JSON.stringify(singleElements));
-
       expect(JSON.stringify(splitElements)).toEqual(
         JSON.stringify(singleElements)
       );
