@@ -1,5 +1,6 @@
 import { PDFDocument } from "pdf-lib";
 import async from "async";
+import {writeFileSync} from "node:fs"
 
 import { HTTPClient } from "../../lib/http";
 import {
@@ -242,9 +243,13 @@ export class SplitPdfHook
       { length: endPage - startPage + 1 },
       (_, index) => startPage + index - 1
     );
-    const [page] = await subPdf.copyPages(pdf, pageIndices);
-    subPdf.addPage(page);
+    console.warn(pageIndices);
+    const pages = await subPdf.copyPages(pdf, pageIndices);
+    for (const page of pages) {
+      subPdf.addPage(page);
+    }
     const subPdfBytes = await subPdf.save();
+    writeFileSync(`test/data/split_${startPage}-${endPage}.pdf`, subPdfBytes);
     return new Blob([subPdfBytes], {
       type: "application/pdf",
     });
@@ -271,12 +276,15 @@ export class SplitPdfHook
     const numberOfSplits = Math.ceil(pagesCount / splitSize);
 
     for (let i = 0; i < numberOfSplits; ++i) {
-      const startPage = i * splitSize + 1;
+      const offset = i * splitSize;
+      const startPage = offset + 1;
       // If it's the last split, take the rest of the pages
-      const endPage = Math.min(pagesCount, startPage + splitSize);
+      const endPage = Math.min(pagesCount, offset + splitSize);
       const pdfSplit = await this.#pdfPagesToBlob(pdf, startPage, endPage);
       pdfSplits.push({ content: pdfSplit, startPage, endPage });
     }
+
+    console.warn(pdfSplits);
 
     return pdfSplits;
   }
@@ -394,6 +402,7 @@ export class SplitPdfHook
     return this.#partitionResponses[operationID]?.filter((e) => e) ?? [];
   }
 
+  // TODO: Marek Połom - Update function documentation
   /**
    * Checks if the given file is a PDF. First it checks the `.pdf` file extension, then
    * it tries to load the file as a PDF using the `PDFDocument.load` method.
@@ -431,13 +440,9 @@ export class SplitPdfHook
     let numberParameter = defaultValue;
     const formDataParameter = formData.get(parameterName);
 
-    console.error(typeof formDataParameter);
-    console.error(formDataParameter === null);
-
     if (formDataParameter === null) {
       return numberParameter;
     }
-    console.error(formDataParameter);
 
     const formDataNumberParameter = parseInt(formDataParameter as string);
 
