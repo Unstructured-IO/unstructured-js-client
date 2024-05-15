@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 
 import { UnstructuredClient } from "../../src";
 import { PartitionResponse } from "../../src/sdk/models/operations";
+import { Strategy } from "../../src/sdk/models/shared";
 
 describe("SplitPdfHook integration tests check splitted file is same as not splitted", () => {
   const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -132,15 +133,17 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
 
       const requestParams = {
         files: file,
-        strategy: "fast",
+        strategy: Strategy.Fast,
         languages: ["eng"],
       };
 
       let respSplit: PartitionResponse;
       try {
         respSplit = await client.general.partition({
-          ...requestParams,
-          splitPdfPage: true,
+          partitionParameters: {
+            ...requestParams,
+            splitPdfPage: true,
+          },
         });
       } catch (e) {
         if (!expectedOk) {
@@ -155,8 +158,10 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
       }
 
       const respSingle = await client.general.partition({
-        ...requestParams,
-        splitPdfPage: false,
+        partitionParameters: {
+          ...requestParams,
+          splitPdfPage: false,
+        },
       });
 
       expect(respSplit.elements?.length).toEqual(respSingle.elements?.length);
@@ -208,14 +213,16 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
 
     const requestParams = {
       files: file,
-      strategy: "fast",
+      strategy: Strategy.Fast,
       languages: ["eng"],
     };
 
     await expect(async () => {
       await client.general.partition({
-        ...requestParams,
-        splitPdfPage: true,
+        partitionParameters: {
+          ...requestParams,
+          splitPdfPage: true,
+        },
       });
     }).rejects.toThrow(/.*File type None is not supported.*/);
   });
