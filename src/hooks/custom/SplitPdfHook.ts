@@ -23,8 +23,8 @@ const DEFAULT_STARTING_PAGE_NUMBER = 1;
 const MAX_NUMBER_OF_PARALLEL_REQUESTS = 15;
 const DEFAULT_NUMBER_OF_PARALLEL_REQUESTS = 5;
 
-const MIN_PAGES = 2;
-const MAX_PAGES = 20;
+const MIN_PAGES_PER_THREAD = 2;
+const MAX_PAGES_PER_THREAD = 20;
 
 interface PdfSplit {
   content: Blob;
@@ -41,17 +41,17 @@ export class SplitPdfHook
   /**
    * The HTTP client used for making requests.
    */
-  #client: HTTPClient | undefined;
+  client: HTTPClient | undefined;
 
   /**
    * Maps lists responses to client operation.
    */
-  #partitionResponses: Record<string, Response[]> = {};
+  partitionResponses: Record<string, Response[]> = {};
 
   /**
    * Maps parallel requests to client operation.
    */
-  #partitionRequests: Record<string, Promise<unknown>> = {};
+  partitionRequests: Record<string, Promise<unknown>> = {};
 
   /**
    * Initializes Split PDF Hook.
@@ -60,20 +60,20 @@ export class SplitPdfHook
    */
   sdkInit(opts: SDKInitOptions): SDKInitOptions {
     const { baseURL, client } = opts;
-    this.#client = client;
+    this.client = client;
     return { baseURL: baseURL, client: client };
   }
 
   /**
    * If `splitPdfPage` is set to `true` in the request, the PDF file is split into
-   * separate pages. Each page is sent as a separate request in parallel. The last
-   * page request is returned by this method. It will return the original request
+   * separate batches. Each batch is sent as a separate request in parallel. The last
+   * batch request is returned by this method. It will return the original request
    * when: `splitPdfPage` is set to `false`, the file is not a PDF, or the HTTP
    * has not been initialized.
    *
    * @param hookCtx - The hook context containing information about the operation.
    * @param request - The request object.
-   * @returns If `splitPdfPage` is set to `true`, the last page request; otherwise,
+   * @returns If `splitPdfPage` is set to `true`, the last batch request; otherwise,
    * the original request.
    */
   async beforeRequest(
@@ -86,41 +86,40 @@ export class SplitPdfHook
       (formData.get(PARTITION_FORM_SPLIT_PDF_PAGE_KEY) as string) ?? "false"
     );
     const file = formData.get(PARTITION_FORM_FILES_KEY) as File | null;
-    const startingPageNumber = this.#getStartingPageNumber(formData);
+    const startingPageNumber = this.getStartingPageNumber(formData);
 
     if (!splitPdfPage) {
       return request;
     }
 
-    if (!this.#client) {
+    if (!this.client) {
       console.warn("HTTP client not accessible! Continuing without splitting.");
       return request;
     }
 
-    const [error, pdf, pagesCount] = await this.#loadPdf(file);
+    const [error, pdf, pagesCount] = await this.loadPdf(file);
     if (file === null || pdf === null || error) {
       return request;
     }
 
-    if (pagesCount < MIN_PAGES) {
+    if (pagesCount < MIN_PAGES_PER_THREAD) {
       console.warn(
-        `PDF has less than ${MIN_PAGES} pages. Continuing without splitting.`
+        `PDF has less than ${MIN_PAGES_PER_THREAD} pages. Continuing without splitting.`
       );
       return request;
     }
 
-    const requestsLimit = this.#getSplitPdfCallThreads(formData);
-    const splits = await this.#splitPdf(pdf, requestsLimit);
-    const headers = this.#prepareRequestHeaders(request);
+    const requestsLimit = this.getSplitPdfCallThreads(formData);
+    const splits = await this.splitPdf(pdf, requestsLimit);
+    const headers = this.prepareRequestHeaders(request);
 
     const requestClone = request.clone();
     const requests: Request[] = [];
 
-    // TODO: Marek Połom - Fix page numbering
     for (const { content, startPage } of splits) {
       // Both startPage and startingPageNumber are 1-based, so we need to subtract 1
       const firstPageNumber = startPage + startingPageNumber - 1;
-      const body = await this.#prepareRequestBody(
+      const body = await this.prepareRequestBody(
         formData,
         content,
         file.name,
@@ -133,15 +132,15 @@ export class SplitPdfHook
       requests.push(req);
     }
 
-    this.#partitionResponses[operationID] = new Array(requests.length);
+    this.partitionResponses[operationID] = new Array(requests.length);
 
-    this.#partitionRequests[operationID] = async.parallelLimit(
+    this.partitionRequests[operationID] = async.parallelLimit(
       requests.slice(0, -1).map((req, pageIndex) => async () => {
         const pageNumber = pageIndex + startingPageNumber;
         try {
-          const response = await this.#client!.request(req);
+          const response = await this.client!.request(req);
           if (response.status === 200) {
-            (this.#partitionResponses[operationID] as Response[])[pageIndex] =
+            (this.partitionResponses[operationID] as Response[])[pageIndex] =
               response;
           }
         } catch (e) {
@@ -167,16 +166,16 @@ export class SplitPdfHook
     response: Response
   ): Promise<Response> {
     const { operationID } = hookCtx;
-    const responses = await this.#awaitAllRequests(operationID);
+    const responses = await this.awaitAllRequests(operationID);
 
     if (!responses) {
       return response;
     }
 
-    const headers = this.#prepareResponseHeaders(response);
-    const body = await this.#prepareResponseBody([...responses, response]);
+    const headers = this.prepareResponseHeaders(response);
+    const body = await this.prepareResponseBody([...responses, response]);
 
-    this.#clearOperation(operationID);
+    this.clearOperation(operationID);
 
     return new Response(body, {
       headers: headers,
@@ -201,16 +200,16 @@ export class SplitPdfHook
     error: unknown
   ): Promise<{ response: Response | null; error: unknown }> {
     const { operationID } = hookCtx;
-    const responses = await this.#awaitAllRequests(operationID);
+    const responses = await this.awaitAllRequests(operationID);
 
     if (!responses?.length) {
-      this.#clearOperation(operationID);
+      this.clearOperation(operationID);
       return { response, error };
     }
 
     const okResponse = responses[0] as Response;
-    const headers = this.#prepareResponseHeaders(okResponse);
-    const body = await this.#prepareResponseBody(responses);
+    const headers = this.prepareResponseHeaders(okResponse);
+    const body = await this.prepareResponseBody(responses);
 
     const finalResponse = new Response(body, {
       headers: headers,
@@ -218,19 +217,20 @@ export class SplitPdfHook
       statusText: okResponse.statusText,
     });
 
-    this.#clearOperation(operationID);
+    this.clearOperation(operationID);
 
     return { response: finalResponse, error: null };
   }
 
-  // TODO: Marek Połom - Update function documentation (min max pages)
   /**
-   * Converts a page of a PDF document to a Blob object.
+   * Converts range of pages (including start and end page values) of a PDF document
+   * to a Blob object.
    * @param pdf - The PDF document.
-   * @param pageIndex - The index of the page to convert.
-   * @returns A Promise that resolves to a Blob object representing the converted page.
+   * @param startPage - Number of the first page of split.
+   * @param endPage - Number of the last page of split.
+   * @returns A Promise that resolves to a Blob object representing the converted pages.
    */
-  async #pdfPagesToBlob(
+  async pdfPagesToBlob(
     pdf: PDFDocument,
     startPage: number,
     endPage: number
@@ -242,7 +242,6 @@ export class SplitPdfHook
       { length: endPage - startPage + 1 },
       (_, index) => startPage + index - 1
     );
-    console.warn(pageIndices);
     const pages = await subPdf.copyPages(pdf, pageIndices);
     for (const page of pages) {
       subPdf.addPage(page);
@@ -253,23 +252,24 @@ export class SplitPdfHook
     });
   }
 
-  // TODO: Marek Połom - Update function documentation (min max pages)
   /**
-   * Retrieves an array of individual page files from a PDF file.
+   * Retrieves an array of splits, with the start and end page numbers, from a PDF file.
+   * Distribution of pages per split is made in as much uniform manner as possible.
    *
-   * @param file - The PDF file to extract pages from.
-   * @returns A promise that resolves to an array of Blob objects, each representing
-   * an individual page of the PDF.
+   * @param pdf - The PDF file to extract pages from.
+   * @param threadsCount - Number of maximum parallel requests.
+   * @returns A promise that resolves to an array of objects containing Blob files and
+   * start and end page numbers from the original document.
    */
-  async #splitPdf(pdf: PDFDocument, threadsCount: number): Promise<PdfSplit[]> {
+  async splitPdf(pdf: PDFDocument, threadsCount: number): Promise<PdfSplit[]> {
     const pdfSplits: PdfSplit[] = [];
     const pagesCount = pdf.getPages().length;
 
-    let splitSize = MAX_PAGES;
-    if (pagesCount < MAX_PAGES * threadsCount) {
+    let splitSize = MAX_PAGES_PER_THREAD;
+    if (pagesCount < MAX_PAGES_PER_THREAD * threadsCount) {
       splitSize = Math.ceil(pagesCount / threadsCount);
     }
-    splitSize = Math.max(splitSize, MIN_PAGES);
+    splitSize = Math.max(splitSize, MIN_PAGES_PER_THREAD);
 
     const numberOfSplits = Math.ceil(pagesCount / splitSize);
 
@@ -278,11 +278,9 @@ export class SplitPdfHook
       const startPage = offset + 1;
       // If it's the last split, take the rest of the pages
       const endPage = Math.min(pagesCount, offset + splitSize);
-      const pdfSplit = await this.#pdfPagesToBlob(pdf, startPage, endPage);
+      const pdfSplit = await this.pdfPagesToBlob(pdf, startPage, endPage);
       pdfSplits.push({ content: pdfSplit, startPage, endPage });
     }
-
-    console.warn(pdfSplits);
 
     return pdfSplits;
   }
@@ -293,7 +291,7 @@ export class SplitPdfHook
    * @param response - The response object.
    * @returns The modified headers object.
    */
-  #prepareResponseHeaders(response: Response): Headers {
+  prepareResponseHeaders(response: Response): Headers {
     const headers = new Headers(response.headers);
     headers.delete("content-length");
     return headers;
@@ -307,7 +305,7 @@ export class SplitPdfHook
    * @returns A Promise that resolves to a string representation of the flattened
    * JSON elements.
    */
-  async #prepareResponseBody(responses: Response[]): Promise<string> {
+  async prepareResponseBody(responses: Response[]): Promise<string> {
     const allElements: any[] = [];
     for (const res of responses) {
       const resElements = await res.clone().json();
@@ -322,24 +320,23 @@ export class SplitPdfHook
    * @param request - The request object containing the headers.
    * @returns The modified headers object.
    */
-  #prepareRequestHeaders(request: Request): Headers {
+  prepareRequestHeaders(request: Request): Headers {
     const headers = new Headers(request.headers);
     headers.delete("content-type");
     return headers;
   }
 
-  // TODO: Marek Połom - Update function documentation
   /**
    * Prepares the request body for splitting a PDF.
    *
    * @param formData - The original form data.
-   * @param fileContent - The content of the page to be split.
+   * @param fileContent - The content of the pages to be split.
    * @param fileName - The name of the file.
-   * @param startingPageNumber - Real page number from the document.
+   * @param startingPageNumber - Real first page number of the split.
    * @returns A Promise that resolves to a FormData object representing
    * the prepared request body.
    */
-  async #prepareRequestBody(
+  async prepareRequestBody(
     formData: FormData,
     fileContent: Blob,
     fileName: string,
@@ -360,7 +357,6 @@ export class SplitPdfHook
 
     newFormData.append(PARTITION_FORM_SPLIT_PDF_PAGE_KEY, "false");
     newFormData.append(PARTITION_FORM_FILES_KEY, fileContent, fileName);
-    console.warn(startingPageNumber);
     newFormData.append(
       PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
       startingPageNumber.toString()
@@ -374,9 +370,9 @@ export class SplitPdfHook
    *
    * @param operationID - The ID of the operation to clear.
    */
-  #clearOperation(operationID: string) {
-    delete this.#partitionResponses[operationID];
-    delete this.#partitionRequests[operationID];
+  clearOperation(operationID: string) {
+    delete this.partitionResponses[operationID];
+    delete this.partitionRequests[operationID];
   }
 
   /**
@@ -386,10 +382,10 @@ export class SplitPdfHook
    * @returns A promise that resolves to an array of responses, or undefined
    * if there are no requests for the given operation ID.
    */
-  async #awaitAllRequests(
+  async awaitAllRequests(
     operationID: string
   ): Promise<Response[] | undefined> {
-    const requests = this.#partitionRequests[operationID];
+    const requests = this.partitionRequests[operationID];
 
     if (!requests) {
       return;
@@ -397,17 +393,19 @@ export class SplitPdfHook
 
     await requests;
 
-    return this.#partitionResponses[operationID]?.filter((e) => e) ?? [];
+    return this.partitionResponses[operationID]?.filter((e) => e) ?? [];
   }
 
-  // TODO: Marek Połom - Update function documentation
   /**
    * Checks if the given file is a PDF. First it checks the `.pdf` file extension, then
    * it tries to load the file as a PDF using the `PDFDocument.load` method.
    * @param file - The file to check.
-   * @returns A promise that resolves to `true` if the file is a PDF, or `false` otherwise.
+   * @returns A promise that resolves to three values, first is a boolean representing
+   * whether there was an error during PDF load, second is a PDFDocument object or null
+   * (depending if there was an error), and the third is the number of pages in the PDF.
+   * The number of pages is 0 if there was an error while loading the file.
    */
-  async #loadPdf(
+  async loadPdf(
     file: File | null
   ): Promise<[boolean, PDFDocument | null, number]> {
     if (!file?.name.endsWith(".pdf")) {
@@ -429,8 +427,17 @@ export class SplitPdfHook
     }
   }
 
-  // TODO: Marek Połom - Update function documentation
-  #getIntegerParameter(
+  /**
+   * Retrieves an integer parameter from the given form data.
+   * If the parameter is not found or is not a valid integer, the default value is returned.
+   *
+   * @param formData - The form data object.
+   * @param parameterName - The name of the parameter to retrieve.
+   * @param defaultValue - The default value to use if the parameter is not found or is not
+   * a valid integer.
+   * @returns The integer value of the parameter.
+   */
+  getIntegerParameter(
     formData: FormData,
     parameterName: string,
     defaultValue: number
@@ -468,8 +475,8 @@ export class SplitPdfHook
    *
    * @returns The number of call threads to use when calling the API to split a PDF.
    */
-  #getSplitPdfCallThreads(formData: FormData): number {
-    let splitPdfThreads = this.#getIntegerParameter(
+  getSplitPdfCallThreads(formData: FormData): number {
+    let splitPdfThreads = this.getIntegerParameter(
       formData,
       PARTITION_FORM_SPLIT_PDF_THREADS,
       DEFAULT_NUMBER_OF_PARALLEL_REQUESTS
@@ -502,8 +509,8 @@ export class SplitPdfHook
    * @param formData - Request form data.
    * @returns The starting page number.
    */
-  #getStartingPageNumber(formData: FormData): number {
-    let startingPageNumber = this.#getIntegerParameter(
+  getStartingPageNumber(formData: FormData): number {
+    let startingPageNumber = this.getIntegerParameter(
       formData,
       PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
       DEFAULT_STARTING_PAGE_NUMBER
