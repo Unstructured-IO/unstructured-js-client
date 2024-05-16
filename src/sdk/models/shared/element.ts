@@ -15,9 +15,7 @@ export type Element = {
 
 /** @internal */
 export namespace Metadata$ {
-    export type Inbound = {};
-
-    export const inboundSchema: z.ZodType<Metadata, z.ZodTypeDef, Inbound> = z.object({});
+    export const inboundSchema: z.ZodType<Metadata, z.ZodTypeDef, unknown> = z.object({});
 
     export type Outbound = {};
 
@@ -26,14 +24,7 @@ export namespace Metadata$ {
 
 /** @internal */
 export namespace Element$ {
-    export type Inbound = {
-        element_id: string;
-        metadata: Metadata$.Inbound;
-        text: string;
-        type: string;
-    };
-
-    export const inboundSchema: z.ZodType<Element, z.ZodTypeDef, Inbound> = z
+    export const inboundSchema: z.ZodType<Element, z.ZodTypeDef, unknown> = z
         .object({
             element_id: z.string(),
             metadata: z.lazy(() => Metadata$.inboundSchema),

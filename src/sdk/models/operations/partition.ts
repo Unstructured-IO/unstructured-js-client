@@ -31,12 +31,7 @@ export type PartitionResponse = {
 
 /** @internal */
 export namespace PartitionRequest$ {
-    export type Inbound = {
-        partition_parameters: shared.PartitionParameters$.Inbound;
-        "unstructured-api-key"?: string | null | undefined;
-    };
-
-    export const inboundSchema: z.ZodType<PartitionRequest, z.ZodTypeDef, Inbound> = z
+    export const inboundSchema: z.ZodType<PartitionRequest, z.ZodTypeDef, unknown> = z
         .object({
             partition_parameters: shared.PartitionParameters$.inboundSchema,
             "unstructured-api-key": z.nullable(z.string()).optional(),
@@ -72,14 +67,7 @@ export namespace PartitionRequest$ {
 
 /** @internal */
 export namespace PartitionResponse$ {
-    export type Inbound = {
-        ContentType: string;
-        Elements?: Array<shared.Element$.Inbound> | undefined;
-        StatusCode: number;
-        RawResponse: Response;
-    };
-
-    export const inboundSchema: z.ZodType<PartitionResponse, z.ZodTypeDef, Inbound> = z
+    export const inboundSchema: z.ZodType<PartitionResponse, z.ZodTypeDef, unknown> = z
         .object({
             ContentType: z.string(),
             Elements: z.array(shared.Element$.inboundSchema).optional(),

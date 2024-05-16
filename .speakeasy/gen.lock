@@ -3,10 +3,10 @@ id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
   docChecksum: f6f734e7469f072182baccaf467d2766
   docVersion: 1.0.30
-  speakeasyVersion: 1.285.4
-  generationVersion: 2.326.3
-  releaseVersion: 0.15.1
-  configChecksum: 85d0e93e01f22bade3e4ffcc5eac3ef4
+  speakeasyVersion: 1.291.0
+  generationVersion: 2.332.4
+  releaseVersion: 0.15.2
+  configChecksum: 248210476209138ac5e062c52c8e82bb
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -15,7 +15,7 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.5
-    core: 3.9.3
+    core: 3.9.4
     examples: 2.81.4
     globalSecurity: 2.82.9
     globalSecurityCallbacks: 0.1.0
@@ -49,6 +49,7 @@ generatedFiles:
   - src/sdk/models/errors/sdkerror.ts
   - src/sdk/models/errors/sdkvalidationerror.ts
   - src/sdk/types/blobs.ts
+  - src/sdk/types/enums.ts
   - src/sdk/types/index.ts
   - src/sdk/types/operations.ts
   - src/sdk/types/rfcdate.ts
