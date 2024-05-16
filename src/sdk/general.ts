@@ -143,7 +143,7 @@ export class General extends ClientSDK {
             body$.append("ocr_languages", String(payload$.partition_parameters.ocr_languages));
         }
         if (payload$.partition_parameters.output_format !== undefined) {
-            body$.append("output_format", String(payload$.partition_parameters.output_format));
+            body$.append("output_format", payload$.partition_parameters.output_format);
         }
         if (payload$.partition_parameters.overlap !== undefined) {
             body$.append("overlap", String(payload$.partition_parameters.overlap));
@@ -176,7 +176,7 @@ export class General extends ClientSDK {
             );
         }
         if (payload$.partition_parameters.strategy !== undefined) {
-            body$.append("strategy", String(payload$.partition_parameters.strategy));
+            body$.append("strategy", payload$.partition_parameters.strategy);
         }
         if (payload$.partition_parameters.unique_element_ids !== undefined) {
             body$.append(

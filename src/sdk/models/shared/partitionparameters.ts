@@ -143,17 +143,14 @@ export type PartitionParameters = {
 };
 
 /** @internal */
-export const ChunkingStrategy$: z.ZodNativeEnum<typeof ChunkingStrategy> =
-    z.nativeEnum(ChunkingStrategy);
+export namespace ChunkingStrategy$ {
+    export const inboundSchema = z.nativeEnum(ChunkingStrategy);
+    export const outboundSchema = inboundSchema;
+}
 
 /** @internal */
 export namespace Files$ {
-    export type Inbound = {
-        content: Uint8Array | string;
-        fileName: string;
-    };
-
-    export const inboundSchema: z.ZodType<Files, z.ZodTypeDef, Inbound> = z
+    export const inboundSchema: z.ZodType<Files, z.ZodTypeDef, unknown> = z
         .object({
             content: b64$.zodInbound,
             fileName: z.string(),
@@ -184,45 +181,23 @@ export namespace Files$ {
 }
 
 /** @internal */
-export const OutputFormat$: z.ZodNativeEnum<typeof OutputFormat> = z.nativeEnum(OutputFormat);
+export namespace OutputFormat$ {
+    export const inboundSchema = z.nativeEnum(OutputFormat);
+    export const outboundSchema = inboundSchema;
+}
 
 /** @internal */
-export const Strategy$: z.ZodNativeEnum<typeof Strategy> = z.nativeEnum(Strategy);
+export namespace Strategy$ {
+    export const inboundSchema = z.nativeEnum(Strategy);
+    export const outboundSchema = inboundSchema;
+}
 
 /** @internal */
 export namespace PartitionParameters$ {
-    export type Inbound = {
-        files: Files$.Inbound;
-        chunking_strategy?: ChunkingStrategy | null | undefined;
-        combine_under_n_chars?: number | null | undefined;
-        coordinates?: boolean | undefined;
-        encoding?: string | null | undefined;
-        extract_image_block_types?: Array<string> | undefined;
-        gz_uncompressed_content_type?: string | null | undefined;
-        hi_res_model_name?: string | null | undefined;
-        include_orig_elements?: boolean | null | undefined;
-        include_page_breaks?: boolean | undefined;
-        languages?: Array<string> | undefined;
-        max_characters?: number | null | undefined;
-        multipage_sections?: boolean | undefined;
-        new_after_n_chars?: number | null | undefined;
-        ocr_languages?: Array<string> | undefined;
-        output_format?: OutputFormat | undefined;
-        overlap?: number | undefined;
-        overlap_all?: boolean | undefined;
-        pdf_infer_table_structure?: boolean | undefined;
-        similarity_threshold?: number | null | undefined;
-        skip_infer_table_types?: Array<string> | undefined;
-        starting_page_number?: number | null | undefined;
-        strategy?: Strategy | undefined;
-        unique_element_ids?: boolean | undefined;
-        xml_keep_tags?: boolean | undefined;
-    };
-
-    export const inboundSchema: z.ZodType<PartitionParameters, z.ZodTypeDef, Inbound> = z
+    export const inboundSchema: z.ZodType<PartitionParameters, z.ZodTypeDef, unknown> = z
         .object({
             files: z.lazy(() => Files$.inboundSchema),
-            chunking_strategy: z.nullable(ChunkingStrategy$).default(null),
+            chunking_strategy: z.nullable(ChunkingStrategy$.inboundSchema).default(null),
             combine_under_n_chars: z.nullable(z.number().int()).default(null),
             coordinates: z.boolean().default(false),
             encoding: z.nullable(z.string()).default(null),
@@ -236,14 +211,14 @@ export namespace PartitionParameters$ {
             multipage_sections: z.boolean().default(true),
             new_after_n_chars: z.nullable(z.number().int()).default(null),
             ocr_languages: z.array(z.string()).optional(),
-            output_format: OutputFormat$.default(OutputFormat.ApplicationJson),
+            output_format: OutputFormat$.inboundSchema.default(OutputFormat.ApplicationJson),
             overlap: z.number().int().default(0),
             overlap_all: z.boolean().default(false),
             pdf_infer_table_structure: z.boolean().default(true),
             similarity_threshold: z.nullable(z.number()).default(null),
             skip_infer_table_types: z.array(z.string()).optional(),
             starting_page_number: z.nullable(z.number().int()).default(null),
-            strategy: Strategy$.default(Strategy.Auto),
+            strategy: Strategy$.inboundSchema.default(Strategy.Auto),
             unique_element_ids: z.boolean().default(false),
             xml_keep_tags: z.boolean().default(false),
         })
@@ -283,7 +258,7 @@ export namespace PartitionParameters$ {
 
     export type Outbound = {
         files: Files$.Outbound | Blob;
-        chunking_strategy: ChunkingStrategy | null;
+        chunking_strategy: string | null;
         combine_under_n_chars: number | null;
         coordinates: boolean;
         encoding: string | null;
@@ -297,14 +272,14 @@ export namespace PartitionParameters$ {
         multipage_sections: boolean;
         new_after_n_chars: number | null;
         ocr_languages?: Array<string> | undefined;
-        output_format: OutputFormat;
+        output_format: string;
         overlap: number;
         overlap_all: boolean;
         pdf_infer_table_structure: boolean;
         similarity_threshold: number | null;
         skip_infer_table_types?: Array<string> | undefined;
         starting_page_number: number | null;
-        strategy: Strategy;
+        strategy: string;
         unique_element_ids: boolean;
         xml_keep_tags: boolean;
     };
@@ -312,7 +287,7 @@ export namespace PartitionParameters$ {
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, PartitionParameters> = z
         .object({
             files: z.lazy(() => Files$.outboundSchema).or(blobLikeSchema),
-            chunkingStrategy: z.nullable(ChunkingStrategy$).default(null),
+            chunkingStrategy: z.nullable(ChunkingStrategy$.outboundSchema).default(null),
             combineUnderNChars: z.nullable(z.number().int()).default(null),
             coordinates: z.boolean().default(false),
             encoding: z.nullable(z.string()).default(null),
@@ -326,14 +301,14 @@ export namespace PartitionParameters$ {
             multipageSections: z.boolean().default(true),
             newAfterNChars: z.nullable(z.number().int()).default(null),
             ocrLanguages: z.array(z.string()).optional(),
-            outputFormat: OutputFormat$.default(OutputFormat.ApplicationJson),
+            outputFormat: OutputFormat$.outboundSchema.default(OutputFormat.ApplicationJson),
             overlap: z.number().int().default(0),
             overlapAll: z.boolean().default(false),
             pdfInferTableStructure: z.boolean().default(true),
             similarityThreshold: z.nullable(z.number()).default(null),
             skipInferTableTypes: z.array(z.string()).optional(),
             startingPageNumber: z.nullable(z.number().int()).default(null),
-            strategy: Strategy$.default(Strategy.Auto),
+            strategy: Strategy$.outboundSchema.default(Strategy.Auto),
             uniqueElementIds: z.boolean().default(false),
             xmlKeepTags: z.boolean().default(false),
         })

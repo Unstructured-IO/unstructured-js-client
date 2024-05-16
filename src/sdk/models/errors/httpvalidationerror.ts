@@ -34,11 +34,7 @@ export class HTTPValidationError extends Error {
 
 /** @internal */
 export namespace HTTPValidationError$ {
-    export type Inbound = {
-        detail?: Array<shared.ValidationError$.Inbound> | undefined;
-    };
-
-    export const inboundSchema: z.ZodType<HTTPValidationError, z.ZodTypeDef, Inbound> = z
+    export const inboundSchema: z.ZodType<HTTPValidationError, z.ZodTypeDef, unknown> = z
         .object({
             detail: z.array(shared.ValidationError$.inboundSchema).optional(),
         })
