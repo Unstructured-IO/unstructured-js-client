@@ -122,13 +122,13 @@ export type PartitionParameters = {
      */
     skipInferTableTypes?: Array<string> | undefined;
     /**
+     * Number of maximum concurrent requests made when splitting PDF. Ignored on backend.
+     */
+    splitPdfConcurrencyLevel?: number | undefined;
+    /**
      * Should the pdf file be split at client. Ignored on backend.
      */
     splitPdfPage?: boolean | undefined;
-    /**
-     * Number of threads used when sending requests of splitted PDF. Ignored on backend.
-     */
-    splitPdfThreads?: number | undefined;
     /**
      * When PDF is split into pages before sending it into the API, providing this information will allow the page number to be assigned correctly. Introduced in 1.0.27.
      */
@@ -225,8 +225,8 @@ export namespace PartitionParameters$ {
             pdf_infer_table_structure: z.boolean().default(true),
             similarity_threshold: z.nullable(z.number()).optional(),
             skip_infer_table_types: z.array(z.string()).optional(),
-            split_pdf_page: z.boolean().default(true),
-            split_pdf_threads: z.number().int().default(5),
+            split_pdf_concurrency_level: z.number().int().default(5),
+            split_pdf_page: z.boolean().default(false),
             starting_page_number: z.nullable(z.number().int()).optional(),
             strategy: Strategy$.inboundSchema.default(Strategy.Auto),
             unique_element_ids: z.boolean().default(false),
@@ -273,8 +273,8 @@ export namespace PartitionParameters$ {
                 ...(v.skip_infer_table_types === undefined
                     ? null
                     : { skipInferTableTypes: v.skip_infer_table_types }),
+                splitPdfConcurrencyLevel: v.split_pdf_concurrency_level,
                 splitPdfPage: v.split_pdf_page,
-                splitPdfThreads: v.split_pdf_threads,
                 ...(v.starting_page_number === undefined
                     ? null
                     : { startingPageNumber: v.starting_page_number }),
@@ -306,8 +306,8 @@ export namespace PartitionParameters$ {
         pdf_infer_table_structure: boolean;
         similarity_threshold?: number | null | undefined;
         skip_infer_table_types?: Array<string> | undefined;
+        split_pdf_concurrency_level: number;
         split_pdf_page: boolean;
-        split_pdf_threads: number;
         starting_page_number?: number | null | undefined;
         strategy: string;
         unique_element_ids: boolean;
@@ -337,8 +337,8 @@ export namespace PartitionParameters$ {
             pdfInferTableStructure: z.boolean().default(true),
             similarityThreshold: z.nullable(z.number()).optional(),
             skipInferTableTypes: z.array(z.string()).optional(),
-            splitPdfPage: z.boolean().default(true),
-            splitPdfThreads: z.number().int().default(5),
+            splitPdfConcurrencyLevel: z.number().int().default(5),
+            splitPdfPage: z.boolean().default(false),
             startingPageNumber: z.nullable(z.number().int()).optional(),
             strategy: Strategy$.outboundSchema.default(Strategy.Auto),
             uniqueElementIds: z.boolean().default(false),
@@ -385,8 +385,8 @@ export namespace PartitionParameters$ {
                 ...(v.skipInferTableTypes === undefined
                     ? null
                     : { skip_infer_table_types: v.skipInferTableTypes }),
+                split_pdf_concurrency_level: v.splitPdfConcurrencyLevel,
                 split_pdf_page: v.splitPdfPage,
-                split_pdf_threads: v.splitPdfThreads,
                 ...(v.startingPageNumber === undefined
                     ? null
                     : { starting_page_number: v.startingPageNumber }),
