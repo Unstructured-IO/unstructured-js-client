@@ -166,13 +166,9 @@ See the [general partition](docs/sdk/models/shared/partitionparameters.md) page 
 
 ### Splitting PDF by pages
 
-In order to speed up processing of long PDF files they are split into smaller batches at client side, before sending to API, and combining individual responses as single result. This will work only for PDF files, so don't set it for other types of files. Size of each batch is determined internally and it can vary between 2 and 20 pages per split.
+In order to speed up processing of long PDF files, set `splitPdfPage` parameter to `true`. It will cause the PDF to be split into smaller batches at client side, before sending to API, and combining individual responses as single result. This will work only for PDF files, so don't set it for other types of files. Size of each batch is determined internally and it can vary between 2 and 20 pages per split.
 
-**Warning:** *this feature causes the `parent_id` metadata generation in elements to be disabled, as it requires having context of multiple pages.*
-
-This option can be disabled by setting `splitPdfPage` parameter to `false`.
-
-The amount of parallel requests is controlled by `splitPdfThreads` parameter. By default it equals to 5. It can't be more than 15, to avoid too high resource usage and costs.
+The amount of parallel requests is controlled by `splitPdfConcurrencyLevel` parameter. By default it equals to 5. It can't be more than 15, to avoid too high resource usage and costs.
 
 ```typescript
 import { SplitPdfHook } from "unstructured-client/hooks/custom/SplitPdfHook";
@@ -185,10 +181,10 @@ client.general.partition({
             content: data,
             fileName: filename,
         },
-        // Modify splitPdfThreads to change the limit of parallel requests
-        splitPdfThreads: 10,
         // Set splitPdfPage parameter to false in order to disable splitting PDF
-        // splitPdfPage: false,
+        splitPdfPage: true,
+        // Modify splitPdfConcurrencyLevel to change the limit of parallel requests
+        splitPdfConcurrencyLevel: 10,
     },
 }).then((res: PartitionResponse) => {
     if (res.statusCode == 200) {

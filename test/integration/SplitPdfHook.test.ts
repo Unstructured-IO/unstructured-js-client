@@ -156,7 +156,7 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
           partitionParameters: {
             ...requestParams,
             splitPdfPage: true,
-            splitPdfThreads: requestsLimit,
+            splitPdfConcurrencyLevel: requestsLimit,
           },
         });
       } catch (e) {

@@ -17,7 +17,7 @@ import { stringToBoolean } from "./utils";
 const PARTITION_FORM_FILES_KEY = "files";
 const PARTITION_FORM_SPLIT_PDF_PAGE_KEY = "split_pdf_page";
 const PARTITION_FORM_STARTING_PAGE_NUMBER_KEY = "starting_page_number";
-const PARTITION_FORM_SPLIT_PDF_THREADS = "split_pdf_threads";
+const PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL = "split_pdf_concurrency_level";
 
 const DEFAULT_STARTING_PAGE_NUMBER = 1;
 const MAX_NUMBER_OF_PARALLEL_REQUESTS = 15;
@@ -109,8 +109,8 @@ export class SplitPdfHook
       return request;
     }
 
-    const requestsLimit = this.getSplitPdfCallThreads(formData);
-    const splits = await this.splitPdf(pdf, requestsLimit);
+    const concurrencyLevel = this.getSplitPdfConcurrencyLevel(formData);
+    const splits = await this.splitPdf(pdf, concurrencyLevel);
     const headers = this.prepareRequestHeaders(request);
 
     const requestClone = request.clone();
@@ -147,7 +147,7 @@ export class SplitPdfHook
           console.error(`Failed to send request for page ${pageNumber}.`);
         }
       }),
-      requestsLimit
+      concurrencyLevel
     );
 
     return requests.at(-1) as Request;
@@ -257,17 +257,17 @@ export class SplitPdfHook
    * Distribution of pages per split is made in as much uniform manner as possible.
    *
    * @param pdf - The PDF file to extract pages from.
-   * @param threadsCount - Number of maximum parallel requests.
+   * @param concurrencyLevel - Number of maximum parallel requests.
    * @returns A promise that resolves to an array of objects containing Blob files and
    * start and end page numbers from the original document.
    */
-  async splitPdf(pdf: PDFDocument, threadsCount: number): Promise<PdfSplit[]> {
+  async splitPdf(pdf: PDFDocument, concurrencyLevel: number): Promise<PdfSplit[]> {
     const pdfSplits: PdfSplit[] = [];
     const pagesCount = pdf.getPages().length;
 
     let splitSize = MAX_PAGES_PER_THREAD;
-    if (pagesCount < MAX_PAGES_PER_THREAD * threadsCount) {
-      splitSize = Math.ceil(pagesCount / threadsCount);
+    if (pagesCount < MAX_PAGES_PER_THREAD * concurrencyLevel) {
+      splitSize = Math.ceil(pagesCount / concurrencyLevel);
     }
     splitSize = Math.max(splitSize, MIN_PAGES_PER_THREAD);
 
@@ -463,42 +463,42 @@ export class SplitPdfHook
   }
 
   /**
-   * Gets the number of call threads to use when splitting a PDF.
-   * - The number of call threads is determined by the value of the request parameter
+   * Gets the number of maximum requests that can be made when splitting PDF.
+   * - The number of maximum requests is determined by the value of the request parameter
    * `split_pdf_thread`.
    * - If the parameter is not set or has an invalid value, the default number of
    * parallel requests (5) is used.
-   * - If the number of call threads is greater than the maximum allowed (15), it is
+   * - If the number of maximum requests is greater than the maximum allowed (15), it is
    * clipped to the maximum value.
-   * - If the number of call threads is less than 1, the default number of parallel
+   * - If the number of maximum requests is less than 1, the default number of parallel
    * requests (5) is used.
    *
-   * @returns The number of call threads to use when calling the API to split a PDF.
+   * @returns The number of maximum requests to use when calling the API to split a PDF.
    */
-  getSplitPdfCallThreads(formData: FormData): number {
-    let splitPdfThreads = this.getIntegerParameter(
+  getSplitPdfConcurrencyLevel(formData: FormData): number {
+    let splitPdfConcurrencyLevel = this.getIntegerParameter(
       formData,
-      PARTITION_FORM_SPLIT_PDF_THREADS,
+      PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL,
       DEFAULT_NUMBER_OF_PARALLEL_REQUESTS
     );
 
-    if (splitPdfThreads > MAX_NUMBER_OF_PARALLEL_REQUESTS) {
+    if (splitPdfConcurrencyLevel > MAX_NUMBER_OF_PARALLEL_REQUESTS) {
       console.warn(
-        `Clipping '${PARTITION_FORM_SPLIT_PDF_THREADS}' to ${MAX_NUMBER_OF_PARALLEL_REQUESTS}.`
+        `Clipping '${PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL}' to ${MAX_NUMBER_OF_PARALLEL_REQUESTS}.`
       );
-      splitPdfThreads = MAX_NUMBER_OF_PARALLEL_REQUESTS;
-    } else if (splitPdfThreads < 1) {
-      console.warn(`'${PARTITION_FORM_SPLIT_PDF_THREADS}' is less than 1.`);
-      splitPdfThreads = DEFAULT_NUMBER_OF_PARALLEL_REQUESTS;
+      splitPdfConcurrencyLevel = MAX_NUMBER_OF_PARALLEL_REQUESTS;
+    } else if (splitPdfConcurrencyLevel < 1) {
+      console.warn(`'${PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL}' is less than 1.`);
+      splitPdfConcurrencyLevel = DEFAULT_NUMBER_OF_PARALLEL_REQUESTS;
     }
 
     console.info(
-      `Splitting PDF by page on client. Using ${splitPdfThreads} threads when calling API.`
+      `Splitting PDF by page on client. Using ${splitPdfConcurrencyLevel} threads when calling API.`
     );
     console.info(
-      `Set ${PARTITION_FORM_SPLIT_PDF_THREADS} parameter if you want to change that.`
+      `Set ${PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL} parameter if you want to change that.`
     );
-    return splitPdfThreads;
+    return splitPdfConcurrencyLevel;
   }
 
   /**
