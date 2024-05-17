@@ -1,16 +1,18 @@
 import { PDFDocument } from "pdf-lib";
 import { readFileSync } from "node:fs";
 
-import { SplitPdfHook } from "../../src/hooks/custom/SplitPdfHook";
+import {
+  loadPdf,
+  pdfPagesToBlob,
+  splitPdf,
+} from "../../../src/hooks/custom/utils";
 
-describe("SplitPdfHook", () => {
-  let splitPdfHook: SplitPdfHook;
+describe("Pdf utility functions", () => {
   const filename = "test/data/layout-parser-paper.pdf";
   let file: Buffer;
   let pdf: PDFDocument;
 
   beforeEach(async () => {
-    splitPdfHook = new SplitPdfHook();
     file = readFileSync(filename);
     pdf = await PDFDocument.load(file);
   });
@@ -26,7 +28,7 @@ describe("SplitPdfHook", () => {
       const addMock = jest.spyOn(PDFDocument.prototype, "addPage");
 
       // Call the method
-      const result = await splitPdfHook.pdfPagesToBlob(pdf, 4, 8);
+      const result = await pdfPagesToBlob(pdf, 4, 8);
 
       // Verify the expected behavior
       expect(copyMock).toHaveBeenCalledWith(pdf, [3, 4, 5, 6, 7]);
@@ -39,7 +41,7 @@ describe("SplitPdfHook", () => {
 
   describe("splitPdf", () => {
     it("should split the PDF into one batch", async () => {
-      const result = await splitPdfHook.splitPdf(pdf, 1);
+      const result = await splitPdf(pdf, 1);
 
       expect(result).toHaveLength(1);
       expect(result[0]?.startPage).toBe(1);
@@ -47,7 +49,7 @@ describe("SplitPdfHook", () => {
     });
 
     it("should split the PDF into 3 batches", async () => {
-      const result = await splitPdfHook.splitPdf(pdf, 3);
+      const result = await splitPdf(pdf, 3);
 
       // Verify the expected behavior
       expect(result).toHaveLength(3);
@@ -60,7 +62,7 @@ describe("SplitPdfHook", () => {
     });
 
     it("should split the PDF into 4 batches", async () => {
-      const result = await splitPdfHook.splitPdf(pdf, 5);
+      const result = await splitPdf(pdf, 5);
 
       // Verify the expected behavior
       expect(result).toHaveLength(4);
@@ -77,7 +79,7 @@ describe("SplitPdfHook", () => {
 
   describe("loadPdf", () => {
     it("should return true, null, and 0 if the file is not a PDF", async () => {
-      const result = await splitPdfHook.loadPdf(null);
+      const result = await loadPdf(null);
 
       expect(result).toEqual([true, null, 0]);
     });
@@ -88,7 +90,7 @@ describe("SplitPdfHook", () => {
         content: jest.fn().mockResolvedValue(new ArrayBuffer(0)),
       };
 
-      const result = await splitPdfHook.loadPdf(file as any);
+      const result = await loadPdf(file as any);
 
       expect(result).toEqual([true, null, 0]);
       expect(file.content).not.toHaveBeenCalled();
@@ -100,7 +102,7 @@ describe("SplitPdfHook", () => {
         arrayBuffer: jest.fn().mockRejectedValue(new ArrayBuffer(0)),
       };
 
-      const result = await splitPdfHook.loadPdf(file as any);
+      const result = await loadPdf(file as any);
 
       expect(result).toEqual([true, null, 0]);
       expect(file.arrayBuffer).toHaveBeenCalled();
@@ -115,7 +117,7 @@ describe("SplitPdfHook", () => {
 
       const loadMock = jest.spyOn(PDFDocument, "load");
 
-      const [error, _, pages] = await splitPdfHook.loadPdf(f as any);
+      const [error, _, pages] = await loadPdf(f as any);
 
       expect(error).toBeFalsy();
       expect(pages).toEqual(2);
