@@ -34,7 +34,7 @@ test-unit:
 ## test-integration:			run integration tests
 .PHONY: test-integration
 test-integration:
-	npx jest --detectOpenHandles --config jest.config.js test/integration
+	npx jest --detectOpenHandles --config jest.config.js --forceExit test/integration
 
 ## test:					run all tests
 .PHONY: test
