@@ -61,13 +61,15 @@ const filename = "sample-docs/layout-parser-paper.pdf";
 const data = fs.readFileSync(filename);
 
 client.general.partition({
-    // Note that this currently only supports a single file
-    files: {
-        content: data,
-        fileName: filename,
+    partitionParameters: {
+        // Note that this currently only supports a single file
+        files: {
+            content: data,
+            fileName: filename,
+        },
+        // Other partition params
+        strategy: "fast",
     },
-    // Other partition params
-    strategy: "fast",
 }).then((res: PartitionResponse) => {
     if (res.statusCode == 200) {
         console.log(res.elements);
@@ -164,27 +166,26 @@ See the [general partition](docs/sdk/models/shared/partitionparameters.md) page 
 
 ### Splitting PDF by pages
 
-In order to speed up processing of long PDF files, set `splitPdfPage` parameter to `true`. It will cause the PDF to be split page-by-page at client side, before sending to API, and combining individual responses as single result. This will work only for PDF files, so don't set it for other types of files.
+In order to speed up processing of long PDF files, set `splitPdfPage` parameter to `true`. It will cause the PDF to be split into smaller batches at client side, before sending to API, and combining individual responses as single result. This will work only for PDF files, so don't set it for other types of files. Size of each batch is determined internally and it can vary between 2 and 20 pages per split.
 
-Warning: this feature causes the `parent_id` metadata generation in elements to be disabled, as it requires having context of multiple pages.
-
-The amount of parallel requests is controlled by `UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS` environmental variable. By default it equals to 5. It can't be more than 15, to avoid too high resource usage and costs.
+The amount of parallel requests is controlled by `splitPdfConcurrencyLevel` parameter. By default it equals to 5. It can't be more than 15, to avoid too high resource usage and costs.
 
 ```typescript
 import { SplitPdfHook } from "unstructured-client/hooks/custom/SplitPdfHook";
 
 ...
 
-// Modify this environmental variable to change the limit of parallel requests
-process.env["UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS"] = "10";
-
 client.general.partition({
-    files: {
-        content: data,
-        fileName: filename,
+    partitionParameters: {
+        files: {
+            content: data,
+            fileName: filename,
+        },
+        // Set splitPdfPage parameter to false in order to disable splitting PDF
+        splitPdfPage: true,
+        // Modify splitPdfConcurrencyLevel to change the limit of parallel requests
+        splitPdfConcurrencyLevel: 10,
     },
-    // Set `splitPdfPage` parameter to `true` in order to split the PDF file
-    splitPdfPage: true
 }).then((res: PartitionResponse) => {
     if (res.statusCode == 200) {
         console.log(res.elements);

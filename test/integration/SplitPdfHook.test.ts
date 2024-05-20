@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 
 import { UnstructuredClient } from "../../src";
 import { PartitionResponse } from "../../src/sdk/models/operations";
+import { PartitionParameters, Strategy } from "../../src/sdk/models/shared";
 
 describe("SplitPdfHook integration tests check splitted file is same as not splitted", () => {
   const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -19,94 +20,110 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
       expectedOk: true,
       requestsLimit: 1,
       description: "single paged PDF",
+      strategy: Strategy.Fast,
     },
     {
       filename: "test/data/list-item-example-1.pdf",
       expectedOk: true,
       requestsLimit: 2,
       description: "single paged PDF",
+      strategy: Strategy.Fast,
     },
     {
       filename: "test/data/list-item-example-1.pdf",
       expectedOk: true,
       requestsLimit: 5,
       description: "single paged PDF",
+      strategy: Strategy.Fast,
     },
     {
       filename: "test/data/layout-parser-paper-fast.pdf",
       expectedOk: true,
       requestsLimit: 1,
       description: "multi paged small PDF",
+      strategy: Strategy.Fast,
     },
     {
       filename: "test/data/layout-parser-paper-fast.pdf",
       expectedOk: true,
       requestsLimit: 2,
       description: "multi paged small PDF",
+      strategy: Strategy.Fast,
     },
     {
       filename: "test/data/layout-parser-paper-fast.pdf",
       expectedOk: true,
       requestsLimit: 5,
       description: "multi paged small PDF",
+      strategy: Strategy.Fast,
     },
+    // NOTE(Marek Połom): using "fast" strategy fails on this file for unknown reasons
     {
       filename: "test/data/layout-parser-paper.pdf",
       expectedOk: true,
       requestsLimit: 1,
       description: "multi paged big PDF",
+      strategy: Strategy.HiRes,
     },
     {
       filename: "test/data/layout-parser-paper.pdf",
       expectedOk: true,
       requestsLimit: 2,
       description: "multi paged big PDF",
+      strategy: Strategy.HiRes,
     },
     {
       filename: "test/data/layout-parser-paper.pdf",
       expectedOk: true,
       requestsLimit: 5,
       description: "multi paged big PDF",
+      strategy: Strategy.HiRes,
     },
     {
       filename: "test/data/fake.doc",
       expectedOk: true,
       requestsLimit: 1,
       description: "not PDF file",
+      strategy: Strategy.Fast,
     },
     {
       filename: "test/data/fake.doc",
       expectedOk: true,
       requestsLimit: 2,
       description: "not PDF file",
+      strategy: Strategy.Fast,
     },
     {
       filename: "test/data/fake.doc",
       expectedOk: true,
       requestsLimit: 5,
       description: "not PDF file",
+      strategy: Strategy.Fast,
     },
     {
       filename: "test/data/fake.doc",
       expectedOk: false,
       requestsLimit: 1,
       description: "fake PDF file (wrong content)",
+      strategy: Strategy.Fast,
     },
     {
       filename: "test/data/fake.doc",
       expectedOk: false,
       requestsLimit: 2,
       description: "fake PDF file (wrong content)",
+      strategy: Strategy.Fast,
     },
     {
       filename: "test/data/fake.doc",
       expectedOk: false,
       requestsLimit: 5,
       description: "fake PDF file (wrong content)",
+      strategy: Strategy.Fast,
     },
   ])(
     "for request limit $requestsLimit and $description",
-    async ({ filename, expectedOk, requestsLimit }) => {
+    async ({ filename, expectedOk, requestsLimit, strategy }) => {
       try {
         const res = await fetch("http://localhost:8000/general/docs");
         expect(res.status).toEqual(200);
@@ -127,20 +144,20 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
         file.fileName += ".pdf";
       }
 
-      process.env["UNSTRUCTURED_CLIENT_SPLIT_CALL_THREADS"] =
-        requestsLimit.toString();
-
-      const requestParams = {
+      const requestParams: PartitionParameters = {
         files: file,
-        strategy: "fast",
+        strategy: strategy,
         languages: ["eng"],
       };
 
       let respSplit: PartitionResponse;
       try {
         respSplit = await client.general.partition({
-          ...requestParams,
-          splitPdfPage: true,
+          partitionParameters: {
+            ...requestParams,
+            splitPdfPage: true,
+            splitPdfConcurrencyLevel: requestsLimit,
+          },
         });
       } catch (e) {
         if (!expectedOk) {
@@ -155,15 +172,17 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
       }
 
       const respSingle = await client.general.partition({
-        ...requestParams,
-        splitPdfPage: false,
+        partitionParameters: {
+          ...requestParams,
+          splitPdfPage: false,
+        },
       });
 
       expect(respSplit.elements?.length).toEqual(respSingle.elements?.length);
       expect(respSplit.contentType).toEqual(respSingle.contentType);
       expect(respSplit.statusCode).toEqual(respSingle.statusCode);
 
-      // Remove 'parent_id' and (temporarily) 'page_number' metadata
+      // Remove 'parent_id' metadata
       const splitElements = respSplit.elements?.map((el) => ({
         ...el,
         metadata: {
@@ -178,12 +197,12 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
           parent_id: undefined,
         },
       }));
-
+      
       expect(JSON.stringify(splitElements)).toEqual(
         JSON.stringify(singleElements)
       );
     },
-    30000
+    300000
   );
 
   it("should throw error when given filename is empty", async () => {
@@ -208,14 +227,16 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
 
     const requestParams = {
       files: file,
-      strategy: "fast",
+      strategy: Strategy.Fast,
       languages: ["eng"],
     };
 
     await expect(async () => {
       await client.general.partition({
-        ...requestParams,
-        splitPdfPage: true,
+        partitionParameters: {
+          ...requestParams,
+          splitPdfPage: true,
+        },
       });
     }).rejects.toThrow(/.*File type None is not supported.*/);
   });

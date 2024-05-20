@@ -1,14 +1,5 @@
+import { BASE_HOSTNAME_REGEX, BASE_PROTOCOL } from "./common";
 import { SDKInitHook, SDKInitOptions } from "../types";
-
-/**
- * Regular expression pattern for matching base hostnames in the form of "*.unstructuredapp.io".
- */
-const BASE_HOSTNAME_REGEX = /^.*\.unstructuredapp\.io$/;
-
-/**
- * The base protocol used for HTTPS requests.
- */
-const BASE_PROTOCOL = "https:";
 
 /**
  * Represents a hook that performs base host HTTPS check during SDK initialization.
