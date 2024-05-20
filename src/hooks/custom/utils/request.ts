@@ -29,7 +29,7 @@ export async function prepareResponseBody(
 ): Promise<string> {
   const allElements: any[] = [];
   for (const res of responses) {
-    const resElements = await res.clone().json();
+    const resElements = await res.json();
     allElements.push(resElements);
   }
   return JSON.stringify(allElements.flat());
