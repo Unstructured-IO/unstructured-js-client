@@ -12,3 +12,5 @@ targets:
     unstructed-typescript:
         target: typescript
         source: my-source
+        codeSamples:
+            output: codeSamples.yaml
