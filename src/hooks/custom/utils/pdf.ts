@@ -1,0 +1,106 @@
+import { PDFDocument } from "pdf-lib";
+
+import { MAX_PAGES_PER_THREAD, MIN_PAGES_PER_THREAD } from "../common";
+
+interface PdfSplit {
+  content: Blob;
+  startPage: number;
+  endPage: number;
+}
+
+/**
+ * Converts range of pages (including start and end page values) of a PDF document
+ * to a Blob object.
+ * @param pdf - The PDF document.
+ * @param startPage - Number of the first page of split.
+ * @param endPage - Number of the last page of split.
+ * @returns A Promise that resolves to a Blob object representing the converted pages.
+ */
+export async function pdfPagesToBlob(
+  pdf: PDFDocument,
+  startPage: number,
+  endPage: number
+): Promise<Blob> {
+  const subPdf = await PDFDocument.create();
+  // Create an array with page indices to copy
+  // Converts 1-based page numbers to 0-based page indices
+  const pageIndices = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, index) => startPage + index - 1
+  );
+  const pages = await subPdf.copyPages(pdf, pageIndices);
+  for (const page of pages) {
+    subPdf.addPage(page);
+  }
+  const subPdfBytes = await subPdf.save();
+  return new Blob([subPdfBytes], {
+    type: "application/pdf",
+  });
+}
+
+/**
+ * Retrieves an array of splits, with the start and end page numbers, from a PDF file.
+ * Distribution of pages per split is made in as much uniform manner as possible.
+ *
+ * @param pdf - The PDF file to extract pages from.
+ * @param concurrencyLevel - Number of maximum parallel requests.
+ * @returns A promise that resolves to an array of objects containing Blob files and
+ * start and end page numbers from the original document.
+ */
+export async function splitPdf(
+  pdf: PDFDocument,
+  concurrencyLevel: number
+): Promise<PdfSplit[]> {
+  const pdfSplits: PdfSplit[] = [];
+  const pagesCount = pdf.getPages().length;
+
+  let splitSize = MAX_PAGES_PER_THREAD;
+  if (pagesCount < MAX_PAGES_PER_THREAD * concurrencyLevel) {
+    splitSize = Math.ceil(pagesCount / concurrencyLevel);
+  }
+  splitSize = Math.max(splitSize, MIN_PAGES_PER_THREAD);
+
+  const numberOfSplits = Math.ceil(pagesCount / splitSize);
+
+  for (let i = 0; i < numberOfSplits; ++i) {
+    const offset = i * splitSize;
+    const startPage = offset + 1;
+    // If it's the last split, take the rest of the pages
+    const endPage = Math.min(pagesCount, offset + splitSize);
+    const pdfSplit = await pdfPagesToBlob(pdf, startPage, endPage);
+    pdfSplits.push({ content: pdfSplit, startPage, endPage });
+  }
+
+  return pdfSplits;
+}
+
+/**
+ * Checks if the given file is a PDF. First it checks the `.pdf` file extension, then
+ * it tries to load the file as a PDF using the `PDFDocument.load` method.
+ * @param file - The file to check.
+ * @returns A promise that resolves to three values, first is a boolean representing
+ * whether there was an error during PDF load, second is a PDFDocument object or null
+ * (depending if there was an error), and the third is the number of pages in the PDF.
+ * The number of pages is 0 if there was an error while loading the file.
+ */
+export async function loadPdf(
+  file: File | null
+): Promise<[boolean, PDFDocument | null, number]> {
+  if (!file?.name.endsWith(".pdf")) {
+    console.warn("Given file is not a PDF. Continuing without splitting.");
+    return [true, null, 0];
+  }
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    const pagesCount = pdf.getPages().length;
+    return [false, pdf, pagesCount];
+  } catch (e) {
+    console.error(e);
+    console.warn(
+      "Attempted to interpret file as pdf, but error arose when splitting by pages. Reverting to non-split pdf handling path."
+    );
+    return [true, null, 0];
+  }
+}
