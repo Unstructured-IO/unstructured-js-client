@@ -1,9 +1,9 @@
-speakeasyVersion: 1.291.0
+speakeasyVersion: 1.294.0
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:840e54531b0f663d45ba8ef1d6a481e8222ccb74a3e8b5b7c11c49b892b00e47
-        sourceBlobDigest: sha256:a2ec6584873fba3028df947d0e0f6500c1b415d0be9a288805aba50df8646a14
+        sourceRevisionDigest: sha256:13f638c6b160ab2acfff66c10511059d6fefc7a5d6291dc08f3f916d02f0e6a4
+        sourceBlobDigest: sha256:a75e8086efed1647634530594adfa94f399d710ad2b4c6c759aecb4e903b051d
         tags:
             - latest
             - main
@@ -11,8 +11,8 @@ targets:
     unstructed-typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:840e54531b0f663d45ba8ef1d6a481e8222ccb74a3e8b5b7c11c49b892b00e47
-        sourceBlobDigest: sha256:a2ec6584873fba3028df947d0e0f6500c1b415d0be9a288805aba50df8646a14
+        sourceRevisionDigest: sha256:13f638c6b160ab2acfff66c10511059d6fefc7a5d6291dc08f3f916d02f0e6a4
+        sourceBlobDigest: sha256:a75e8086efed1647634530594adfa94f399d710ad2b4c6c759aecb4e903b051d
         outLocation: /github/workspace/repo
 workflow:
     workflowVersion: 1.0.0
@@ -21,6 +21,8 @@ workflow:
         my-source:
             inputs:
                 - location: https://api.unstructured.io/general/openapi.json
+            overlays:
+                - location: ./overlay_client.yaml
             registry:
                 location: registry.speakeasyapi.dev/unstructured/unstructured5xr/my-source
     targets:
