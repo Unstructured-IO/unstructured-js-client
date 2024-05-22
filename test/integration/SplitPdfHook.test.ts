@@ -9,7 +9,30 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
   const consoleWarnSpy = jest.spyOn(console, "warn");
   const consoleErrorSpy = jest.spyOn(console, "error");
 
-  beforeEach(() => {
+  let client = new UnstructuredClient({
+    serverURL: "http://localhost:8000",
+    security: {
+      apiKeyAuth: FAKE_API_KEY,
+    },
+  });
+
+  beforeEach(async () => {
+    try {
+      const res = await fetch("http://localhost:8000/general/docs");
+      expect(res.status).toEqual(200);
+    } catch {
+      throw Error("The unstructured-api is not running on localhost:8000");
+    }
+
+    client = new UnstructuredClient({
+      serverURL: "http://localhost:8000",
+      security: {
+        apiKeyAuth: FAKE_API_KEY,
+      },
+    });
+  });
+
+  afterEach(() => {
     consoleWarnSpy.mockClear();
     consoleErrorSpy.mockClear();
   });
@@ -124,20 +147,6 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
   ])(
     "for request limit $requestsLimit and $description",
     async ({ filename, expectedOk, requestsLimit, strategy }) => {
-      try {
-        const res = await fetch("http://localhost:8000/general/docs");
-        expect(res.status).toEqual(200);
-      } catch {
-        throw Error("The unstructured-api is not running on localhost:8000");
-      }
-
-      const client = new UnstructuredClient({
-        serverURL: "http://localhost:8000",
-        security: {
-          apiKeyAuth: FAKE_API_KEY,
-        },
-      });
-
       const file = { content: readFileSync(filename), fileName: filename };
 
       if (!expectedOk) {
@@ -197,7 +206,7 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
           parent_id: undefined,
         },
       }));
-      
+
       expect(JSON.stringify(splitElements)).toEqual(
         JSON.stringify(singleElements)
       );
@@ -206,20 +215,6 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
   );
 
   it("should throw error when given filename is empty", async () => {
-    try {
-      const res = await fetch("http://localhost:8000/general/docs");
-      expect(res.status).toEqual(200);
-    } catch {
-      throw Error("The unstructured-api is not running on localhost:8000");
-    }
-
-    const client = new UnstructuredClient({
-      serverURL: "http://localhost:8000",
-      security: {
-        apiKeyAuth: FAKE_API_KEY,
-      },
-    });
-
     const file = {
       content: readFileSync("test/data/layout-parser-paper-fast.pdf"),
       fileName: "    ",

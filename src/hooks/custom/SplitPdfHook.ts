@@ -77,7 +77,8 @@ export class SplitPdfHook
     request: Request
   ): Promise<Request> {
     const { operationID } = hookCtx;
-    const formData = await request.clone().formData();
+    const requestClone = request.clone();
+    const formData = await requestClone.formData();
     const splitPdfPage = stringToBoolean(
       (formData.get(PARTITION_FORM_SPLIT_PDF_PAGE_KEY) as string) ?? "false"
     );
@@ -109,7 +110,6 @@ export class SplitPdfHook
     const splits = await splitPdf(pdf, concurrencyLevel);
     const headers = prepareRequestHeaders(request);
 
-    const requestClone = request.clone();
     const requests: Request[] = [];
 
     for (const { content, startPage } of splits) {
@@ -137,7 +137,7 @@ export class SplitPdfHook
           const response = await this.client!.request(req);
           if (response.status === 200) {
             (this.partitionResponses[operationID] as Response[])[pageIndex] =
-              response;
+              response.clone();
           }
         } catch (e) {
           console.error(`Failed to send request for page ${pageNumber}.`);
