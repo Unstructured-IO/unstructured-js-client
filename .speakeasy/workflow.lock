@@ -1,9 +1,9 @@
-speakeasyVersion: 1.294.0
+speakeasyVersion: 1.295.0
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:13f638c6b160ab2acfff66c10511059d6fefc7a5d6291dc08f3f916d02f0e6a4
-        sourceBlobDigest: sha256:a75e8086efed1647634530594adfa94f399d710ad2b4c6c759aecb4e903b051d
+        sourceRevisionDigest: sha256:d67d48fd7c939731a60765e33c617ca7b0d381ec49c16f16899fba838d698a39
+        sourceBlobDigest: sha256:04f3c0c272274344fecf5e95b8be0846d3ab6b0226e896264df51405fc5fc3af
         tags:
             - latest
             - main
@@ -11,8 +11,8 @@ targets:
     unstructed-typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:13f638c6b160ab2acfff66c10511059d6fefc7a5d6291dc08f3f916d02f0e6a4
-        sourceBlobDigest: sha256:a75e8086efed1647634530594adfa94f399d710ad2b4c6c759aecb4e903b051d
+        sourceRevisionDigest: sha256:d67d48fd7c939731a60765e33c617ca7b0d381ec49c16f16899fba838d698a39
+        sourceBlobDigest: sha256:04f3c0c272274344fecf5e95b8be0846d3ab6b0226e896264df51405fc5fc3af
         outLocation: /github/workspace/repo
 workflow:
     workflowVersion: 1.0.0
@@ -29,3 +29,5 @@ workflow:
         unstructed-typescript:
             target: typescript
             source: my-source
+            codeSamples:
+                output: codeSamples.yaml
