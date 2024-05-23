@@ -3,10 +3,10 @@ id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
   docChecksum: 11aea3253100b90cea9096804194412f
   docVersion: 1.0.30
-  speakeasyVersion: 1.294.0
-  generationVersion: 2.333.3
-  releaseVersion: 0.15.5
-  configChecksum: c2f1584e9efdfcb4488c4c2c28d38030
+  speakeasyVersion: 1.295.1
+  generationVersion: 2.335.5
+  releaseVersion: 0.15.6
+  configChecksum: 10b9fa841e267c5919b47bad284c855b
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -15,7 +15,7 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.5
-    core: 3.9.4
+    core: 3.9.6
     examples: 2.81.4
     globalSecurity: 2.82.9
     globalSecurityCallbacks: 0.1.0
@@ -40,6 +40,7 @@ generatedFiles:
   - src/lib/config.ts
   - src/lib/encodings.ts
   - src/lib/http.ts
+  - src/lib/primitives.ts
   - src/lib/retries.ts
   - src/lib/schemas.ts
   - src/lib/sdks.ts
