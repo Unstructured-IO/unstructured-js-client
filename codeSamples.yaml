@@ -20,7 +20,7 @@ actions:
             });
 
             async function run() {
-              const result = await unstructuredClient.partition({
+              const result = await unstructuredClient.general.partition({
                 partitionParameters: {
                   files: await openAsBlob("./sample-file"),
                   strategy: Strategy.Auto,
