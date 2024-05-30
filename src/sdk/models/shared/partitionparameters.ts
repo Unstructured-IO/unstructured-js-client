@@ -3,7 +3,7 @@
  */
 
 import * as b64$ from "../../../lib/base64";
-import { blobLikeSchema } from "../../types";
+import { blobLikeSchema, catchUnrecognizedEnum, OpenEnum, Unrecognized } from "../../types";
 import * as z from "zod";
 
 export enum ChunkingStrategy {
@@ -12,6 +12,7 @@ export enum ChunkingStrategy {
     BySimilarity = "by_similarity",
     ByTitle = "by_title",
 }
+export type ChunkingStrategyOpen = OpenEnum<typeof ChunkingStrategy>;
 
 export type Files = {
     content: Uint8Array | string;
@@ -25,6 +26,10 @@ export enum OutputFormat {
     ApplicationJson = "application/json",
     TextCsv = "text/csv",
 }
+/**
+ * The format of the response. Supported formats are application/json and text/csv. Default: application/json.
+ */
+export type OutputFormatOpen = OpenEnum<typeof OutputFormat>;
 
 /**
  * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: auto
@@ -35,6 +40,10 @@ export enum Strategy {
     Auto = "auto",
     OcrOnly = "ocr_only",
 }
+/**
+ * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: auto
+ */
+export type StrategyOpen = OpenEnum<typeof Strategy>;
 
 export type PartitionParameters = {
     /**
@@ -44,7 +53,7 @@ export type PartitionParameters = {
     /**
      * Use one of the supported strategies to chunk the returned elements. Currently supports: 'basic', 'by_page', 'by_similarity', or 'by_title'
      */
-    chunkingStrategy?: ChunkingStrategy | null | undefined;
+    chunkingStrategy?: ChunkingStrategyOpen | null | undefined;
     /**
      * If chunking strategy is set, combine elements until a section reaches a length of n chars. Default: 500
      */
@@ -100,7 +109,7 @@ export type PartitionParameters = {
     /**
      * The format of the response. Supported formats are application/json and text/csv. Default: application/json.
      */
-    outputFormat?: OutputFormat | undefined;
+    outputFormat?: OutputFormatOpen | undefined;
     /**
      * Specifies the length of a string ('tail') to be drawn from each chunk and prefixed to the next chunk as a context-preserving mechanism. By default, this only applies to split-chunks where an oversized element is divided into multiple chunks by text-splitting. Default: 0
      */
@@ -136,12 +145,9 @@ export type PartitionParameters = {
     /**
      * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: auto
      */
-    strategy?: Strategy | undefined;
+    strategy?: StrategyOpen | undefined;
     /**
-     * When `True`, assign UUIDs to element IDs, which guarantees their uniqueness
-     *
-     * @remarks
-     * (useful when using them as primary keys in database). Otherwise a SHA-256 of element text is used. Default: False
+     * When `True`, assign UUIDs to element IDs, which guarantees their uniqueness (useful when using them as primary keys in database). Otherwise a SHA-256 of element text is used. Default: False
      */
     uniqueElementIds?: boolean | undefined;
     /**
@@ -152,8 +158,15 @@ export type PartitionParameters = {
 
 /** @internal */
 export namespace ChunkingStrategy$ {
-    export const inboundSchema = z.nativeEnum(ChunkingStrategy);
-    export const outboundSchema = inboundSchema;
+    export const inboundSchema: z.ZodType<ChunkingStrategyOpen, z.ZodTypeDef, unknown> = z.union([
+        z.nativeEnum(ChunkingStrategy),
+        z.string().transform(catchUnrecognizedEnum),
+    ]);
+
+    export const outboundSchema = z.union([
+        z.nativeEnum(ChunkingStrategy),
+        z.string().and(z.custom<Unrecognized<string>>()),
+    ]);
 }
 
 /** @internal */
@@ -190,14 +203,28 @@ export namespace Files$ {
 
 /** @internal */
 export namespace OutputFormat$ {
-    export const inboundSchema = z.nativeEnum(OutputFormat);
-    export const outboundSchema = inboundSchema;
+    export const inboundSchema: z.ZodType<OutputFormatOpen, z.ZodTypeDef, unknown> = z.union([
+        z.nativeEnum(OutputFormat),
+        z.string().transform(catchUnrecognizedEnum),
+    ]);
+
+    export const outboundSchema = z.union([
+        z.nativeEnum(OutputFormat),
+        z.string().and(z.custom<Unrecognized<string>>()),
+    ]);
 }
 
 /** @internal */
 export namespace Strategy$ {
-    export const inboundSchema = z.nativeEnum(Strategy);
-    export const outboundSchema = inboundSchema;
+    export const inboundSchema: z.ZodType<StrategyOpen, z.ZodTypeDef, unknown> = z.union([
+        z.nativeEnum(Strategy),
+        z.string().transform(catchUnrecognizedEnum),
+    ]);
+
+    export const outboundSchema = z.union([
+        z.nativeEnum(Strategy),
+        z.string().and(z.custom<Unrecognized<string>>()),
+    ]);
 }
 
 /** @internal */
