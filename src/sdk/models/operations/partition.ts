@@ -18,7 +18,7 @@ export type PartitionResponse = {
     /**
      * Successful Response
      */
-    elements?: Array<shared.Element> | undefined;
+    elements?: Array<{ [k: string]: any }> | undefined;
     /**
      * HTTP response status code for this operation
      */
@@ -70,7 +70,7 @@ export namespace PartitionResponse$ {
     export const inboundSchema: z.ZodType<PartitionResponse, z.ZodTypeDef, unknown> = z
         .object({
             ContentType: z.string(),
-            Elements: z.array(shared.Element$.inboundSchema).optional(),
+            Elements: z.array(z.record(z.any())).optional(),
             StatusCode: z.number().int(),
             RawResponse: z.instanceof(Response),
         })
@@ -85,7 +85,7 @@ export namespace PartitionResponse$ {
 
     export type Outbound = {
         ContentType: string;
-        Elements?: Array<shared.Element$.Outbound> | undefined;
+        Elements?: Array<{ [k: string]: any }> | undefined;
         StatusCode: number;
         RawResponse: never;
     };
@@ -93,7 +93,7 @@ export namespace PartitionResponse$ {
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, PartitionResponse> = z
         .object({
             contentType: z.string(),
-            elements: z.array(shared.Element$.outboundSchema).optional(),
+            elements: z.array(z.record(z.any())).optional(),
             statusCode: z.number().int(),
             rawResponse: z.instanceof(Response).transform(() => {
                 throw new Error("Response cannot be serialized");
