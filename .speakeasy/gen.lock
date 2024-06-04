@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 2846e2567d9b8c8befb0fd83e373c29e
-  docVersion: 1.0.32
+  docChecksum: 9965dc613ab49f64c422ea37a522f52f
+  docVersion: 1.0.33
   speakeasyVersion: 1.299.6
   generationVersion: 2.338.12
-  releaseVersion: 0.16.1
-  configChecksum: 29def02c535eb839dcc53493f76ab082
+  releaseVersion: 0.16.2
+  configChecksum: 36862da3737dab2c178e1ab7d018a733
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -57,18 +57,16 @@ generatedFiles:
   - src/sdk/types/rfcdate.ts
   - tsconfig.json
   - src/sdk/models/operations/partition.ts
-  - src/sdk/models/shared/element.ts
+  - src/sdk/models/errors/httpvalidationerror.ts
   - src/sdk/models/shared/validationerror.ts
   - src/sdk/models/shared/partitionparameters.ts
   - src/sdk/models/shared/security.ts
-  - src/sdk/models/errors/httpvalidationerror.ts
   - src/sdk/models/errors/index.ts
   - src/sdk/models/operations/index.ts
   - src/sdk/models/shared/index.ts
   - docs/sdk/models/operations/partitionrequest.md
   - docs/sdk/models/operations/partitionresponse.md
-  - docs/sdk/models/shared/metadata.md
-  - docs/sdk/models/shared/element.md
+  - docs/sdk/models/errors/httpvalidationerror.md
   - docs/sdk/models/shared/loc.md
   - docs/sdk/models/shared/validationerror.md
   - docs/sdk/models/shared/chunkingstrategy.md
@@ -77,7 +75,6 @@ generatedFiles:
   - docs/sdk/models/shared/strategy.md
   - docs/sdk/models/shared/partitionparameters.md
   - docs/sdk/models/shared/security.md
-  - docs/sdk/models/errors/httpvalidationerror.md
   - USAGE.md
   - .gitattributes
   - src/hooks/hooks.ts
