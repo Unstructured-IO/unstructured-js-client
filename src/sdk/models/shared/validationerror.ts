@@ -28,19 +28,11 @@ export namespace Loc$ {
 
 /** @internal */
 export namespace ValidationError$ {
-    export const inboundSchema: z.ZodType<ValidationError, z.ZodTypeDef, unknown> = z
-        .object({
-            loc: z.array(z.union([z.string(), z.number().int()])),
-            msg: z.string(),
-            type: z.string(),
-        })
-        .transform((v) => {
-            return {
-                loc: v.loc,
-                msg: v.msg,
-                type: v.type,
-            };
-        });
+    export const inboundSchema: z.ZodType<ValidationError, z.ZodTypeDef, unknown> = z.object({
+        loc: z.array(z.union([z.string(), z.number().int()])),
+        msg: z.string(),
+        type: z.string(),
+    });
 
     export type Outbound = {
         loc: Array<string | number>;
@@ -48,17 +40,9 @@ export namespace ValidationError$ {
         type: string;
     };
 
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ValidationError> = z
-        .object({
-            loc: z.array(z.union([z.string(), z.number().int()])),
-            msg: z.string(),
-            type: z.string(),
-        })
-        .transform((v) => {
-            return {
-                loc: v.loc,
-                msg: v.msg,
-                type: v.type,
-            };
-        });
+    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, ValidationError> = z.object({
+        loc: z.array(z.union([z.string(), z.number().int()])),
+        msg: z.string(),
+        type: z.string(),
+    });
 }

@@ -3,6 +3,7 @@
  */
 
 import * as b64$ from "../../../lib/base64";
+import { remap as remap$ } from "../../../lib/primitives";
 import { blobLikeSchema, catchUnrecognizedEnum, OpenEnum, Unrecognized } from "../../types";
 import * as z from "zod";
 
@@ -171,34 +172,20 @@ export namespace ChunkingStrategy$ {
 
 /** @internal */
 export namespace Files$ {
-    export const inboundSchema: z.ZodType<Files, z.ZodTypeDef, unknown> = z
-        .object({
-            content: b64$.zodInbound,
-            fileName: z.string(),
-        })
-        .transform((v) => {
-            return {
-                content: v.content,
-                fileName: v.fileName,
-            };
-        });
+    export const inboundSchema: z.ZodType<Files, z.ZodTypeDef, unknown> = z.object({
+        content: b64$.zodInbound,
+        fileName: z.string(),
+    });
 
     export type Outbound = {
         content: Uint8Array;
         fileName: string;
     };
 
-    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Files> = z
-        .object({
-            content: b64$.zodOutbound,
-            fileName: z.string(),
-        })
-        .transform((v) => {
-            return {
-                content: v.content,
-                fileName: v.fileName,
-            };
-        });
+    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Files> = z.object({
+        content: b64$.zodOutbound,
+        fileName: z.string(),
+    });
 }
 
 /** @internal */
@@ -260,55 +247,29 @@ export namespace PartitionParameters$ {
             xml_keep_tags: z.boolean().default(false),
         })
         .transform((v) => {
-            return {
-                files: v.files,
-                ...(v.chunking_strategy === undefined
-                    ? null
-                    : { chunkingStrategy: v.chunking_strategy }),
-                ...(v.combine_under_n_chars === undefined
-                    ? null
-                    : { combineUnderNChars: v.combine_under_n_chars }),
-                coordinates: v.coordinates,
-                ...(v.encoding === undefined ? null : { encoding: v.encoding }),
-                ...(v.extract_image_block_types === undefined
-                    ? null
-                    : { extractImageBlockTypes: v.extract_image_block_types }),
-                ...(v.gz_uncompressed_content_type === undefined
-                    ? null
-                    : { gzUncompressedContentType: v.gz_uncompressed_content_type }),
-                ...(v.hi_res_model_name === undefined
-                    ? null
-                    : { hiResModelName: v.hi_res_model_name }),
-                ...(v.include_orig_elements === undefined
-                    ? null
-                    : { includeOrigElements: v.include_orig_elements }),
-                includePageBreaks: v.include_page_breaks,
-                ...(v.languages === undefined ? null : { languages: v.languages }),
-                ...(v.max_characters === undefined ? null : { maxCharacters: v.max_characters }),
-                multipageSections: v.multipage_sections,
-                ...(v.new_after_n_chars === undefined
-                    ? null
-                    : { newAfterNChars: v.new_after_n_chars }),
-                ...(v.ocr_languages === undefined ? null : { ocrLanguages: v.ocr_languages }),
-                outputFormat: v.output_format,
-                overlap: v.overlap,
-                overlapAll: v.overlap_all,
-                pdfInferTableStructure: v.pdf_infer_table_structure,
-                ...(v.similarity_threshold === undefined
-                    ? null
-                    : { similarityThreshold: v.similarity_threshold }),
-                ...(v.skip_infer_table_types === undefined
-                    ? null
-                    : { skipInferTableTypes: v.skip_infer_table_types }),
-                splitPdfConcurrencyLevel: v.split_pdf_concurrency_level,
-                splitPdfPage: v.split_pdf_page,
-                ...(v.starting_page_number === undefined
-                    ? null
-                    : { startingPageNumber: v.starting_page_number }),
-                strategy: v.strategy,
-                uniqueElementIds: v.unique_element_ids,
-                xmlKeepTags: v.xml_keep_tags,
-            };
+            return remap$(v, {
+                chunking_strategy: "chunkingStrategy",
+                combine_under_n_chars: "combineUnderNChars",
+                extract_image_block_types: "extractImageBlockTypes",
+                gz_uncompressed_content_type: "gzUncompressedContentType",
+                hi_res_model_name: "hiResModelName",
+                include_orig_elements: "includeOrigElements",
+                include_page_breaks: "includePageBreaks",
+                max_characters: "maxCharacters",
+                multipage_sections: "multipageSections",
+                new_after_n_chars: "newAfterNChars",
+                ocr_languages: "ocrLanguages",
+                output_format: "outputFormat",
+                overlap_all: "overlapAll",
+                pdf_infer_table_structure: "pdfInferTableStructure",
+                similarity_threshold: "similarityThreshold",
+                skip_infer_table_types: "skipInferTableTypes",
+                split_pdf_concurrency_level: "splitPdfConcurrencyLevel",
+                split_pdf_page: "splitPdfPage",
+                starting_page_number: "startingPageNumber",
+                unique_element_ids: "uniqueElementIds",
+                xml_keep_tags: "xmlKeepTags",
+            });
         });
 
     export type Outbound = {
@@ -372,54 +333,28 @@ export namespace PartitionParameters$ {
             xmlKeepTags: z.boolean().default(false),
         })
         .transform((v) => {
-            return {
-                files: v.files,
-                ...(v.chunkingStrategy === undefined
-                    ? null
-                    : { chunking_strategy: v.chunkingStrategy }),
-                ...(v.combineUnderNChars === undefined
-                    ? null
-                    : { combine_under_n_chars: v.combineUnderNChars }),
-                coordinates: v.coordinates,
-                ...(v.encoding === undefined ? null : { encoding: v.encoding }),
-                ...(v.extractImageBlockTypes === undefined
-                    ? null
-                    : { extract_image_block_types: v.extractImageBlockTypes }),
-                ...(v.gzUncompressedContentType === undefined
-                    ? null
-                    : { gz_uncompressed_content_type: v.gzUncompressedContentType }),
-                ...(v.hiResModelName === undefined
-                    ? null
-                    : { hi_res_model_name: v.hiResModelName }),
-                ...(v.includeOrigElements === undefined
-                    ? null
-                    : { include_orig_elements: v.includeOrigElements }),
-                include_page_breaks: v.includePageBreaks,
-                ...(v.languages === undefined ? null : { languages: v.languages }),
-                ...(v.maxCharacters === undefined ? null : { max_characters: v.maxCharacters }),
-                multipage_sections: v.multipageSections,
-                ...(v.newAfterNChars === undefined
-                    ? null
-                    : { new_after_n_chars: v.newAfterNChars }),
-                ...(v.ocrLanguages === undefined ? null : { ocr_languages: v.ocrLanguages }),
-                output_format: v.outputFormat,
-                overlap: v.overlap,
-                overlap_all: v.overlapAll,
-                pdf_infer_table_structure: v.pdfInferTableStructure,
-                ...(v.similarityThreshold === undefined
-                    ? null
-                    : { similarity_threshold: v.similarityThreshold }),
-                ...(v.skipInferTableTypes === undefined
-                    ? null
-                    : { skip_infer_table_types: v.skipInferTableTypes }),
-                split_pdf_concurrency_level: v.splitPdfConcurrencyLevel,
-                split_pdf_page: v.splitPdfPage,
-                ...(v.startingPageNumber === undefined
-                    ? null
-                    : { starting_page_number: v.startingPageNumber }),
-                strategy: v.strategy,
-                unique_element_ids: v.uniqueElementIds,
-                xml_keep_tags: v.xmlKeepTags,
-            };
+            return remap$(v, {
+                chunkingStrategy: "chunking_strategy",
+                combineUnderNChars: "combine_under_n_chars",
+                extractImageBlockTypes: "extract_image_block_types",
+                gzUncompressedContentType: "gz_uncompressed_content_type",
+                hiResModelName: "hi_res_model_name",
+                includeOrigElements: "include_orig_elements",
+                includePageBreaks: "include_page_breaks",
+                maxCharacters: "max_characters",
+                multipageSections: "multipage_sections",
+                newAfterNChars: "new_after_n_chars",
+                ocrLanguages: "ocr_languages",
+                outputFormat: "output_format",
+                overlapAll: "overlap_all",
+                pdfInferTableStructure: "pdf_infer_table_structure",
+                similarityThreshold: "similarity_threshold",
+                skipInferTableTypes: "skip_infer_table_types",
+                splitPdfConcurrencyLevel: "split_pdf_concurrency_level",
+                splitPdfPage: "split_pdf_page",
+                startingPageNumber: "starting_page_number",
+                uniqueElementIds: "unique_element_ids",
+                xmlKeepTags: "xml_keep_tags",
+            });
         });
 }

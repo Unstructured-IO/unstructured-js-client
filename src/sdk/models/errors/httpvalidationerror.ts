@@ -39,9 +39,7 @@ export namespace HTTPValidationError$ {
             detail: z.array(shared.ValidationError$.inboundSchema).optional(),
         })
         .transform((v) => {
-            return new HTTPValidationError({
-                ...(v.detail === undefined ? null : { detail: v.detail }),
-            });
+            return new HTTPValidationError(v);
         });
 
     export type Outbound = {
@@ -52,14 +50,8 @@ export namespace HTTPValidationError$ {
         .instanceof(HTTPValidationError)
         .transform((v) => v.data$)
         .pipe(
-            z
-                .object({
-                    detail: z.array(shared.ValidationError$.outboundSchema).optional(),
-                })
-                .transform((v) => {
-                    return {
-                        ...(v.detail === undefined ? null : { detail: v.detail }),
-                    };
-                })
+            z.object({
+                detail: z.array(shared.ValidationError$.outboundSchema).optional(),
+            })
         );
 }
