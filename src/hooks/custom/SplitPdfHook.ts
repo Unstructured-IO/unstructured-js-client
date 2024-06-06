@@ -241,6 +241,7 @@ export class SplitPdfHook
     const responses = await this.awaitAllRequests(operationID);
 
     if (!responses?.length) {
+      console.error("Failed to process the request.");
       this.clearOperation(operationID);
       return { response, error };
     }
@@ -256,6 +257,7 @@ export class SplitPdfHook
     });
 
     this.clearOperation(operationID);
+    console.info("Successfully processed the request.");
 
     return { response: finalResponse, error: null };
   }
