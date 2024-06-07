@@ -6,6 +6,8 @@ import {
   pdfPagesToBlob,
   splitPdf,
 } from "../../../src/hooks/custom/utils";
+import { getOptimalSplitSize } from "../../../hooks/custom/utils";
+import { MAX_PAGES_PER_THREAD, MIN_PAGES_PER_THREAD } from "../../../hooks/custom/common";
 
 describe("Pdf utility functions", () => {
   const filename = "test/data/layout-parser-paper.pdf";
@@ -39,9 +41,26 @@ describe("Pdf utility functions", () => {
     });
   });
 
+  describe("getOptimalSplitSize", () => {
+    it("should return the maximum pages per thread when pagesCount is high", async () => {
+      const result = await getOptimalSplitSize(100, 4);
+      expect(result).toBe(MAX_PAGES_PER_THREAD);
+    });
+
+    it("should return the minimum pages per thread when pagesCount is low", async () => {
+      const result = await getOptimalSplitSize(2, 4);
+      expect(result).toBe(MIN_PAGES_PER_THREAD);
+    });
+
+    it("should return an appropriate split size for a given pagesCount and concurrencyLevel", async () => {
+      const result = await getOptimalSplitSize(10, 3);
+      expect(result).toBe(Math.ceil(10 / 3));
+    });
+  });
+
   describe("splitPdf", () => {
     it("should split the PDF into one batch", async () => {
-      const result = await splitPdf(pdf, 1);
+      const result = await splitPdf(pdf, 16);
 
       expect(result).toHaveLength(1);
       expect(result[0]?.startPage).toBe(1);
@@ -49,7 +68,7 @@ describe("Pdf utility functions", () => {
     });
 
     it("should split the PDF into 3 batches", async () => {
-      const result = await splitPdf(pdf, 3);
+      const result = await splitPdf(pdf, 6);
 
       // Verify the expected behavior
       expect(result).toHaveLength(3);
@@ -62,7 +81,7 @@ describe("Pdf utility functions", () => {
     });
 
     it("should split the PDF into 4 batches", async () => {
-      const result = await splitPdf(pdf, 5);
+      const result = await splitPdf(pdf, 4);
 
       // Verify the expected behavior
       expect(result).toHaveLength(4);
