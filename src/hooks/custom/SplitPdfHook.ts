@@ -12,6 +12,7 @@ import {
   SDKInitOptions,
 } from "../types";
 import {
+  getOptimalSplitSize,
   getSplitPdfConcurrencyLevel,
   getStartingPageNumber,
   loadPdf,
@@ -83,38 +84,76 @@ export class SplitPdfHook
       (formData.get(PARTITION_FORM_SPLIT_PDF_PAGE_KEY) as string) ?? "false"
     );
     const file = formData.get(PARTITION_FORM_FILES_KEY) as File | null;
-    const startingPageNumber = getStartingPageNumber(formData);
 
     if (!splitPdfPage) {
+      console.info("Partitioning without split.")
       return request;
     }
 
+    console.info("Preparing to split document for partition.")
     if (!this.client) {
-      console.warn("HTTP client not accessible! Continuing without splitting.");
+      console.warn("HTTP client not accessible! Partitioning without split.");
       return request;
     }
 
     const [error, pdf, pagesCount] = await loadPdf(file);
     if (file === null || pdf === null || error) {
+      console.warn("File could not be split. Partitioning without split.")
       return request;
     }
 
     if (pagesCount < MIN_PAGES_PER_THREAD) {
       console.warn(
-        `PDF has less than ${MIN_PAGES_PER_THREAD} pages. Continuing without splitting.`
+        `PDF has less than ${MIN_PAGES_PER_THREAD} pages. Partitioning without split.`
       );
       return request;
     }
 
+    const startingPageNumber = getStartingPageNumber(formData);
+    console.info("Starting page number set to %d", startingPageNumber);
+
     const concurrencyLevel = getSplitPdfConcurrencyLevel(formData);
-    const splits = await splitPdf(pdf, concurrencyLevel);
+    console.info("Concurrency level set to %d", concurrencyLevel)
+
+    const splitSize = await getOptimalSplitSize(pagesCount, concurrencyLevel);
+    console.info("Determined optimal split size of %d pages.", splitSize)
+
+    if (splitSize >= pagesCount) {
+      console.warn(
+          "Document has too few pages (%d) to be split efficiently. Partitioning without split.",
+          pagesCount,
+      )
+      return request;
+    }
+
+    const splits = await splitPdf(pdf, splitSize);
+    const numberOfSplits = splits.length
+    console.info(
+        "Document split into %d, %d-paged sets.",
+        numberOfSplits,
+        splitSize,
+    )
+    console.info(
+        "Partitioning %d, %d-paged sets.",
+        numberOfSplits,
+        splitSize,
+    )
+
     const headers = prepareRequestHeaders(request);
 
     const requests: Request[] = [];
 
+    let setIndex = 1
     for (const { content, startPage } of splits) {
       // Both startPage and startingPageNumber are 1-based, so we need to subtract 1
       const firstPageNumber = startPage + startingPageNumber - 1;
+      console.info(
+          "Partitioning set #%d (pages %d-%d).",
+          setIndex,
+          firstPageNumber,
+          Math.min(firstPageNumber + splitSize - 1, pagesCount),
+      );
+
       const body = await prepareRequestBody(
         formData,
         content,
@@ -126,6 +165,7 @@ export class SplitPdfHook
         body,
       });
       requests.push(req);
+      setIndex+=1;
     }
 
     this.partitionResponses[operationID] = new Array(requests.length);
@@ -173,6 +213,8 @@ export class SplitPdfHook
 
     this.clearOperation(operationID);
 
+    console.info("Successfully processed the request.")
+
     return new Response(body, {
       headers: headers,
       status: response.status,
@@ -199,6 +241,7 @@ export class SplitPdfHook
     const responses = await this.awaitAllRequests(operationID);
 
     if (!responses?.length) {
+      console.error("Failed to process the request.");
       this.clearOperation(operationID);
       return { response, error };
     }
@@ -214,6 +257,7 @@ export class SplitPdfHook
     });
 
     this.clearOperation(operationID);
+    console.info("Successfully processed the request.");
 
     return { response: finalResponse, error: null };
   }

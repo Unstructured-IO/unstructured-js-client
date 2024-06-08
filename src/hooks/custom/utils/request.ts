@@ -28,9 +28,17 @@ export async function prepareResponseBody(
   responses: Response[]
 ): Promise<string> {
   const allElements: any[] = [];
+  let index = 1;
   for (const res of responses) {
+    if (res.status == 200) {
+      console.info("Successfully partitioned set #%d, elements added to the final result.", index);
+    } else {
+      console.warn("Failed to partition set #%d, its elements will be omitted in the final result.", index);
+    }
+
     const resElements = await res.json();
     allElements.push(resElements);
+    index++;
   }
   return JSON.stringify(allElements.flat());
 }

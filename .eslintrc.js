@@ -24,5 +24,6 @@ module.exports = {
     "import/no-named-as-default-member": "off",
 
     "import/no-default-export": "error",
+    "object-curly-spacing": ["error", "always"],
   },
 };

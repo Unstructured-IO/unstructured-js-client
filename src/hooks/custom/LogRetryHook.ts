@@ -5,6 +5,27 @@ import { AfterErrorContext, AfterErrorHook } from "../types";
  * after encountering a 5xx error.
  */
 export class LogRetryHook implements AfterErrorHook {
+  private retriesCounter: Map<string, number> = new Map();
+
+  /**
+   * Log retries to give users visibility into requests.
+   * @param response - The response object received from the server.
+   * @param operationID - The unique identifier for the operation being logged.
+   */
+  private logRetries(response: Response | null, operationID: string): void {
+    if (response && response.status >= 500) {
+      console.warn(
+          "Failed to process a request due to API server error with status code %d. " +
+          "Attempting retry number %d after sleep.",
+          response.status,
+          this.retriesCounter.get(operationID)
+      );
+      if (response.statusText) {
+        console.warn("Server message - %s", response.statusText);
+      }
+    }
+  }
+
   /**
    * Executes after an error occurs during a request.
    * @param _context - The context object containing information about the request.
@@ -17,11 +38,9 @@ export class LogRetryHook implements AfterErrorHook {
     response: Response | null,
     error: unknown
   ): { response: Response | null; error: unknown } {
-    if (response && response.status >= 500) {
-      console.warn(
-        `Got an error: '${response.status} ${response.statusText}'. Retrying request!`
-      );
-    }
+    const currentCount = this.retriesCounter.get(_context.operationID) || 0;
+    this.retriesCounter.set(_context.operationID, currentCount + 1);
+    this.logRetries(response, _context.operationID);
     return { response, error };
   }
 }

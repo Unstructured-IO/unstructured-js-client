@@ -39,27 +39,42 @@ export async function pdfPagesToBlob(
 }
 
 /**
- * Retrieves an array of splits, with the start and end page numbers, from a PDF file.
- * Distribution of pages per split is made in as much uniform manner as possible.
+ * Calculates the optimal split size for processing pages with a specified concurrency level.
  *
- * @param pdf - The PDF file to extract pages from.
- * @param concurrencyLevel - Number of maximum parallel requests.
- * @returns A promise that resolves to an array of objects containing Blob files and
- * start and end page numbers from the original document.
+ * @param pagesCount - The total number of pages to process.
+ * @param concurrencyLevel - The level of concurrency to be used.
+ * @returns A promise that resolves to the optimal number of pages per split,
+ * ensuring it does not exceed the maximum or fall below the minimum threshold.
  */
-export async function splitPdf(
-  pdf: PDFDocument,
-  concurrencyLevel: number
-): Promise<PdfSplit[]> {
-  const pdfSplits: PdfSplit[] = [];
-  const pagesCount = pdf.getPages().length;
-
+export async function getOptimalSplitSize(
+    pagesCount: number,
+    concurrencyLevel: number
+): Promise<number> {
   let splitSize = MAX_PAGES_PER_THREAD;
   if (pagesCount < MAX_PAGES_PER_THREAD * concurrencyLevel) {
     splitSize = Math.ceil(pagesCount / concurrencyLevel);
   }
   splitSize = Math.max(splitSize, MIN_PAGES_PER_THREAD);
 
+  return splitSize;
+}
+
+
+/**
+ * Retrieves an array of splits, with the start and end page numbers, from a PDF file.
+ * Distribution of pages per split is made in as much uniform manner as possible.
+ *
+ * @param pdf - The PDF file to extract pages from.
+ * @param splitSize - The number of pages per split.
+ * @returns A promise that resolves to an array of objects containing Blob files and
+ * start and end page numbers from the original document.
+ */
+export async function splitPdf(
+  pdf: PDFDocument,
+  splitSize: number
+): Promise<PdfSplit[]> {
+  const pdfSplits: PdfSplit[] = [];
+  const pagesCount = pdf.getPages().length;
   const numberOfSplits = Math.ceil(pagesCount / splitSize);
 
   for (let i = 0; i < numberOfSplits; ++i) {
