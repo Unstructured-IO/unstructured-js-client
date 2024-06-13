@@ -24,25 +24,24 @@ This is a Typescript client for the [Unstructured API](https://unstructured-io.g
 
 </div>
 
-## This is ahead of the currently published version (v0.10.6). [Please refer here for usage.](https://github.com/Unstructured-IO/unstructured-js-client/blob/v0.10.6/README.md)
 
 ## SDK Installation
 
 ### NPM
 
 ```bash
-npm install unstructured-client
+npm install unstructured-client --include=dev
 ```
 
 ### Yarn
 
 ```bash
-yarn add unstructured-client
+yarn add unstructured-client --dev
 ```
 <!-- No SDK Installation -->
 
 ## SDK Example Usage
-Only the `files` parameter is required. See the [general partition](docs/sdks/general/README.md) page for all available parameters. 
+Only the `files` parameter is required for partition. See the [general partition](docs/sdks/general/README.md) page for all available parameters. 
 
 ```typescript
 import { UnstructuredClient } from "unstructured-client";
@@ -55,21 +54,22 @@ const client = new UnstructuredClient({
     security: {
         apiKeyAuth: key,
     },
+    // uncomment and change the URL below depending on which services you use or hosting locally; see below for more details
+    // by default it will make requests againt the url for the freemium (https://unstructured.io/api-key-free) API service
+    // serverURL: "http://localhost:8000",
 });
 
 const filename = "sample-docs/layout-parser-paper.pdf";
 const data = fs.readFileSync(filename);
 
 client.general.partition({
-    partitionParameters: {
-        // Note that this currently only supports a single file
-        files: {
-            content: data,
-            fileName: filename,
-        },
-        // Other partition params
-        strategy: "fast",
+    // Note that this currently only supports a single file
+    files: {
+        content: data,
+        fileName: filename,
     },
+    // Other partition params
+    strategy: "fast",
 }).then((res: PartitionResponse) => {
     if (res.statusCode == 200) {
         console.log(res.elements);
