@@ -1,8 +1,8 @@
-# HTTPValidationError
+# ServerError
 
 
 ## Fields
 
 | Field              | Type               | Required           | Description        |
 | ------------------ | ------------------ | ------------------ | ------------------ |
-| `detail`           | *errors.Detail*    | :heavy_minus_sign: | N/A                |
+| `detail`           | *string*           | :heavy_minus_sign: | N/A                |

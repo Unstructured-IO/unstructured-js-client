@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 9965dc613ab49f64c422ea37a522f52f
-  docVersion: 1.0.33
-  speakeasyVersion: 1.300.0
-  generationVersion: 2.338.14
-  releaseVersion: 0.16.3
-  configChecksum: 1a2a6d55eddd51df1016221c060a7eb5
+  docChecksum: af8d0c3230d9891ef1e3e4386c6e816a
+  docVersion: 1.0.34
+  speakeasyVersion: 1.306.0
+  generationVersion: 2.340.3
+  releaseVersion: 0.16.4
+  configChecksum: 830f1b348569b3488309317287db229c
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -15,7 +15,7 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.5
-    core: 3.9.12
+    core: 3.9.13
     examples: 2.81.4
     globalSecurity: 2.82.9
     globalSecurityCallbacks: 0.1.0
@@ -59,6 +59,7 @@ generatedFiles:
   - tsconfig.json
   - src/sdk/models/operations/partition.ts
   - src/sdk/models/errors/httpvalidationerror.ts
+  - src/sdk/models/errors/servererror.ts
   - src/sdk/models/shared/validationerror.ts
   - src/sdk/models/shared/partitionparameters.ts
   - src/sdk/models/shared/security.ts
@@ -67,7 +68,9 @@ generatedFiles:
   - src/sdk/models/shared/index.ts
   - docs/sdk/models/operations/partitionrequest.md
   - docs/sdk/models/operations/partitionresponse.md
+  - docs/sdk/models/errors/detail.md
   - docs/sdk/models/errors/httpvalidationerror.md
+  - docs/sdk/models/errors/servererror.md
   - docs/sdk/models/shared/loc.md
   - docs/sdk/models/shared/validationerror.md
   - docs/sdk/models/shared/chunkingstrategy.md
