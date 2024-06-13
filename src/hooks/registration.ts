@@ -1,6 +1,6 @@
 import { Hooks } from "./types";
 
-import { LogRetryHook } from "./custom/LogRetryHook";
+import { LoggerHook } from "./custom/LoggerHook";
 import { SplitPdfHook } from "./custom/SplitPdfHook";
 import { HttpsCheckHook } from "./custom/HttpsCheckHook";
 
@@ -16,7 +16,7 @@ export function initHooks(hooks: Hooks) {
   // Hooks are registered per SDK instance, and are valid for the lifetime of the SDK instance
 
   // Initialize hooks
-  const logErrorHook = new LogRetryHook();
+  const logErrorHook = new LoggerHook();
   const splitPdfHook = new SplitPdfHook();
   const httpsCheckHook = new HttpsCheckHook();
 

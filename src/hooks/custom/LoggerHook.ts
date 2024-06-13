@@ -4,7 +4,7 @@ import { AfterErrorContext, AfterErrorHook } from "../types";
  * Represents a hook that logs status and information that the request will be retried
  * after encountering a 5xx error.
  */
-export class LogRetryHook implements AfterErrorHook {
+export class LoggerHook implements AfterErrorHook {
   private retriesCounter: Map<string, number> = new Map();
 
   /**
