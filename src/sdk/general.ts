@@ -4,7 +4,7 @@
 
 import { SDKHooks } from "../hooks";
 import { SDK_METADATA, SDKOptions, serverURLFromOptions } from "../lib/config";
-import * as enc$ from "../lib/encodings";
+import { encodeSimple as encodeSimple$ } from "../lib/encodings";
 import { HTTPClient } from "../lib/http";
 import * as retries$ from "../lib/retries";
 import * as schemas$ from "../lib/schemas";
@@ -203,7 +203,7 @@ export class General extends ClientSDK {
 
         headers$.set(
             "unstructured-api-key",
-            enc$.encodeSimple("unstructured-api-key", payload$["unstructured-api-key"], {
+            encodeSimple$("unstructured-api-key", payload$["unstructured-api-key"], {
                 explode: false,
                 charEncoding: "none",
             })
@@ -265,7 +265,8 @@ export class General extends ClientSDK {
         const [result$] = await this.matcher<operations.PartitionResponse>()
             .json(200, operations.PartitionResponse$, { key: "Elements" })
             .json(422, errors.HTTPValidationError$, { err: true })
-            .fail(["4XX", "5XX"])
+            .fail("4XX")
+            .json("5XX", errors.ServerError$, { err: true })
             .match(response, { extraFields: responseFields$ });
 
         return result$;

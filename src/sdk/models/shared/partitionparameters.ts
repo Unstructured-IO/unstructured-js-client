@@ -52,7 +52,7 @@ export type PartitionParameters = {
      */
     files: Files | Blob;
     /**
-     * Use one of the supported strategies to chunk the returned elements. Currently supports: 'basic', 'by_page', 'by_similarity', or 'by_title'
+     * Use one of the supported strategies to chunk the returned elements after partitioning. When 'chunking_strategy' is not specified, no chunking is performed and any other chunking parameters provided are ignored. Supported strategies: 'basic', 'by_page', 'by_similarity', or 'by_title'
      */
     chunkingStrategy?: ChunkingStrategyOpen | null | undefined;
     /**
@@ -60,7 +60,7 @@ export type PartitionParameters = {
      */
     combineUnderNChars?: number | null | undefined;
     /**
-     * If true, return coordinates for each element. Default: false
+     * If `True`, return coordinates for each element extracted via OCR. Default: `False`
      */
     coordinates?: boolean | undefined;
     /**
@@ -68,11 +68,11 @@ export type PartitionParameters = {
      */
     encoding?: string | null | undefined;
     /**
-     * The types of elements to extract, for use in extracting image blocks as base64 encoded data stored in metadata fields
+     * The types of elements to extract, for use in extracting image blocks as base64 encoded data stored in metadata fields.
      */
     extractImageBlockTypes?: Array<string> | undefined;
     /**
-     * If file is gzipped, use this content type after unzipping
+     * If file is gzipped, use this content type after unzipping.
      */
     gzUncompressedContentType?: string | null | undefined;
     /**
@@ -84,11 +84,11 @@ export type PartitionParameters = {
      */
     includeOrigElements?: boolean | null | undefined;
     /**
-     * If True, the output will include page breaks if the filetype supports it. Default: false
+     * If true, the output will include page breaks if the filetype supports it. Default: false
      */
     includePageBreaks?: boolean | undefined;
     /**
-     * The languages present in the document, for use in partitioning and/or OCR
+     * The languages present in the document, for use in partitioning and/or OCR. See the Tesseract documentation for a full list of languages.
      */
     languages?: Array<string> | undefined;
     /**
@@ -104,7 +104,7 @@ export type PartitionParameters = {
      */
     newAfterNChars?: number | null | undefined;
     /**
-     * The languages present in the document, for use in partitioning and/or OCR
+     * Deprecated! The languages present in the document, for use in partitioning and/or OCR
      */
     ocrLanguages?: Array<string> | undefined;
     /**
@@ -148,11 +148,11 @@ export type PartitionParameters = {
      */
     strategy?: StrategyOpen | undefined;
     /**
-     * When `True`, assign UUIDs to element IDs, which guarantees their uniqueness (useful when using them as primary keys in database). Otherwise a SHA-256 of element text is used. Default: False
+     * When `True`, assign UUIDs to element IDs, which guarantees their uniqueness (useful when using them as primary keys in database). Otherwise a SHA-256 of element text is used. Default: `False`
      */
     uniqueElementIds?: boolean | undefined;
     /**
-     * If True, will retain the XML tags in the output. Otherwise it will simply extract the text from within the tags. Only applies to partition_xml.
+     * If `True`, will retain the XML tags in the output. Otherwise it will simply extract the text from within the tags. Only applies to XML documents.
      */
     xmlKeepTags?: boolean | undefined;
 };

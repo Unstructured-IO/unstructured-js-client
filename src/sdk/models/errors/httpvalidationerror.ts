@@ -5,12 +5,14 @@
 import * as shared from "../shared";
 import * as z from "zod";
 
+export type Detail = Array<shared.ValidationError> | string;
+
 export type HTTPValidationErrorData = {
-    detail?: Array<shared.ValidationError> | undefined;
+    detail?: Array<shared.ValidationError> | string | undefined;
 };
 
 export class HTTPValidationError extends Error {
-    detail?: Array<shared.ValidationError> | undefined;
+    detail?: Array<shared.ValidationError> | string | undefined;
 
     /** The original data that was passed to this error instance. */
     data$: HTTPValidationErrorData;
@@ -33,17 +35,33 @@ export class HTTPValidationError extends Error {
 }
 
 /** @internal */
+export namespace Detail$ {
+    export const inboundSchema: z.ZodType<Detail, z.ZodTypeDef, unknown> = z.union([
+        z.array(shared.ValidationError$.inboundSchema),
+        z.string(),
+    ]);
+
+    export type Outbound = Array<shared.ValidationError$.Outbound> | string;
+    export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, Detail> = z.union([
+        z.array(shared.ValidationError$.outboundSchema),
+        z.string(),
+    ]);
+}
+
+/** @internal */
 export namespace HTTPValidationError$ {
     export const inboundSchema: z.ZodType<HTTPValidationError, z.ZodTypeDef, unknown> = z
         .object({
-            detail: z.array(shared.ValidationError$.inboundSchema).optional(),
+            detail: z
+                .union([z.array(shared.ValidationError$.inboundSchema), z.string()])
+                .optional(),
         })
         .transform((v) => {
             return new HTTPValidationError(v);
         });
 
     export type Outbound = {
-        detail?: Array<shared.ValidationError$.Outbound> | undefined;
+        detail?: Array<shared.ValidationError$.Outbound> | string | undefined;
     };
 
     export const outboundSchema: z.ZodType<Outbound, z.ZodTypeDef, HTTPValidationError> = z
@@ -51,7 +69,9 @@ export namespace HTTPValidationError$ {
         .transform((v) => v.data$)
         .pipe(
             z.object({
-                detail: z.array(shared.ValidationError$.outboundSchema).optional(),
+                detail: z
+                    .union([z.array(shared.ValidationError$.outboundSchema), z.string()])
+                    .optional(),
             })
         );
 }
