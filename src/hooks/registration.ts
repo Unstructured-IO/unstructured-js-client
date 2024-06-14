@@ -16,9 +16,12 @@ export function initHooks(hooks: Hooks) {
   // Hooks are registered per SDK instance, and are valid for the lifetime of the SDK instance
 
   // Initialize hooks
-  const logErrorHook = new LoggerHook();
+  const loggerHook = new LoggerHook();
   const splitPdfHook = new SplitPdfHook();
   const httpsCheckHook = new HttpsCheckHook();
+
+  // NOTE: logger_hook should stay registered last as logs the status of
+  // request and whether it will be retried which can be changed by e.g. split_pdf_hook
 
   // Register SDK init hooks
   hooks.registerSDKInitHook(httpsCheckHook);
@@ -29,8 +32,9 @@ export function initHooks(hooks: Hooks) {
 
   // Register after success hooks
   hooks.registerAfterSuccessHook(splitPdfHook);
+  hooks.registerAfterSuccessHook(loggerHook)
 
   // Register after error hooks
   hooks.registerAfterErrorHook(splitPdfHook);
-  hooks.registerAfterErrorHook(logErrorHook);
+  hooks.registerAfterErrorHook(loggerHook);
 }
