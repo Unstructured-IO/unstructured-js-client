@@ -170,8 +170,9 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
         });
       } catch (e) {
         if (!expectedOk) {
-          expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
-          expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to process the request.");
+          expect(consoleErrorSpy).toHaveBeenCalledTimes(3);
+          expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to partition the document.");
+          expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining("Server responded with"));
           expect(consoleWarnSpy).toHaveBeenCalledWith(
             "Attempted to interpret file as pdf, but error arose when splitting by pages. Reverting to non-split pdf handling path."
           );
