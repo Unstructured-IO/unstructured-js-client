@@ -22,7 +22,7 @@ import {
   prepareResponseHeaders,
   splitPdf,
   stringToBoolean,
-} from "./utils";
+} from "./utils/index";
 import {
   MIN_PAGES_PER_THREAD,
   PARTITION_FORM_FILES_KEY,
