@@ -22,7 +22,7 @@ import {
   prepareResponseHeaders,
   splitPdf,
   stringToBoolean,
-} from "./utils";
+} from "./utils/index";
 import {
   MIN_PAGES_PER_THREAD,
   PARTITION_FORM_FILES_KEY,
@@ -98,12 +98,12 @@ export class SplitPdfHook
 
     const [error, pdf, pagesCount] = await loadPdf(file);
     if (file === null || pdf === null || error) {
-      console.warn("File could not be split. Partitioning without split.")
+      console.info("Partitioning without split.")
       return request;
     }
 
     if (pagesCount < MIN_PAGES_PER_THREAD) {
-      console.warn(
+      console.info(
         `PDF has less than ${MIN_PAGES_PER_THREAD} pages. Partitioning without split.`
       );
       return request;
@@ -119,7 +119,7 @@ export class SplitPdfHook
     console.info("Determined optimal split size of %d pages.", splitSize)
 
     if (splitSize >= pagesCount) {
-      console.warn(
+      console.info(
           "Document has too few pages (%d) to be split efficiently. Partitioning without split.",
           pagesCount,
       )

@@ -9,12 +9,6 @@
     <a href="https://speakeasyapi.dev/"><img src="https://custom-icon-badges.demolab.com/badge/-Built%20By%20Speakeasy-212015?style=for-the-badge&logoColor=FBE331&logo=speakeasy&labelColor=545454" /></a>
 </div>
 
-<h2 align="center">
-  <p>Typescript SDK for the Unstructured API</p>
-</h2>
-
-This is a Typescript client for the [Unstructured API](https://unstructured-io.github.io/unstructured/api.html). 
-
 <div align="center">
 
  <a
@@ -24,6 +18,13 @@ This is a Typescript client for the [Unstructured API](https://unstructured-io.g
 
 </div>
 
+<h2 align="center">
+  <p>Typescript SDK for the Unstructured API</p>
+</h2>
+
+This is a Typescript client for the [Unstructured API](https://unstructured-io.github.io/unstructured/api.html). 
+
+Please refer to the [Unstructured docs](https://docs.unstructured.io/api-reference/api-services/sdk) for a full guide to using the client.
 
 ## SDK Installation
 
@@ -40,45 +41,40 @@ yarn add unstructured-client --dev
 ```
 <!-- No SDK Installation -->
 
+<!-- Start SDK Example Usage [usage] -->
 ## SDK Example Usage
-Only the `files` parameter is required for partition. See the [general partition](docs/sdks/general/README.md) page for all available parameters. 
+
+### Example
 
 ```typescript
+import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { PartitionResponse } from "unstructured-client/dist/sdk/models/operations";
-import * as fs from "fs";
+import { Strategy } from "unstructured-client/sdk/models/shared";
 
-const key = "YOUR-API-KEY";
-
-const client = new UnstructuredClient({
+const unstructuredClient = new UnstructuredClient({
     security: {
-        apiKeyAuth: key,
+        apiKeyAuth: "YOUR_API_KEY",
     },
-    // uncomment and change the URL below depending on which services you use or hosting locally; see below for more details
-    // by default it will make requests againt the url for the freemium (https://unstructured.io/api-key-free) API service
-    // serverURL: "http://localhost:8000",
 });
 
-const filename = "sample-docs/layout-parser-paper.pdf";
-const data = fs.readFileSync(filename);
+async function run() {
+    const result = await unstructuredClient.general.partition({
+        partitionParameters: {
+            files: await openAsBlob("./sample-file"),
+            strategy: Strategy.Auto,
+        },
+    });
 
-client.general.partition({
-    // Note that this currently only supports a single file
-    files: {
-        content: data,
-        fileName: filename,
-    },
-    // Other partition params
-    strategy: "fast",
-}).then((res: PartitionResponse) => {
-    if (res.statusCode == 200) {
-        console.log(res.elements);
-    }
-}).catch((e) => {
-    console.log(e.statusCode);
-    console.log(e.body);
-});
+    // Handle the result
+    console.log(result);
+}
+
+run();
+
 ```
+<!-- End SDK Example Usage [usage] -->
+
+Refer to the [API parameters page](https://docs.unstructured.io/api-reference/api-services/api-parameters) for all available parameters.
 
 ## Change the base URL
 
@@ -102,12 +98,6 @@ const client = new UnstructuredClient({
 });
 ```
 
-
-<!-- No SDK Example Usage -->
-<!-- No SDK Available Operations -->
-<!-- No Pagination -->
-<!-- No Error Handling -->
-<!-- No Server Selection -->
 
 <!-- Start Custom HTTP Client [http-client] -->
 ## Custom HTTP Client
@@ -157,24 +147,102 @@ httpClient.addHook("requestError", (error, request) => {
 const sdk = new UnstructuredClient({ httpClient });
 ```
 <!-- End Custom HTTP Client [http-client] -->
-<!-- No Retries -->
-<!-- No Authentication -->
 
-## PartitionParameters
+<!-- Start Retries [retries] -->
+## Retries
 
-See the [general partition](docs/sdk/models/shared/partitionparameters.md) page for all available parameters. 
+Some of the endpoints in this SDK support retries.  If you use the SDK without any configuration, it will fall back to the default retry strategy provided by the API.  However, the default retry strategy can be overridden on a per-operation basis, or across the entire SDK.
+
+To change the default retry strategy for a single API call, simply provide a retryConfig object to the call:
+```typescript
+import { openAsBlob } from "node:fs";
+import { UnstructuredClient } from "unstructured-client";
+import { Strategy } from "unstructured-client/sdk/models/shared";
+
+const unstructuredClient = new UnstructuredClient({
+    security: {
+        apiKeyAuth: "YOUR_API_KEY",
+    },
+});
+
+async function run() {
+    const result = await unstructuredClient.general.partition(
+        {
+            partitionParameters: {
+                files: await openAsBlob("./sample-file"),
+                strategy: Strategy.Auto,
+            },
+        },
+        {
+            retries: {
+                strategy: "backoff",
+                backoff: {
+                    initialInterval: 1,
+                    maxInterval: 50,
+                    exponent: 1.1,
+                    maxElapsedTime: 100,
+                },
+                retryConnectionErrors: false,
+            },
+        }
+    );
+
+    // Handle the result
+    console.log(result);
+}
+
+run();
+
+```
+
+If you'd like to override the default retry strategy for all operations that support retries, you can provide a retryConfig at SDK initialization:
+```typescript
+import { openAsBlob } from "node:fs";
+import { UnstructuredClient } from "unstructured-client";
+import { Strategy } from "unstructured-client/sdk/models/shared";
+
+const unstructuredClient = new UnstructuredClient({
+    retryConfig: {
+        strategy: "backoff",
+        backoff: {
+            initialInterval: 1,
+            maxInterval: 50,
+            exponent: 1.1,
+            maxElapsedTime: 100,
+        },
+        retryConnectionErrors: false,
+    },
+    security: {
+        apiKeyAuth: "YOUR_API_KEY",
+    },
+});
+
+async function run() {
+    const result = await unstructuredClient.general.partition({
+        partitionParameters: {
+            files: await openAsBlob("./sample-file"),
+            strategy: Strategy.Auto,
+        },
+    });
+
+    // Handle the result
+    console.log(result);
+}
+
+run();
+
+```
+<!-- End Retries [retries] -->
 
 ### Splitting PDF by pages
 
-In order to speed up processing of long PDF files, set `splitPdfPage` parameter to `true`. It will cause the PDF to be split into smaller batches at client side, before sending to API, and combining individual responses as single result. This will work only for PDF files, so don't set it for other types of files. Size of each batch is determined internally and it can vary between 2 and 20 pages per split.
+See [page splitting](https://docs.unstructured.io/api-reference/api-services/sdk#page-splitting) for more details.
 
-The amount of parallel requests is controlled by `splitPdfConcurrencyLevel` parameter. By default it equals to 5. It can't be more than 15, to avoid too high resource usage and costs.
+In order to speed up processing of large PDF files, the client splits up PDFs into smaller files, sends these to the API concurrently, and recombines the results. `splitPdfPage` can be set to `false` to disable this.
+
+The amount of parallel requests is controlled by `splitPdfConcurrencyLevel` parameter. By default it equals to 5. It can't be more than 15, to avoid too high resource usage and costs. The size of each batch is determined internally and it can vary between 2 and 20 pages per split.
 
 ```typescript
-import { SplitPdfHook } from "unstructured-client/hooks/custom/SplitPdfHook";
-
-...
-
 client.general.partition({
     partitionParameters: {
         files: {
@@ -186,14 +254,7 @@ client.general.partition({
         // Modify splitPdfConcurrencyLevel to change the limit of parallel requests
         splitPdfConcurrencyLevel: 10,
     },
-}).then((res: PartitionResponse) => {
-    if (res.statusCode == 200) {
-        console.log(res.elements);
-    }
-}).catch((e) => {
-    console.log(e.statusCode);
-    console.log(e.body);
-});
+}};
 ```
 
 <!-- Start Requirements [requirements] -->
@@ -243,6 +304,12 @@ run();
 
 ```
 <!-- End File uploads [file-upload] -->
+
+<!-- No Authentication -->
+<!-- No SDK Available Operations -->
+<!-- No Pagination -->
+<!-- No Error Handling -->
+<!-- No Server Selection -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 

@@ -6,7 +6,7 @@ import {
   pdfPagesToBlob,
   splitPdf,
 } from "../../../src/hooks/custom/utils";
-import { getOptimalSplitSize } from "../../../hooks/custom/utils";
+import { getOptimalSplitSize } from "../../../hooks/custom/utils/index";
 import { MAX_PAGES_PER_THREAD, MIN_PAGES_PER_THREAD } from "../../../hooks/custom/common";
 
 describe("Pdf utility functions", () => {

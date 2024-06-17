@@ -102,7 +102,7 @@ export async function loadPdf(
   file: File | null
 ): Promise<[boolean, PDFDocument | null, number]> {
   if (!file?.name.endsWith(".pdf")) {
-    console.warn("Given file is not a PDF. Continuing without splitting.");
+    console.info("Given file is not a PDF, so splitting is not enabled.");
     return [true, null, 0];
   }
 
