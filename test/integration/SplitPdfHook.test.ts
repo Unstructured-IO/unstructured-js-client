@@ -6,6 +6,7 @@ import { PartitionParameters, Strategy } from "../../src/sdk/models/shared";
 
 describe("SplitPdfHook integration tests check splitted file is same as not splitted", () => {
   const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+  const consoleInfoSpy = jest.spyOn(console, "info");
   const consoleWarnSpy = jest.spyOn(console, "warn");
   const consoleErrorSpy = jest.spyOn(console, "error");
 
@@ -33,6 +34,7 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
   });
 
   afterEach(() => {
+    consoleInfoSpy.mockClear();
     consoleWarnSpy.mockClear();
     consoleErrorSpy.mockClear();
   });
@@ -173,10 +175,10 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
           expect(consoleErrorSpy).toHaveBeenCalledTimes(3);
           expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to partition the document.");
           expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining("Server responded with"));
+          expect(consoleInfoSpy).toHaveBeenCalledWith("Partitioning without split.");
           expect(consoleWarnSpy).toHaveBeenCalledWith(
             "Attempted to interpret file as pdf, but error arose when splitting by pages. Reverting to non-split pdf handling path."
           );
-          expect(consoleWarnSpy).toHaveBeenCalledWith("File could not be split. Partitioning without split.");
           return;
         } else {
           throw e;
