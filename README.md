@@ -41,15 +41,15 @@ yarn add unstructured-client --dev
 ```
 <!-- No SDK Installation -->
 
-<!-- Start SDK Example Usage [usage] -->
 ## SDK Example Usage
 
 ### Example
 
 ```typescript
-import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
+import { PartitionResponse } from "unstructured-client/sdk/models/operations";
 import { Strategy } from "unstructured-client/sdk/models/shared";
+import * as fs from "fs";
 
 const unstructuredClient = new UnstructuredClient({
     security: {
@@ -57,22 +57,28 @@ const unstructuredClient = new UnstructuredClient({
     },
 });
 
-async function run() {
-    const result = await unstructuredClient.general.partition({
-        partitionParameters: {
-            files: await openAsBlob("./sample-file"),
-            strategy: Strategy.Auto,
+const filename = "./sample-file";
+const data = fs.readFileSync(filename);
+
+unstructuredClient.general.partition({
+    partitionParameters: {
+        files: {
+            content: data,
+            fileName: filename,
         },
-    });
-
-    // Handle the result
-    console.log(result);
-}
-
-run();
+	strategy: Strategy.Auto,
+    }
+}).then((res: PartitionResponse) => {
+    if (res.statusCode == 200) {
+        console.log(res.elements);
+    }
+}).catch((e) => {
+    console.log(e.statusCode);
+    console.log(e.body);
+});
 
 ```
-<!-- End SDK Example Usage [usage] -->
+<!-- No SDK Example Usage [usage] -->
 
 Refer to the [API parameters page](https://docs.unstructured.io/api-reference/api-services/api-parameters) for all available parameters.
 
