@@ -15,7 +15,7 @@ export const PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL =
   "split_pdf_concurrency_level";
 
 export const DEFAULT_STARTING_PAGE_NUMBER = 1;
-export const DEFAULT_NUMBER_OF_PARALLEL_REQUESTS = 5;
+export const DEFAULT_NUMBER_OF_PARALLEL_REQUESTS = 8;
 export const MAX_NUMBER_OF_PARALLEL_REQUESTS = 15;
 
 export const MIN_PAGES_PER_THREAD = 2;
