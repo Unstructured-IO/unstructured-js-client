@@ -61,4 +61,16 @@ describe("HttpsCheckHook", () => {
     expect(result.baseURL).toBeNull();
     expect(consoleSpy).not.toHaveBeenCalled();
   });
+
+  it("should update the pathname to empty", () => {
+    const baseURL = new URL("https://example.unstructuredapp.io/general/v0/general");
+    const client = new HTTPClient();
+    const opts = { baseURL, client };
+    const hook = new HttpsCheckHook();
+
+    const result = hook.sdkInit(opts);
+
+    expect(result.baseURL?.pathname).toBe("/");
+    expect(consoleSpy).not.toHaveBeenCalled();
+  });
 });
