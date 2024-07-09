@@ -1,3 +1,7 @@
+/esm
+/dist
+/.tshy
+/.tshy-*
 /models
 /sdk/models/errors
 /sdk/types
@@ -10,9 +14,7 @@
 /.tsbuildinfo
 dist/
 node_modules/
-
 # Custom ignores
 openapi.json
 openapi_client.json
-
 .idea/
