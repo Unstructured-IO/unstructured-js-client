@@ -1,6 +1,6 @@
 import async from "async";
 
-import { HTTPClient } from "../../lib/http";
+import { HTTPClient } from "../../lib/http.js";
 import {
   AfterErrorContext,
   AfterErrorHook,
@@ -10,7 +10,7 @@ import {
   BeforeRequestHook,
   SDKInitHook,
   SDKInitOptions,
-} from "../types";
+} from "../types.js";
 import {
   getOptimalSplitSize,
   getSplitPdfConcurrencyLevel,
@@ -22,12 +22,12 @@ import {
   prepareResponseHeaders,
   splitPdf,
   stringToBoolean,
-} from "./utils/index";
+} from "./utils/index.js";
 import {
   MIN_PAGES_PER_THREAD,
   PARTITION_FORM_FILES_KEY,
   PARTITION_FORM_SPLIT_PDF_PAGE_KEY,
-} from "./common";
+} from "./common.js";
 
 /**
  * Represents a hook for splitting and sending PDF files as per page requests.
