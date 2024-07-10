@@ -1,8 +1,8 @@
 import { Hooks } from "./types";
 
-import { LoggerHook } from "./custom/LoggerHook";
-import { SplitPdfHook } from "./custom/SplitPdfHook";
-import { HttpsCheckHook } from "./custom/HttpsCheckHook";
+import { LoggerHook } from "./custom/LoggerHook.js";
+import { SplitPdfHook } from "./custom/SplitPdfHook.js";
+import { HttpsCheckHook } from "./custom/HttpsCheckHook.js";
 
 /*
  * This file is only ever generated once on the first generation and then is free to be modified.

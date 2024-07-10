@@ -4,7 +4,7 @@ import {
   MAX_NUMBER_OF_PARALLEL_REQUESTS,
   PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL,
   PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
-} from "../common";
+} from "../common.js";
 
 /**
  * Retrieves an integer parameter from the given form data.

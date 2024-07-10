@@ -1,5 +1,5 @@
-import { BASE_HOSTNAME_REGEX, BASE_PROTOCOL } from "./common";
-import { SDKInitHook, SDKInitOptions } from "../types";
+import { BASE_HOSTNAME_REGEX, BASE_PROTOCOL } from "./common.js";
+import { SDKInitHook, SDKInitOptions } from "../types.js";
 
 /**
  * Represents a hook that performs base host HTTPS check during SDK initialization.

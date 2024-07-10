@@ -10,7 +10,7 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
 typescript:
-  version: 0.11.3
+  version: 0.12.0
   additionalDependencies:
     dependencies:
       async: ^3.2.5
@@ -38,7 +38,9 @@ typescript:
   license: MIT
   maxMethodParams: 0
   methodArguments: require-security-and-request
+  moduleFormat: commonjs
   outputModelSuffix: output
   packageName: unstructured-client
   responseFormat: envelope
   templateVersion: v2
+  useIndexModules: true

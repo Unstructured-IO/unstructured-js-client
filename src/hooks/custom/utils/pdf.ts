@@ -1,6 +1,6 @@
 import { PDFDocument } from "pdf-lib";
 
-import { MAX_PAGES_PER_THREAD, MIN_PAGES_PER_THREAD } from "../common";
+import { MAX_PAGES_PER_THREAD, MIN_PAGES_PER_THREAD } from "../common.js";
 
 interface PdfSplit {
   content: Blob;
