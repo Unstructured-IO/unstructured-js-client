@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 3f2fbf3f00965b046a501b0642259d4e
-  docVersion: 1.0.39
-  speakeasyVersion: 1.335.0
-  generationVersion: 2.370.2
-  releaseVersion: 0.13.0
-  configChecksum: 42aa478608bdf1332898ea475f2c41ad
+  docChecksum: 20a563c667f63df94bebac671d008a7e
+  docVersion: 1.0.41
+  speakeasyVersion: 1.346.3
+  generationVersion: 2.379.6
+  releaseVersion: 0.13.1
+  configChecksum: 79606ac80f9071d32c15e57ebf993eaa
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -15,7 +15,7 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.5
-    core: 3.11.6
+    core: 3.11.10
     defaultEnabledRetries: 0.1.0
     examples: 2.81.4
     globalSecurity: 2.82.9
@@ -28,7 +28,7 @@ features:
     retries: 2.83.0
     sdkHooks: 0.1.0
     serverIDs: 2.81.2
-    unions: 2.85.5
+    unions: 2.85.6
 generatedFiles:
   - src/sdk/general.ts
   - src/sdk/sdk.ts
@@ -85,3 +85,4 @@ generatedFiles:
   - src/hooks/hooks.ts
   - src/hooks/types.ts
   - src/hooks/index.ts
+  - CONTRIBUTING.md

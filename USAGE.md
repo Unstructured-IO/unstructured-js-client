@@ -2,7 +2,7 @@
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { Strategy } from "unstructured-client/sdk/models/shared";
+import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient({
     security: {
@@ -14,7 +14,8 @@ async function run() {
     const result = await unstructuredClient.general.partition({
         partitionParameters: {
             files: await openAsBlob("./sample-file"),
-            strategy: Strategy.Auto,
+            chunkingStrategy: ChunkingStrategy.ByTitle,
+            strategy: Strategy.HiRes,
         },
     });
 
