@@ -12,7 +12,7 @@ import {
   SDKInitOptions,
 } from "../types.js";
 import {
-  getOptimalSplitSize,
+  getOptimalSplitSize, getSplitPdfAllowFailed,
   getSplitPdfConcurrencyLevel,
   getStartingPageNumber,
   loadPdf,
@@ -40,10 +40,21 @@ export class SplitPdfHook
    */
   client: HTTPClient | undefined;
 
+
+  /**
+   * Keeps the strict-mode setting for splitPdfPage feature.
+   */
+  allowFailed: boolean | undefined;
+
   /**
    * Maps lists responses to client operation.
    */
-  partitionResponses: Record<string, Response[]> = {};
+  partitionSuccessfulResponses: Record<string, Response[]> = {};
+
+  /**
+   * Maps lists failed responses to client operation.
+   */
+  partitionFailedResponses: Record<string, Response[]> = {};
 
   /**
    * Maps parallel requests to client operation.
@@ -115,6 +126,9 @@ export class SplitPdfHook
     const concurrencyLevel = getSplitPdfConcurrencyLevel(formData);
     console.info("Concurrency level set to %d", concurrencyLevel)
 
+    this.allowFailed = getSplitPdfAllowFailed(formData);
+    console.info("Allow failed set to %s", this.allowFailed)
+
     const splitSize = await getOptimalSplitSize(pagesCount, concurrencyLevel);
     console.info("Determined optimal split size of %d pages.", splitSize)
 
@@ -168,7 +182,9 @@ export class SplitPdfHook
       setIndex+=1;
     }
 
-    this.partitionResponses[operationID] = new Array(requests.length);
+    this.partitionSuccessfulResponses[operationID] = new Array(requests.length);
+
+    const allowFailed = this.allowFailed;
 
     this.partitionRequests[operationID] = async.parallelLimit(
       requests.slice(0, -1).map((req, pageIndex) => async () => {
@@ -176,17 +192,74 @@ export class SplitPdfHook
         try {
           const response = await this.client!.request(req);
           if (response.status === 200) {
-            (this.partitionResponses[operationID] as Response[])[pageIndex] =
+            (this.partitionSuccessfulResponses[operationID] as Response[])[pageIndex] =
               response.clone();
+          } else {
+            (this.partitionFailedResponses[operationID] as Response[])[pageIndex] =
+              response.clone();
+              if (!allowFailed) {
+                throw new Error(`Failed to send request for page ${pageNumber}.`);
+              }
           }
         } catch (e) {
           console.error(`Failed to send request for page ${pageNumber}.`);
+          if (!allowFailed) {
+            throw e;
+          }
         }
       }),
       concurrencyLevel
     );
 
     return requests.at(-1) as Request;
+  }
+
+    /**
+     * Forms the final response object based on the successful and failed responses.
+     * @param response - The response object returned from the API request.
+     *   Expected to be a successful response.
+     * @param successfulResponses - The list of successful responses.
+     * @param failedResponses - The list of failed responses.
+     * @returns The final response object.
+     */
+  async formFinalResponse(response: Response,
+                    successfulResponses: Response[],
+                    failedResponses: Response[]
+  ): Promise<Response>  {
+    let responseBody, responseStatus, responseStatusText;
+    const numFailedResponses = failedResponses?.length ?? 0;
+    const headers = prepareResponseHeaders(response);
+
+    if (!this.allowFailed && failedResponses && failedResponses.length > 0) {
+       const failedResponse = failedResponses[0]?.clone();
+       if (failedResponse) {
+            responseBody = await failedResponse.text();
+            responseStatus = failedResponse.status;
+            responseStatusText = failedResponse.statusText;
+        } else {
+            responseBody = JSON.stringify({"details:": "Unknown error"});
+            responseStatus = 503
+            responseStatusText = "Unknown error"
+        }
+        console.warn(
+            `${numFailedResponses} requests failed. The partition operation is cancelled.`
+          );
+      } else {
+        responseBody = await prepareResponseBody([...successfulResponses, response]);
+        responseStatus = response.status
+        responseStatusText = response.statusText
+        if (numFailedResponses > 0) {
+          console.warn(
+            `${numFailedResponses} requests failed. The results might miss some pages.`
+          );
+          }
+    }
+    return new Response(responseBody, {
+        headers: headers,
+        status: responseStatus,
+        statusText: responseStatusText,
+      });
+
   }
 
   /**
@@ -203,22 +276,19 @@ export class SplitPdfHook
   ): Promise<Response> {
     const { operationID } = hookCtx;
     const responses = await this.awaitAllRequests(operationID);
-
-    if (!responses) {
+    const successfulResponses = responses?.get("success") ?? [];
+    const failedResponses = responses?.get("failed") ?? [];
+    if (!successfulResponses) {
       return response;
     }
 
-    const headers = prepareResponseHeaders(response);
-    const body = await prepareResponseBody([...responses, response]);
+    const finalResponse = await this.formFinalResponse(response, successfulResponses, failedResponses);
 
     this.clearOperation(operationID);
 
-    return new Response(body, {
-      headers: headers,
-      status: response.status,
-      statusText: response.statusText,
-    });
-  }
+    return finalResponse;
+    }
+
 
   /**
    * Executes after an unsuccessful API request. Awaits all parallel requests, if at least one
@@ -237,21 +307,19 @@ export class SplitPdfHook
   ): Promise<{ response: Response | null; error: unknown }> {
     const { operationID } = hookCtx;
     const responses = await this.awaitAllRequests(operationID);
-
-    if (!responses?.length) {
+    const successfulResponses = responses?.get("success") ?? [];
+    const failedResponses = responses?.get("failed") ?? [];
+    if (!successfulResponses?.length) {
       this.clearOperation(operationID);
       return { response, error };
     }
 
-    const okResponse = responses[0] as Response;
-    const headers = prepareResponseHeaders(okResponse);
-    const body = await prepareResponseBody(responses);
-
-    const finalResponse = new Response(body, {
-      headers: headers,
-      status: okResponse.status,
-      statusText: okResponse.statusText,
-    });
+    const okResponse = successfulResponses[0] as Response;
+    const finalResponse = await this.formFinalResponse(
+        okResponse,
+        successfulResponses.slice(1),
+        failedResponses
+    );
 
     this.clearOperation(operationID);
 
@@ -265,7 +333,8 @@ export class SplitPdfHook
    * @param operationID - The ID of the operation to clear.
    */
   clearOperation(operationID: string) {
-    delete this.partitionResponses[operationID];
+    delete this.partitionSuccessfulResponses[operationID];
+    delete this.partitionFailedResponses[operationID];
     delete this.partitionRequests[operationID];
   }
 
@@ -276,15 +345,17 @@ export class SplitPdfHook
    * @returns A promise that resolves to an array of responses, or undefined
    * if there are no requests for the given operation ID.
    */
-  async awaitAllRequests(operationID: string): Promise<Response[] | undefined> {
+  async awaitAllRequests(operationID: string): Promise<Map<string, Response[]>> {
     const requests = this.partitionRequests[operationID];
+    const responseMap = new Map<string, Response[]>();
 
     if (!requests) {
-      return;
+      return responseMap;
     }
-
     await requests;
 
-    return this.partitionResponses[operationID]?.filter((e) => e) ?? [];
+    responseMap.set("success", this.partitionSuccessfulResponses[operationID]?.filter((e) => e) ?? []);
+    responseMap.set("failed", this.partitionFailedResponses[operationID]?.filter((e) => e) ?? []);
+    return responseMap
   }
 }
