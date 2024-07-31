@@ -163,7 +163,7 @@ To change the default retry strategy for a single API call, simply provide a ret
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { Strategy } from "unstructured-client/sdk/models/shared";
+import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient({
     security: {
@@ -176,7 +176,8 @@ async function run() {
         {
             partitionParameters: {
                 files: await openAsBlob("./sample-file"),
-                strategy: Strategy.Auto,
+                chunkingStrategy: ChunkingStrategy.ByTitle,
+                strategy: Strategy.HiRes,
             },
         },
         {
@@ -205,7 +206,7 @@ If you'd like to override the default retry strategy for all operations that sup
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { Strategy } from "unstructured-client/sdk/models/shared";
+import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient({
     retryConfig: {
@@ -227,7 +228,8 @@ async function run() {
     const result = await unstructuredClient.general.partition({
         partitionParameters: {
             files: await openAsBlob("./sample-file"),
-            strategy: Strategy.Auto,
+            chunkingStrategy: ChunkingStrategy.ByTitle,
+            strategy: Strategy.HiRes,
         },
     });
 
@@ -286,7 +288,7 @@ Certain SDK methods accept files as part of a multi-part request. It is possible
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { Strategy } from "unstructured-client/sdk/models/shared";
+import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient({
     security: {
@@ -298,7 +300,8 @@ async function run() {
     const result = await unstructuredClient.general.partition({
         partitionParameters: {
             files: await openAsBlob("./sample-file"),
-            strategy: Strategy.Auto,
+            chunkingStrategy: ChunkingStrategy.ByTitle,
+            strategy: Strategy.HiRes,
         },
     });
 
