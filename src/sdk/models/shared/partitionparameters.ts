@@ -137,6 +137,10 @@ export type PartitionParameters = {
      */
     splitPdfConcurrencyLevel?: number | undefined;
     /**
+     * Controls the split pdf strict mode - if set to True, the partial requests with page batches may fail. If set to False - the first failed partial request will cancel the process and error out.
+     */
+    splitPdfAllowFailed?: boolean | undefined;
+    /**
      * Should the pdf file be split at client. Ignored on backend.
      */
     splitPdfPage?: boolean | undefined;
