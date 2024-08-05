@@ -133,13 +133,13 @@ export type PartitionParameters = {
      */
     skipInferTableTypes?: Array<string> | undefined;
     /**
+     * When `split_pdf_page` is set to `True`, this parameter defines the behavior when some of the parallel requests fail. By default `split_pdf_allow_failed` is set to `False` and any failed request send to the API will make the whole process break and raise an Exception. If `split_pdf_allow_failed` is set to `True`, the errors encountered while sending parallel requests will not break the processing - the resuling list of Elements will miss the data from errored pages.
+     */
+    splitPdfAllowFailed?: boolean | undefined;
+    /**
      * Number of maximum concurrent requests made when splitting PDF. Ignored on backend.
      */
     splitPdfConcurrencyLevel?: number | undefined;
-    /**
-     * Controls the split pdf strict mode - if set to True, the partial requests with page batches may fail. If set to False - the first failed partial request will cancel the process and error out.
-     */
-    splitPdfAllowFailed?: boolean | undefined;
     /**
      * Should the pdf file be split at client. Ignored on backend.
      */
@@ -290,6 +290,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
         pdf_infer_table_structure: z.boolean().default(true),
         similarity_threshold: z.nullable(z.number()).optional(),
         skip_infer_table_types: z.array(z.string()).optional(),
+        split_pdf_allow_failed: z.boolean().default(false),
         split_pdf_concurrency_level: z.number().int().default(5),
         split_pdf_page: z.boolean().default(true),
         starting_page_number: z.nullable(z.number().int()).optional(),
@@ -315,6 +316,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
             pdf_infer_table_structure: "pdfInferTableStructure",
             similarity_threshold: "similarityThreshold",
             skip_infer_table_types: "skipInferTableTypes",
+            split_pdf_allow_failed: "splitPdfAllowFailed",
             split_pdf_concurrency_level: "splitPdfConcurrencyLevel",
             split_pdf_page: "splitPdfPage",
             starting_page_number: "startingPageNumber",
@@ -346,6 +348,7 @@ export type PartitionParameters$Outbound = {
     pdf_infer_table_structure: boolean;
     similarity_threshold?: number | null | undefined;
     skip_infer_table_types?: Array<string> | undefined;
+    split_pdf_allow_failed: boolean;
     split_pdf_concurrency_level: number;
     split_pdf_page: boolean;
     starting_page_number?: number | null | undefined;
@@ -382,6 +385,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
         pdfInferTableStructure: z.boolean().default(true),
         similarityThreshold: z.nullable(z.number()).optional(),
         skipInferTableTypes: z.array(z.string()).optional(),
+        splitPdfAllowFailed: z.boolean().default(false),
         splitPdfConcurrencyLevel: z.number().int().default(5),
         splitPdfPage: z.boolean().default(true),
         startingPageNumber: z.nullable(z.number().int()).optional(),
@@ -407,6 +411,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
             pdfInferTableStructure: "pdf_infer_table_structure",
             similarityThreshold: "similarity_threshold",
             skipInferTableTypes: "skip_infer_table_types",
+            splitPdfAllowFailed: "split_pdf_allow_failed",
             splitPdfConcurrencyLevel: "split_pdf_concurrency_level",
             splitPdfPage: "split_pdf_page",
             startingPageNumber: "starting_page_number",
