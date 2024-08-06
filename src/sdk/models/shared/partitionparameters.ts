@@ -61,6 +61,10 @@ export type PartitionParameters = {
      */
     combineUnderNChars?: number | null | undefined;
     /**
+     * A hint about the content type to use (such as text/markdown), when there are problems processing a specific file. This value is a MIME type in the format type/subtype.
+     */
+    contentType?: string | null | undefined;
+    /**
      * If `True`, return coordinates for each element extracted via OCR. Default: `False`
      */
     coordinates?: boolean | undefined;
@@ -272,6 +276,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
         files: z.lazy(() => Files$inboundSchema),
         chunking_strategy: z.nullable(ChunkingStrategy$inboundSchema).optional(),
         combine_under_n_chars: z.nullable(z.number().int()).optional(),
+        content_type: z.nullable(z.string()).optional(),
         coordinates: z.boolean().default(false),
         encoding: z.nullable(z.string()).optional(),
         extract_image_block_types: z.array(z.string()).optional(),
@@ -302,6 +307,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
         return remap$(v, {
             chunking_strategy: "chunkingStrategy",
             combine_under_n_chars: "combineUnderNChars",
+            content_type: "contentType",
             extract_image_block_types: "extractImageBlockTypes",
             gz_uncompressed_content_type: "gzUncompressedContentType",
             hi_res_model_name: "hiResModelName",
@@ -330,6 +336,7 @@ export type PartitionParameters$Outbound = {
     files: Files$Outbound | Blob;
     chunking_strategy?: string | null | undefined;
     combine_under_n_chars?: number | null | undefined;
+    content_type?: string | null | undefined;
     coordinates: boolean;
     encoding?: string | null | undefined;
     extract_image_block_types?: Array<string> | undefined;
@@ -367,6 +374,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
         files: z.lazy(() => Files$outboundSchema).or(blobLikeSchema),
         chunkingStrategy: z.nullable(ChunkingStrategy$outboundSchema).optional(),
         combineUnderNChars: z.nullable(z.number().int()).optional(),
+        contentType: z.nullable(z.string()).optional(),
         coordinates: z.boolean().default(false),
         encoding: z.nullable(z.string()).optional(),
         extractImageBlockTypes: z.array(z.string()).optional(),
@@ -397,6 +405,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
         return remap$(v, {
             chunkingStrategy: "chunking_strategy",
             combineUnderNChars: "combine_under_n_chars",
+            contentType: "content_type",
             extractImageBlockTypes: "extract_image_block_types",
             gzUncompressedContentType: "gz_uncompressed_content_type",
             hiResModelName: "hi_res_model_name",

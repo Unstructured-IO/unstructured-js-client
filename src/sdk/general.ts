@@ -59,6 +59,9 @@ export class General extends ClientSDK {
                 String(payload$.partition_parameters.combine_under_n_chars)
             );
         }
+        if (payload$.partition_parameters.content_type !== undefined) {
+            body$.append("content_type", String(payload$.partition_parameters.content_type));
+        }
         if (payload$.partition_parameters.coordinates !== undefined) {
             body$.append("coordinates", String(payload$.partition_parameters.coordinates));
         }
