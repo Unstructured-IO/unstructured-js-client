@@ -4,6 +4,8 @@ import { UnstructuredClient } from "../../src";
 import { PartitionResponse } from "../../src/sdk/models/operations";
 import { PartitionParameters, Strategy } from "../../src/sdk/models/shared";
 
+const localServer = "http://localhost:8000"
+
 describe("SplitPdfHook integration tests check splitted file is same as not splitted", () => {
   const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
   const consoleInfoSpy = jest.spyOn(console, "info");
@@ -11,7 +13,7 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
   const consoleErrorSpy = jest.spyOn(console, "error");
 
   let client = new UnstructuredClient({
-    serverURL: "http://localhost:8000",
+    serverURL: localServer,
     security: {
       apiKeyAuth: FAKE_API_KEY,
     },
@@ -19,14 +21,14 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
 
   beforeEach(async () => {
     try {
-      const res = await fetch("http://localhost:8000/general/docs");
+        const res = await fetch(`${localServer}/general/docs`);
       expect(res.status).toEqual(200);
     } catch {
-      throw Error("The unstructured-api is not running on localhost:8000");
+        throw Error(`The unstructured-api is not running on ${localServer}`);
     }
 
     client = new UnstructuredClient({
-      serverURL: "http://localhost:8000",
+      serverURL: localServer,
       security: {
         apiKeyAuth: FAKE_API_KEY,
       },
