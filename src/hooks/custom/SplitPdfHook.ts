@@ -15,6 +15,7 @@ import {
   getOptimalSplitSize,
   getSplitPdfConcurrencyLevel,
   getStartingPageNumber,
+  getSplitPdfPageRange,
   loadPdf,
   prepareRequestBody,
   prepareRequestHeaders,
@@ -96,11 +97,15 @@ export class SplitPdfHook
       return request;
     }
 
-    const [error, pdf, pagesCount] = await loadPdf(file);
+    const [error, pdf, totalPages] = await loadPdf(file);
     if (file === null || pdf === null || error) {
       console.info("Partitioning without split.")
       return request;
     }
+
+    let [pageRangeStart, pageRangeEnd] = getSplitPdfPageRange(formData, totalPages);
+
+    let pagesCount = pageRangeEnd - pageRangeStart + 1;
 
     if (pagesCount < MIN_PAGES_PER_THREAD) {
       console.info(
@@ -118,7 +123,9 @@ export class SplitPdfHook
     const splitSize = await getOptimalSplitSize(pagesCount, concurrencyLevel);
     console.info("Determined optimal split size of %d pages.", splitSize)
 
-    if (splitSize >= pagesCount) {
+    // If the doc is small enough, and we aren't slicing it with a page range:
+    // do not split, just continue with the original request
+    if (splitSize >= pagesCount && pagesCount == totalPages) {
       console.info(
           "Document has too few pages (%d) to be split efficiently. Partitioning without split.",
           pagesCount,
@@ -126,7 +133,7 @@ export class SplitPdfHook
       return request;
     }
 
-    const splits = await splitPdf(pdf, splitSize);
+    const splits = await splitPdf(pdf, splitSize, pageRangeStart, pageRangeEnd);
     const numberOfSplits = splits.length
     console.info(
         "Document split into %d, %d-paged sets.",

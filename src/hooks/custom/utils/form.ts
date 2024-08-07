@@ -3,6 +3,7 @@ import {
   DEFAULT_STARTING_PAGE_NUMBER,
   MAX_NUMBER_OF_PARALLEL_REQUESTS,
   PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL,
+  PARTITION_FORM_SPLIT_PDF_PAGE_RANGE_KEY,
   PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
 } from "../common.js";
 
@@ -39,6 +40,31 @@ function getIntegerParameter(
   }
 
   return numberParameter;
+}
+
+/**
+ * Retrieves and validates a page range from FormData, ensuring that the start and end values are defined and within bounds.
+ *
+ * @param formData - The FormData object containing the page range parameter.
+ * @param maxPages - The maximum number of pages in the document.
+ * @returns {[number, number]} - A tuple containing the validated start and end page numbers.
+ *
+ * @throws Will throw an error if the page range is invalid or out of bounds.
+ */
+export function getSplitPdfPageRange(formData: FormData, maxPages: number): [number, number] {
+  const formDataParameter = formData.get(PARTITION_FORM_SPLIT_PDF_PAGE_RANGE_KEY);
+  const pageRange = String(formDataParameter).split(",").map(Number)
+
+  let start = pageRange[0] || 1;
+  let end = pageRange[1] || maxPages;
+
+  if (!(start > 0 && start <= maxPages) || !(end > 0 && end <= maxPages) || !(start <= end)) {
+    const msg = `Page range (${start} to ${end}) is out of bounds. Values should be between 1 and ${maxPages}.`;
+    console.error(msg);
+    throw new Error(msg);
+  }
+
+  return [start, end];
 }
 
 /**

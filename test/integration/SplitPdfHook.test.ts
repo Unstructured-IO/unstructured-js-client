@@ -243,3 +243,87 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
     }).rejects.toThrow(/.*File type None is not supported.*/);
   });
 });
+
+describe("SplitPdfHook integration tests page range parameter", () => {
+  const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+  const consoleInfoSpy = jest.spyOn(console, "info");
+  const consoleWarnSpy = jest.spyOn(console, "warn");
+  const consoleErrorSpy = jest.spyOn(console, "error");
+
+  let client = new UnstructuredClient({
+    serverURL: localServer,
+    security: {
+      apiKeyAuth: FAKE_API_KEY,
+    },
+  });
+
+  beforeEach(async () => {
+    try {
+      const res = await fetch(`${localServer}/general/docs`);
+      expect(res.status).toEqual(200);
+    } catch {
+      throw Error(`The unstructured-api is not running on ${localServer}`);
+    }
+
+    client = new UnstructuredClient({
+      serverURL: localServer,
+      security: {
+        apiKeyAuth: FAKE_API_KEY,
+      },
+    });
+  });
+
+  afterEach(() => {
+    consoleInfoSpy.mockClear();
+    consoleWarnSpy.mockClear();
+    consoleErrorSpy.mockClear();
+  });
+
+  it.each([
+    { pageRange: [1, 14], expectedOk: true, expectedPages: [1, 14] }, // Valid range, start on boundary
+    { pageRange: [4, 16], expectedOk: true, expectedPages: [4, 16] }, // Valid range, end on boundary
+    { pageRange: [2, 5], expectedOk: true, expectedPages: [2, 5] },   // Valid range within boundary
+    { pageRange: [6, 6], expectedOk: true, expectedPages: [6, 6] },   // Single page range
+    { pageRange: [2, 100], expectedOk: false, expectedPages: null },  // End page too high
+    { pageRange: [50, 100], expectedOk: false, expectedPages: null }, // Range too high
+    { pageRange: [-50, 5], expectedOk: false, expectedPages: null },  // Start page too low
+    { pageRange: [-50, -2], expectedOk: false, expectedPages: null }, // Range too low
+    { pageRange: [10, 2], expectedOk: false, expectedPages: null },   // Backwards range
+  ])(
+    "for page range $pageRange",
+    async ({ pageRange, expectedOk, expectedPages }) => {
+      const filename = "test/data/layout-parser-paper.pdf";
+      const file = { content: readFileSync(filename), fileName: filename };
+
+      let startingPageNumber = 1;
+      try {
+        let response = await client.general.partition({
+          partitionParameters: {
+            files: file,
+            strategy: Strategy.Fast,
+            splitPdfPage: true,
+            splitPdfPageRange: pageRange
+          },
+        });
+
+        // Grab the set of page numbers in the result
+        // Assert that all returned elements are in the expected page range
+        const pageNumbers = new Set(response?.elements?.map((element: any) => element.metadata.page_number));
+        const minPageNumber = expectedPages?.[0] ?? 0 + startingPageNumber - 1;
+        const maxPageNumber = expectedPages?.[1] ?? 0 + startingPageNumber - 1;
+
+        expect(Math.min(...pageNumbers)).toBe(minPageNumber);
+        expect(Math.max(...pageNumbers)).toBe(maxPageNumber);
+      } catch (e) {
+        if (!expectedOk) {
+          expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining("is out of bounds"));
+          return;
+        } else {
+          throw e;
+        }
+      }
+
+    },
+    300000
+  );
+});

@@ -141,6 +141,10 @@ export type PartitionParameters = {
      */
     splitPdfPage?: boolean | undefined;
     /**
+     * When `split_pdf_page is set to `True`, this parameter selects a subset of the pdf to send to the API. The parameter is a list of 2 integers within the range [1, length_of_pdf]. TODO A ValueError is thrown if the given range is invalid. It's an internal parameter for the Python client and is not sent to the backend.
+     */
+    splitPdfPageRange?: Array<number> | undefined;
+    /**
      * When PDF is split into pages before sending it into the API, providing this information will allow the page number to be assigned correctly. Introduced in 1.0.27.
      */
     startingPageNumber?: number | null | undefined;
@@ -288,6 +292,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
         skip_infer_table_types: z.array(z.string()).optional(),
         split_pdf_concurrency_level: z.number().int().default(5),
         split_pdf_page: z.boolean().default(true),
+        split_pdf_page_range: z.array(z.number().int()).optional(),
         starting_page_number: z.nullable(z.number().int()).optional(),
         strategy: Strategy$inboundSchema.default(Strategy.Auto),
         unique_element_ids: z.boolean().default(false),
@@ -313,6 +318,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
             skip_infer_table_types: "skipInferTableTypes",
             split_pdf_concurrency_level: "splitPdfConcurrencyLevel",
             split_pdf_page: "splitPdfPage",
+            split_pdf_page_range: "splitPdfPageRange",
             starting_page_number: "startingPageNumber",
             unique_element_ids: "uniqueElementIds",
             xml_keep_tags: "xmlKeepTags",
@@ -344,6 +350,7 @@ export type PartitionParameters$Outbound = {
     skip_infer_table_types?: Array<string> | undefined;
     split_pdf_concurrency_level: number;
     split_pdf_page: boolean;
+    split_pdf_page_range?: Array<number> | undefined;
     starting_page_number?: number | null | undefined;
     strategy: string;
     unique_element_ids: boolean;
@@ -380,6 +387,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
         skipInferTableTypes: z.array(z.string()).optional(),
         splitPdfConcurrencyLevel: z.number().int().default(5),
         splitPdfPage: z.boolean().default(true),
+        splitPdfPageRange: z.array(z.number().int()).optional(),
         startingPageNumber: z.nullable(z.number().int()).optional(),
         strategy: Strategy$outboundSchema.default(Strategy.Auto),
         uniqueElementIds: z.boolean().default(false),
@@ -405,6 +413,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
             skipInferTableTypes: "skip_infer_table_types",
             splitPdfConcurrencyLevel: "split_pdf_concurrency_level",
             splitPdfPage: "split_pdf_page",
+            splitPdfPageRange: "split_pdf_page_range",
             startingPageNumber: "starting_page_number",
             uniqueElementIds: "unique_element_ids",
             xmlKeepTags: "xml_keep_tags",

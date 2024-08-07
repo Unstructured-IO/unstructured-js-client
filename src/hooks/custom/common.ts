@@ -11,6 +11,7 @@ export const BASE_PROTOCOL = "https:";
 export const PARTITION_FORM_FILES_KEY = "files";
 export const PARTITION_FORM_SPLIT_PDF_PAGE_KEY = "split_pdf_page";
 export const PARTITION_FORM_STARTING_PAGE_NUMBER_KEY = "starting_page_number";
+export const PARTITION_FORM_SPLIT_PDF_PAGE_RANGE_KEY = "split_pdf_page_range";
 export const PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL =
   "split_pdf_concurrency_level";
 
