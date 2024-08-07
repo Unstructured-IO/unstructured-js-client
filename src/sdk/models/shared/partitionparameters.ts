@@ -141,7 +141,7 @@ export type PartitionParameters = {
      */
     splitPdfPage?: boolean | undefined;
     /**
-     * When `split_pdf_page is set to `True`, this parameter selects a subset of the pdf to send to the API. The parameter is a list of 2 integers within the range [1, length_of_pdf]. TODO A ValueError is thrown if the given range is invalid. It's an internal parameter for the Python client and is not sent to the backend.
+     * When `split_pdf_page is set to `True`, this parameter selects a subset of the pdf to send to the API. The parameter is a list of 2 integers within the range [1, length_of_pdf]. An Error is thrown if the given range is invalid. Ignored on backend.
      */
     splitPdfPageRange?: Array<number> | undefined;
     /**
