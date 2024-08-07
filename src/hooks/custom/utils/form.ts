@@ -42,7 +42,7 @@ function getIntegerParameter(
   return numberParameter;
 }
 
-/*
+/**
  * Retrieves a boolean parameter from the given form data.
  * If the parameter is not found or does not have true/false value, the default value is returned.
  *
@@ -77,7 +77,7 @@ function getBooleanParameter(
   }
 
   return booleanParameter;
-};
+}
 
 /**
  * Retrieves and validates a page range from FormData, ensuring that the start and end values are defined and within bounds.
