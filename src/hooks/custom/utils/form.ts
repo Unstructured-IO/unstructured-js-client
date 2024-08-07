@@ -1,7 +1,7 @@
 import {
-  DEFAULT_NUMBER_OF_PARALLEL_REQUESTS,
+  DEFAULT_NUMBER_OF_PARALLEL_REQUESTS, DEFAULT_SPLIT_PDF_ALLOW_FAILED_KEY,
   DEFAULT_STARTING_PAGE_NUMBER,
-  MAX_NUMBER_OF_PARALLEL_REQUESTS,
+  MAX_NUMBER_OF_PARALLEL_REQUESTS, PARTITION_FORM_SPLIT_PDF_ALLOW_FAILED_KEY,
   PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL,
   PARTITION_FORM_SPLIT_PDF_PAGE_RANGE_KEY,
   PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
@@ -41,6 +41,43 @@ function getIntegerParameter(
 
   return numberParameter;
 }
+
+/*
+ * Retrieves a boolean parameter from the given form data.
+ * If the parameter is not found or does not have true/false value, the default value is returned.
+ *
+ * @param formData - The form data object.
+ * @param parameterName - The name of the parameter to retrieve.
+ * @param defaultValue - The default value to use if the parameter is not found or is not
+ * a true/false string.
+ * @returns The boolean value of the parameter.
+ */
+function getBooleanParameter(
+  formData: FormData,
+  parameterName: string,
+  defaultValue: boolean
+): boolean {
+  let booleanParameter = defaultValue;
+  const formDataParameter = formData.get(parameterName);
+
+  if (formDataParameter === null) {
+    return booleanParameter;
+  }
+
+  const formDataBooleanParameterString = formDataParameter as string;
+
+  if (formDataBooleanParameterString.toLowerCase() === "true") {
+    booleanParameter = true;
+  } else if (formDataBooleanParameterString.toLowerCase() === "false") {
+    booleanParameter = false;
+  } else {
+    console.warn(
+      `'${parameterName}' is not a valid boolean. Using default value '${defaultValue}'.`
+    );
+  }
+
+  return booleanParameter;
+};
 
 /**
  * Retrieves and validates a page range from FormData, ensuring that the start and end values are defined and within bounds.
@@ -106,6 +143,48 @@ export function getSplitPdfConcurrencyLevel(formData: FormData): number {
     `Set ${PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL} parameter if you want to change that.`
   );
   return splitPdfConcurrencyLevel;
+}
+
+/**
+ * Gets the allowFailed parameter which decides whether the partial requests can fail or not
+ * when using splitPdfPage parameter.
+ * - The number of maximum requests is determined by the value of the request parameter
+ * `split_pdf_thread`.
+ * - If the parameter is not set or has an invalid value, the default number of
+ * parallel requests (5) is used.
+ * - If the number of maximum requests is greater than the maximum allowed (15), it is
+ * clipped to the maximum value.
+ * - If the number of maximum requests is less than 1, the default number of parallel
+ * requests (5) is used.
+ *
+ * @returns The number of maximum requests to use when calling the API to split a PDF.
+ */
+export function getSplitPdfAllowFailed(formData: FormData): boolean {
+  const splitPdfAllowFailed = getBooleanParameter(
+    formData,
+    PARTITION_FORM_SPLIT_PDF_ALLOW_FAILED_KEY,
+    DEFAULT_SPLIT_PDF_ALLOW_FAILED_KEY
+  );
+
+
+  if (splitPdfAllowFailed) {
+    console.info(
+    `Running split PDF requests in parallel with no-strict mode - 
+      the failed requests will not stop the process, and the resulting elements might miss
+      some pages in case of failure.`
+    );
+  } else {
+    console.info(
+    `Running split PDF requests in parallel with strict mode - 
+      the failed requests will stop the process, and the resulting elements will have all pages
+      or error out.`
+    )
+  }
+
+  console.info(
+    `Set ${PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL} parameter if you want to change that.`
+  );
+  return splitPdfAllowFailed;
 }
 
 /**

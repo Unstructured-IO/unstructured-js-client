@@ -242,6 +242,40 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
       });
     }).rejects.toThrow(/.*File type None is not supported.*/);
   });
+
+
+  it.each([
+    {
+      allowFailed: true,
+    },
+          {
+      allowFailed: false,
+    },
+  ])(
+    "for splitPdf request sets allow failed to $allowFailed",
+    async ({ allowFailed }) => {
+    const file = {
+      content: readFileSync("test/data/layout-parser-paper-fast.pdf"),
+      fileName: "    ",
+    };
+
+    const requestParams = {
+      files: file,
+      strategy: Strategy.Fast,
+      languages: ["eng"],
+    };
+
+    await expect(async () => {
+      await client.general.partition({
+        partitionParameters: {
+          ...requestParams,
+          splitPdfPage: true,
+          splitPdfAllowFailed: allowFailed,
+        },
+      });
+    }).rejects.toThrow(/.*File type None is not supported.*/);
+  });
+
 });
 
 describe("SplitPdfHook integration tests page range parameter", () => {

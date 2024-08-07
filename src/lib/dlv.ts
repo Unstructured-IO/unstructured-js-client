@@ -5,7 +5,7 @@
 /*
 MIT License
 
-Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
+Copyright (c) 2024 Jason Miller <jason@developit.ca> (http://jasonformat.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -25,19 +25,29 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-// Taken from https://github.com/sindresorhus/is-plain-obj/blob/97f38e8836f86a642cce98fc6ab3058bc36df181/index.js
-
-export function isPlainObject(value: unknown): value is object {
-  if (typeof value !== "object" || value === null) {
-    return false;
+/**
+ * @param obj The object to walk
+ * @param key The key path to walk the object with
+ * @param def A default value to return if the result is undefined
+ *
+ * @example
+ * dlv(obj, "a.b.c.d")
+ * @example
+ * dlv(object, ["a", "b", "c", "d"])
+ * @example
+ * dlv(object, "foo.bar.baz", "Hello, default value!")
+ */
+export function dlv<T = any>(
+  obj: any,
+  key: string | string[],
+  def?: T,
+  p?: number,
+  undef?: never,
+): T | undefined {
+  key = Array.isArray(key) ? key : key.split(".");
+  for (p = 0; p < key.length; p++) {
+    const k = key[p];
+    obj = k != null && obj ? obj[k] : undef;
   }
-
-  const prototype = Object.getPrototypeOf(value);
-  return (
-    (prototype === null ||
-      prototype === Object.prototype ||
-      Object.getPrototypeOf(prototype) === null) &&
-    !(Symbol.toStringTag in value) &&
-    !(Symbol.iterator in value)
-  );
+  return obj === undef ? def : obj;
 }
