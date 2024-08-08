@@ -114,10 +114,8 @@ export class SplitPdfHook
       return request;
     }
 
-    let [pageRangeStart, pageRangeEnd] = getSplitPdfPageRange(formData, totalPages);
-
-    let pagesCount = pageRangeEnd - pageRangeStart + 1;
-
+    const [pageRangeStart, pageRangeEnd] = getSplitPdfPageRange(formData, totalPages);
+    const pagesCount = pageRangeEnd - pageRangeStart + 1;
 
     const startingPageNumber = getStartingPageNumber(formData);
     console.info("Starting page number set to %d", startingPageNumber);
@@ -131,9 +129,12 @@ export class SplitPdfHook
     const splitSize = await getOptimalSplitSize(pagesCount, concurrencyLevel);
     console.info("Determined optimal split size of %d pages.", splitSize)
 
-    // If we aren't requesting a slice of the pdf, i.e. the page range covers the total page count
-    // and if the doc is small enough, do not split, just continue with the original request
-    if (pagesCount == totalPages) {
+    // If user wants a specific page range, we need to call splitPdf,
+    // even if this page count is too small to be split normally
+    const isPageRangeRequested = pagesCount < totalPages;
+
+    // Otherwise, if there are not enough pages, return the original request without splitting
+    if (!isPageRangeRequested) {
       if (splitSize >= pagesCount || pagesCount < MIN_PAGES_PER_THREAD) {
         console.info(
           "Document has too few pages (%d) to be split efficiently. Partitioning without split.",
