@@ -251,7 +251,7 @@ export async function generalPartition(
                 },
                 retryConnectionErrors: true,
             },
-        retryCodes: options?.retryCodes || ["5xx"],
+        retryCodes: options?.retryCodes || ["502", "503", "504"],
     });
     if (!doResult.ok) {
         return doResult;
