@@ -4,11 +4,7 @@ import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
 
-const unstructuredClient = new UnstructuredClient({
-    security: {
-        apiKeyAuth: "YOUR_API_KEY",
-    },
-});
+const unstructuredClient = new UnstructuredClient();
 
 async function run() {
     const result = await unstructuredClient.general.partition({
