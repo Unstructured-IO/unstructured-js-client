@@ -22,6 +22,11 @@ install:
 build:
 	npm run build
 
+## check:					lint the client
+.PHONY: check
+check:
+	npx eslint src/
+
 #############
 # Test 		#
 #############
