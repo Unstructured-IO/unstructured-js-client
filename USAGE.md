@@ -15,6 +15,7 @@ async function run() {
         partitionParameters: {
             files: await openAsBlob("./sample-file"),
             chunkingStrategy: ChunkingStrategy.ByTitle,
+            splitPdfPageRange: [1, 10],
             strategy: Strategy.HiRes,
         },
     });

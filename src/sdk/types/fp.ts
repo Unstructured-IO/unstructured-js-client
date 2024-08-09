@@ -33,3 +33,18 @@ export function unwrap<T>(r: Result<T, unknown>): T {
   }
   return r.value;
 }
+
+/**
+ * unwrapAsync is a convenience function for resolving a value from a Promise
+ * of a result or rejecting if an error occurred.
+ */
+export async function unwrapAsync<T>(
+  pr: Promise<Result<T, unknown>>,
+): Promise<T> {
+  const r = await pr;
+  if (!r.ok) {
+    throw r.error;
+  }
+
+  return r.value;
+}
