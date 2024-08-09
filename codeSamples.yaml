@@ -25,6 +25,10 @@ actions:
                   files: await openAsBlob("./sample-file"),
                   strategy: Strategy.Auto,
                   chunkingStrategy: ChunkingStrategy.Basic,
+                  splitPdfPageRange: [
+                    1,
+                    10,
+                  ],
                 },
               });
 

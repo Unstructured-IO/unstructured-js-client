@@ -177,6 +177,7 @@ async function run() {
             partitionParameters: {
                 files: await openAsBlob("./sample-file"),
                 chunkingStrategy: ChunkingStrategy.ByTitle,
+                splitPdfPageRange: [1, 10],
                 strategy: Strategy.HiRes,
             },
         },
@@ -229,6 +230,7 @@ async function run() {
         partitionParameters: {
             files: await openAsBlob("./sample-file"),
             chunkingStrategy: ChunkingStrategy.ByTitle,
+            splitPdfPageRange: [1, 10],
             strategy: Strategy.HiRes,
         },
     });
@@ -301,6 +303,7 @@ async function run() {
         partitionParameters: {
             files: await openAsBlob("./sample-file"),
             chunkingStrategy: ChunkingStrategy.ByTitle,
+            splitPdfPageRange: [1, 10],
             strategy: Strategy.HiRes,
         },
     });
@@ -319,6 +322,21 @@ run();
 <!-- No Pagination -->
 <!-- No Error Handling -->
 <!-- No Server Selection -->
+
+<!-- Start Debugging [debug] -->
+## Debugging
+
+To log HTTP requests and responses, you can pass a logger that matches `console`'s interface as an SDK option.
+
+> [!WARNING]
+> Beware that debug logging will reveal secrets, like API tokens in headers, in log messages printed to a console or files. It's recommended to use this feature only during local development and not in production.
+
+```typescript
+import { UnstructuredClient } from "unstructured-client";
+
+const sdk = new UnstructuredClient({ debugLogger: console });
+```
+<!-- End Debugging [debug] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 

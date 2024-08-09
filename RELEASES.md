@@ -415,3 +415,13 @@ Based on:
 - [typescript v0.14.3] .
 ### Releases
 - [NPM v0.14.3] https://www.npmjs.com/package/unstructured-client/v/0.14.3 - .
+
+## 2024-08-09 19:22:27
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.359.1 (2.392.0) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.15.0] .
+### Releases
+- [NPM v0.15.0] https://www.npmjs.com/package/unstructured-client/v/0.15.0 - .
