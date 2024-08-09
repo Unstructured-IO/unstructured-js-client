@@ -161,6 +161,12 @@ export class General extends ClientSDK {
         if (payload$.partition_parameters.split_pdf_page !== undefined) {
             body$.append("split_pdf_page", String(payload$.partition_parameters.split_pdf_page));
         }
+        if (payload$.partition_parameters.split_pdf_page_range !== undefined) {
+            body$.append(
+                "split_pdf_page_range",
+                String(payload$.partition_parameters.split_pdf_page_range)
+            );
+        }
         if (payload$.partition_parameters.starting_page_number !== undefined) {
             body$.append(
                 "starting_page_number",

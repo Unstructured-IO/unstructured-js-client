@@ -66,24 +66,32 @@ export async function getOptimalSplitSize(
  *
  * @param pdf - The PDF file to extract pages from.
  * @param splitSize - The number of pages per split.
+ * @param [pageRangeStart=1] - The starting page of the range to be split (1-based index). Defaults to the first page of the document.
+ * @param [pageRangeEnd=pdf.getPageCount()] - The ending page of the range to be split (1-based index). Defaults to the last page of the document.
  * @returns A promise that resolves to an array of objects containing Blob files and
  * start and end page numbers from the original document.
  */
 export async function splitPdf(
   pdf: PDFDocument,
-  splitSize: number
+  splitSize: number,
+  pageRangeStart?: number,
+  pageRangeEnd?: number
 ): Promise<PdfSplit[]> {
   const pdfSplits: PdfSplit[] = [];
-  const pagesCount = pdf.getPages().length;
+
+  const startPage = pageRangeStart || 1;
+  const endPage = pageRangeEnd || pdf.getPageCount();
+  const pagesCount = endPage - startPage + 1
+
   const numberOfSplits = Math.ceil(pagesCount / splitSize);
 
   for (let i = 0; i < numberOfSplits; ++i) {
     const offset = i * splitSize;
-    const startPage = offset + 1;
-    // If it's the last split, take the rest of the pages
-    const endPage = Math.min(pagesCount, offset + splitSize);
-    const pdfSplit = await pdfPagesToBlob(pdf, startPage, endPage);
-    pdfSplits.push({ content: pdfSplit, startPage, endPage });
+    const splitStartPage = offset + startPage;
+    const splitEndPage = Math.min(endPage, splitStartPage + splitSize - 1);
+
+    const pdfSplit = await pdfPagesToBlob(pdf, splitStartPage, splitEndPage);
+    pdfSplits.push({ content: pdfSplit, startPage: splitStartPage, endPage: splitEndPage });
   }
 
   return pdfSplits;

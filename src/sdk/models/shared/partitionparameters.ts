@@ -149,6 +149,10 @@ export type PartitionParameters = {
      */
     splitPdfPage?: boolean | undefined;
     /**
+     * When `split_pdf_page is set to `True`, this parameter selects a subset of the pdf to send to the API. The parameter is a list of 2 integers within the range [1, length_of_pdf]. An Error is thrown if the given range is invalid. Ignored on backend.
+     */
+    splitPdfPageRange?: Array<number> | undefined;
+    /**
      * When PDF is split into pages before sending it into the API, providing this information will allow the page number to be assigned correctly. Introduced in 1.0.27.
      */
     startingPageNumber?: number | null | undefined;
@@ -298,6 +302,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
         split_pdf_allow_failed: z.boolean().default(false),
         split_pdf_concurrency_level: z.number().int().default(5),
         split_pdf_page: z.boolean().default(true),
+        split_pdf_page_range: z.array(z.number().int()).optional(),
         starting_page_number: z.nullable(z.number().int()).optional(),
         strategy: Strategy$inboundSchema.default(Strategy.Auto),
         unique_element_ids: z.boolean().default(false),
@@ -325,6 +330,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
             split_pdf_allow_failed: "splitPdfAllowFailed",
             split_pdf_concurrency_level: "splitPdfConcurrencyLevel",
             split_pdf_page: "splitPdfPage",
+            split_pdf_page_range: "splitPdfPageRange",
             starting_page_number: "startingPageNumber",
             unique_element_ids: "uniqueElementIds",
             xml_keep_tags: "xmlKeepTags",
@@ -358,6 +364,7 @@ export type PartitionParameters$Outbound = {
     split_pdf_allow_failed: boolean;
     split_pdf_concurrency_level: number;
     split_pdf_page: boolean;
+    split_pdf_page_range?: Array<number> | undefined;
     starting_page_number?: number | null | undefined;
     strategy: string;
     unique_element_ids: boolean;
@@ -396,6 +403,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
         splitPdfAllowFailed: z.boolean().default(false),
         splitPdfConcurrencyLevel: z.number().int().default(5),
         splitPdfPage: z.boolean().default(true),
+        splitPdfPageRange: z.array(z.number().int()).optional(),
         startingPageNumber: z.nullable(z.number().int()).optional(),
         strategy: Strategy$outboundSchema.default(Strategy.Auto),
         uniqueElementIds: z.boolean().default(false),
@@ -423,6 +431,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
             splitPdfAllowFailed: "split_pdf_allow_failed",
             splitPdfConcurrencyLevel: "split_pdf_concurrency_level",
             splitPdfPage: "split_pdf_page",
+            splitPdfPageRange: "split_pdf_page_range",
             startingPageNumber: "starting_page_number",
             uniqueElementIds: "unique_element_ids",
             xmlKeepTags: "xml_keep_tags",

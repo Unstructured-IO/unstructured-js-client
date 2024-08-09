@@ -15,6 +15,7 @@ import {
   getOptimalSplitSize, getSplitPdfAllowFailed,
   getSplitPdfConcurrencyLevel,
   getStartingPageNumber,
+  getSplitPdfPageRange,
   loadPdf,
   prepareRequestBody,
   prepareRequestHeaders,
@@ -107,18 +108,14 @@ export class SplitPdfHook
       return request;
     }
 
-    const [error, pdf, pagesCount] = await loadPdf(file);
+    const [error, pdf, totalPages] = await loadPdf(file);
     if (file === null || pdf === null || error) {
       console.info("Partitioning without split.")
       return request;
     }
 
-    if (pagesCount < MIN_PAGES_PER_THREAD) {
-      console.info(
-        `PDF has less than ${MIN_PAGES_PER_THREAD} pages. Partitioning without split.`
-      );
-      return request;
-    }
+    const [pageRangeStart, pageRangeEnd] = getSplitPdfPageRange(formData, totalPages);
+    const pagesCount = pageRangeEnd - pageRangeStart + 1;
 
     const startingPageNumber = getStartingPageNumber(formData);
     console.info("Starting page number set to %d", startingPageNumber);
@@ -132,15 +129,22 @@ export class SplitPdfHook
     const splitSize = await getOptimalSplitSize(pagesCount, concurrencyLevel);
     console.info("Determined optimal split size of %d pages.", splitSize)
 
-    if (splitSize >= pagesCount) {
-      console.info(
+    // If user wants a specific page range, we need to call splitPdf,
+    // even if this page count is too small to be split normally
+    const isPageRangeRequested = pagesCount < totalPages;
+
+    // Otherwise, if there are not enough pages, return the original request without splitting
+    if (!isPageRangeRequested) {
+      if (splitSize >= pagesCount || pagesCount < MIN_PAGES_PER_THREAD) {
+        console.info(
           "Document has too few pages (%d) to be split efficiently. Partitioning without split.",
           pagesCount,
-      )
-      return request;
+        )
+        return request;
+      }
     }
 
-    const splits = await splitPdf(pdf, splitSize);
+    const splits = await splitPdf(pdf, splitSize, pageRangeStart, pageRangeEnd);
     const numberOfSplits = splits.length
     console.info(
         "Document split into %d, %d-paged sets.",
