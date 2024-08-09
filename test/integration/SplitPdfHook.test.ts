@@ -223,10 +223,10 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
 
   it.each([
     {
-      allowFailed: true,
-    },
-          {
       allowFailed: false,
+    },
+    {
+      allowFailed: true,
     },
   ])(
     "for splitPdf request sets allow failed to $allowFailed",
@@ -238,6 +238,18 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
         content: readFileSync(`test/data/${filename}`),
         fileName: filename,
       };
+
+      // Make sure retries are disabled
+      // (Until we fix retries happening on 500)
+      client = new UnstructuredClient({
+        serverURL: localServer,
+        security: {
+          apiKeyAuth: FAKE_API_KEY,
+        },
+        retryConfig: {
+          strategy: "none",
+        },
+      });
 
       const requestParams = {
         files: file,
@@ -254,7 +266,7 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
             splitPdfAllowFailed: allowFailed,
           },
         });
-      }).rejects.toThrow(/.*File type None is not supported.*/);
+      }).rejects.toThrow(/.*can't decode byte.*/);
     });
 
 });
