@@ -92,8 +92,8 @@ export function getSplitPdfPageRange(formData: FormData, maxPages: number): [num
   const formDataParameter = formData.get(PARTITION_FORM_SPLIT_PDF_PAGE_RANGE_KEY);
   const pageRange = String(formDataParameter).split(",").map(Number)
 
-  let start = pageRange[0] || 1;
-  let end = pageRange[1] || maxPages;
+  const start = pageRange[0] || 1;
+  const end = pageRange[1] || maxPages;
 
   if (!(start > 0 && start <= maxPages) || !(end > 0 && end <= maxPages) || !(start <= end)) {
     const msg = `Page range (${start} to ${end}) is out of bounds. Values should be between 1 and ${maxPages}.`;
