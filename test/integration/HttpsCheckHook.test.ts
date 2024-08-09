@@ -4,12 +4,14 @@ import { UnstructuredClient } from "../../src";
 import { PartitionResponse } from "../../src/sdk/models/operations";
 import { PartitionParameters, Strategy } from "../../src/sdk/models/shared";
 
+const localServer = "http://localhost:8000"
+
 describe("HttpsCheckHook integration tests", () => {
     const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
     it.each([
-        "http://localhost:8000",
-        "http://localhost:8000/general/v0/general",
+        localServer,
+      `${localServer}/general/v0/general`,
     ])("should throw error when given filename is empty", async (serverURL) => {
         const client = new UnstructuredClient({
             serverURL: serverURL,
