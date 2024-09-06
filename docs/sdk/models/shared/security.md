@@ -1,5 +1,14 @@
 # Security
 
+## Example Usage
+
+```typescript
+import { Security } from "unstructured-client/sdk/models/shared";
+
+let value: Security = {
+    apiKeyAuth: "YOUR_API_KEY",
+};
+```
 
 ## Fields
 

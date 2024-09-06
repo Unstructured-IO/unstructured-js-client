@@ -1,5 +1,12 @@
 # Detail
 
+## Example Usage
+
+```typescript
+import { Detail } from "unstructured-client/sdk/models/errors";
+
+let value: Detail = "<value>";
+```
 
 ## Supported Types
 

@@ -4,6 +4,7 @@
 
 import { UnstructuredClientCore } from "../core.js";
 import { encodeSimple as encodeSimple$ } from "../lib/encodings.js";
+import { readableStreamToArrayBuffer } from "../lib/files.js";
 import * as m$ from "../lib/matchers.js";
 import * as schemas$ from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
@@ -22,6 +23,7 @@ import { SDKValidationError } from "../sdk/models/errors/sdkvalidationerror.js";
 import * as operations from "../sdk/models/operations/index.js";
 import { isBlobLike } from "../sdk/types/blobs.js";
 import { Result } from "../sdk/types/fp.js";
+import { isReadableStream } from "../sdk/types/streams.js";
 
 /**
  * Summary
@@ -62,6 +64,12 @@ export async function generalPartition(
 
     if (isBlobLike(payload$.partition_parameters.files)) {
         body$.append("files", payload$.partition_parameters.files);
+    } else if (isReadableStream(payload$.partition_parameters.files.content)) {
+        const buffer = await readableStreamToArrayBuffer(
+            payload$.partition_parameters.files.content
+        );
+        const blob = new Blob([buffer], { type: "application/octet-stream" });
+        body$.append("files", blob);
     } else {
         body$.append(
             "files",
@@ -114,6 +122,12 @@ export async function generalPartition(
         body$.append(
             "include_page_breaks",
             String(payload$.partition_parameters.include_page_breaks)
+        );
+    }
+    if (payload$.partition_parameters.include_slide_notes !== undefined) {
+        body$.append(
+            "include_slide_notes",
+            String(payload$.partition_parameters.include_slide_notes)
         );
     }
     if (payload$.partition_parameters.languages !== undefined) {
@@ -244,10 +258,10 @@ export async function generalPartition(
             client$.options$.retryConfig || {
                 strategy: "backoff",
                 backoff: {
-                    initialInterval: 500,
-                    maxInterval: 60000,
-                    exponent: 1.5,
-                    maxElapsedTime: 900000,
+                    initialInterval: 3000,
+                    maxInterval: 720000,
+                    exponent: 1.88,
+                    maxElapsedTime: 1800000,
                 },
                 retryConnectionErrors: true,
             },
