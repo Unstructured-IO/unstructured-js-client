@@ -1,5 +1,12 @@
 # PartitionRequest
 
+## Example Usage
+
+```typescript
+import { PartitionRequest } from "unstructured-client/sdk/models/operations";
+
+// No examples available for this model
+```
 
 ## Fields
 

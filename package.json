@@ -1,6 +1,6 @@
 {
   "name": "unstructured-client",
-  "version": "0.15.1",
+  "version": "0.16.0",
   "author": "Unstructured",
   "main": "./index.js",
   "sideEffects": false,
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/async": "^3.2.24",
     "@types/jest": "^29.5.12",
+    "@types/node": "^18.19.3",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
     "eslint": "^8.57.0",

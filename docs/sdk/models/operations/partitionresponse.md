@@ -1,5 +1,31 @@
 # PartitionResponse
 
+## Example Usage
+
+```typescript
+import { PartitionResponse } from "unstructured-client/sdk/models/operations";
+
+let value: PartitionResponse = {
+    contentType: "<value>",
+    elements: [
+        {
+            type: "Title",
+            element_id: "6aa0ff22f91bbe7e26e8e25ca8052acd",
+            text: "LayoutParser: A Unified Toolkit for Deep Learning Based Document Image Analysis",
+            metadata: {
+                languages: ["eng"],
+                page_number: 1,
+                filename: "layout-parser-paper.pdf",
+                filetype: "application/pdf",
+            },
+        },
+    ],
+    statusCode: 715190,
+    rawResponse: new Response('{"message": "hello world"}', {
+        headers: { "Content-Type": "application/json" },
+    }),
+};
+```
 
 ## Fields
 

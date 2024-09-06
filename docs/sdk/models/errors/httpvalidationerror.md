@@ -1,5 +1,12 @@
 # HTTPValidationError
 
+## Example Usage
+
+```typescript
+import { HTTPValidationError } from "unstructured-client/sdk/models/errors";
+
+// No examples available for this model
+```
 
 ## Fields
 

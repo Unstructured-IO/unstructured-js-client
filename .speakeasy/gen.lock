@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: f9968a9b4e176b25982c5fe01966841c
-  docVersion: 1.0.44
-  speakeasyVersion: 1.360.0
-  generationVersion: 2.392.0
-  releaseVersion: 0.15.1
-  configChecksum: 35a1f8ef21905c725838c160f1fe7332
+  docChecksum: 07648fa4a81409d493b04f9a0210053a
+  docVersion: 1.0.48
+  speakeasyVersion: 1.390.7
+  generationVersion: 2.409.8
+  releaseVersion: 0.16.0
+  configChecksum: 7d3a89591f1ead1b1ef84078be25d23c
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -14,8 +14,8 @@ management:
 features:
   typescript:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.1.6
-    core: 3.13.0
+    constsAndDefaults: 0.1.11
+    core: 3.16.1
     defaultEnabledRetries: 0.1.0
     envVarSecurityUsage: 0.1.1
     examples: 2.81.4
@@ -29,13 +29,15 @@ features:
     retries: 2.83.0
     sdkHooks: 0.1.0
     serverIDs: 2.81.2
-    unions: 2.85.6
+    unions: 2.85.7
+    uploadStreams: 0.1.0
 generatedFiles:
   - src/funcs/generalPartition.ts
   - src/sdk/general.ts
   - src/sdk/sdk.ts
   - .eslintrc.cjs
   - .npmignore
+  - FUNCTIONS.md
   - RUNTIMES.md
   - jsr.json
   - package.json
@@ -45,6 +47,7 @@ generatedFiles:
   - src/lib/config.ts
   - src/lib/dlv.ts
   - src/lib/encodings.ts
+  - src/lib/files.ts
   - src/lib/http.ts
   - src/lib/is-plain-object.ts
   - src/lib/logger.ts
@@ -60,11 +63,13 @@ generatedFiles:
   - src/sdk/models/errors/sdkerror.ts
   - src/sdk/models/errors/sdkvalidationerror.ts
   - src/sdk/types/blobs.ts
+  - src/sdk/types/constdatetime.ts
   - src/sdk/types/enums.ts
   - src/sdk/types/fp.ts
   - src/sdk/types/index.ts
   - src/sdk/types/operations.ts
   - src/sdk/types/rfcdate.ts
+  - src/sdk/types/streams.ts
   - tsconfig.json
   - src/sdk/models/operations/partition.ts
   - src/sdk/models/errors/httpvalidationerror.ts
