@@ -4,7 +4,7 @@ import { UnstructuredClient } from "../../src";
 import { PartitionResponse } from "../../src/sdk/models/operations";
 import { PartitionParameters, Strategy } from "../../src/sdk/models/shared";
 
-const localServer = "http://localhost:8000"
+const localServer = "http://localhost:8000";
 
 describe("SplitPdfHook integration tests check splitted file is same as not splitted", () => {
   const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -353,4 +353,43 @@ describe("SplitPdfHook integration tests page range parameter", () => {
     },
     300000
   );
+});
+
+
+describe("SplitPDF succeeds for large PDF with high concurrency", () => {
+    const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+    it.each([
+      `${localServer}/general/v0/general`,
+    ])("succeed", async (serverURL) => {
+        const client = new UnstructuredClient({
+            serverURL: serverURL,
+            security: {
+                apiKeyAuth: FAKE_API_KEY,
+            },
+        });
+
+        const file = {
+            content: readFileSync("test/data/layout-parser-paper.pdf"),
+            fileName: "test/data/layout-parser-paper.pdf"
+        };
+
+        const requestParams: PartitionParameters = {
+            files: file,
+            splitPdfPage: true,
+            strategy: Strategy.HiRes,
+            splitPdfAllowFailed: false,
+            splitPdfConcurrencyLevel: 15
+        };
+
+        const res: PartitionResponse = await client.general.partition({
+            partitionParameters: {
+                ...requestParams
+            },
+        });
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.elements?.length).toBeGreaterThan(0);
+    },
+    300000);
 });
