@@ -254,7 +254,7 @@ export function matchResponse(
 }
 
 /**
- * Uses various heurisitics to determine if an error is a connection error.
+ * Uses various heuristics to determine if an error is a connection error.
  */
 export function isConnectionError(err: unknown): boolean {
   if (typeof err !== "object" || err == null) {
@@ -281,7 +281,7 @@ export function isConnectionError(err: unknown): boolean {
 }
 
 /**
- * Uses various heurisitics to determine if an error is a timeout error.
+ * Uses various heuristics to determine if an error is a timeout error.
  */
 export function isTimeoutError(err: unknown): boolean {
   if (typeof err !== "object" || err == null) {
@@ -302,7 +302,7 @@ export function isTimeoutError(err: unknown): boolean {
 }
 
 /**
- * Uses various heurisitics to determine if an error is a abort error.
+ * Uses various heuristics to determine if an error is a abort error.
  */
 export function isAbortError(err: unknown): boolean {
   if (typeof err !== "object" || err == null) {
