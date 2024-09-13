@@ -19,10 +19,10 @@
 </div>
 
 <h2 align="center">
-  <p>Typescript SDK for the Unstructured API</p>
+  <p>TypeScript SDK for the Unstructured API</p>
 </h2>
 
-This is a Typescript client for the [Unstructured API](https://docs.unstructured.io/api-reference/api-services/overview). 
+This is a TypeScript client for the [Unstructured API](https://docs.unstructured.io/api-reference/api-services/overview). 
 
 Please refer to the [Unstructured docs](https://docs.unstructured.io/api-reference/api-services/sdk-jsts) for a full guide to using the client.
 
