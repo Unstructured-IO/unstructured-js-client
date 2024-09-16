@@ -25,6 +25,8 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: make install
+      - name: Build dependencies
+        run: make build
       - name: Run linter
         run: make check
       - name: Run unit tests
@@ -48,5 +50,7 @@ jobs:
         node-version: 18
     - name: Install dependencies
       run: make install
+    - name: Build dependencies
+      run: make build
     - name: Run integration tests
       run: make test-integration
