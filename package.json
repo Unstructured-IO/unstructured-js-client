@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "eslint --max-warnings=0 src",
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "zod": ">= 3"
