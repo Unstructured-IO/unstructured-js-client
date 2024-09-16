@@ -9,7 +9,7 @@ sources:
         registry:
             location: registry.speakeasyapi.dev/unstructured/unstructured5xr/my-source
 targets:
-    unstructed-typescript:
+    unstructured-typescript:
         target: typescript
         source: my-source
         publish:

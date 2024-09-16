@@ -19,10 +19,10 @@
 </div>
 
 <h2 align="center">
-  <p>Typescript SDK for the Unstructured API</p>
+  <p>TypeScript SDK for the Unstructured API</p>
 </h2>
 
-This is a Typescript client for the [Unstructured API](https://docs.unstructured.io/api-reference/api-services/overview). 
+This is a TypeScript client for the [Unstructured API](https://docs.unstructured.io/api-reference/api-services/overview). 
 
 Please refer to the [Unstructured docs](https://docs.unstructured.io/api-reference/api-services/sdk-jsts) for a full guide to using the client.
 
@@ -384,6 +384,6 @@ looking for the latest version.
 ### Contributions
 
 While we value open-source contributions to this SDK, this library is generated programmatically.
-Feel free to open a PR or a Github issue as a proof of concept and we'll do our best to include it in a future release!
+Feel free to open a PR or a GitHub issue as a proof of concept and we'll do our best to include it in a future release!
 
 ### SDK Created by [Speakeasy](https://docs.speakeasyapi.dev/docs/using-speakeasy/client-sdks)
