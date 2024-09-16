@@ -3,10 +3,10 @@ id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
   docChecksum: 07648fa4a81409d493b04f9a0210053a
   docVersion: 1.0.48
-  speakeasyVersion: 1.390.7
-  generationVersion: 2.409.8
-  releaseVersion: 0.16.0
-  configChecksum: 7d3a89591f1ead1b1ef84078be25d23c
+  speakeasyVersion: 1.397.2
+  generationVersion: 2.415.8
+  releaseVersion: 0.17.0
+  configChecksum: 2c276110c3d851f4c60673861a0ec379
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -15,8 +15,9 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.11
-    core: 3.16.1
+    core: 3.17.3
     defaultEnabledRetries: 0.1.0
+    enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.1
     examples: 2.81.4
     globalSecurity: 2.82.11
@@ -32,16 +33,33 @@ features:
     unions: 2.85.7
     uploadStreams: 0.1.0
 generatedFiles:
-  - src/funcs/generalPartition.ts
-  - src/sdk/general.ts
-  - src/sdk/sdk.ts
   - .eslintrc.cjs
+  - .gitattributes
   - .npmignore
+  - CONTRIBUTING.md
   - FUNCTIONS.md
   - RUNTIMES.md
+  - USAGE.md
+  - docs/sdk/models/errors/detail.md
+  - docs/sdk/models/errors/httpvalidationerror.md
+  - docs/sdk/models/errors/servererror.md
+  - docs/sdk/models/operations/partitionrequest.md
+  - docs/sdk/models/operations/partitionresponse.md
+  - docs/sdk/models/shared/chunkingstrategy.md
+  - docs/sdk/models/shared/files.md
+  - docs/sdk/models/shared/loc.md
+  - docs/sdk/models/shared/outputformat.md
+  - docs/sdk/models/shared/partitionparameters.md
+  - docs/sdk/models/shared/security.md
+  - docs/sdk/models/shared/strategy.md
+  - docs/sdk/models/shared/validationerror.md
   - jsr.json
   - package.json
   - src/core.ts
+  - src/funcs/generalPartition.ts
+  - src/hooks/hooks.ts
+  - src/hooks/index.ts
+  - src/hooks/types.ts
   - src/index.ts
   - src/lib/base64.ts
   - src/lib/config.ts
@@ -58,10 +76,21 @@ generatedFiles:
   - src/lib/sdks.ts
   - src/lib/security.ts
   - src/lib/url.ts
+  - src/sdk/general.ts
   - src/sdk/index.ts
   - src/sdk/models/errors/httpclienterrors.ts
+  - src/sdk/models/errors/httpvalidationerror.ts
+  - src/sdk/models/errors/index.ts
   - src/sdk/models/errors/sdkerror.ts
   - src/sdk/models/errors/sdkvalidationerror.ts
+  - src/sdk/models/errors/servererror.ts
+  - src/sdk/models/operations/index.ts
+  - src/sdk/models/operations/partition.ts
+  - src/sdk/models/shared/index.ts
+  - src/sdk/models/shared/partitionparameters.ts
+  - src/sdk/models/shared/security.ts
+  - src/sdk/models/shared/validationerror.ts
+  - src/sdk/sdk.ts
   - src/sdk/types/blobs.ts
   - src/sdk/types/constdatetime.ts
   - src/sdk/types/enums.ts
@@ -71,31 +100,15 @@ generatedFiles:
   - src/sdk/types/rfcdate.ts
   - src/sdk/types/streams.ts
   - tsconfig.json
-  - src/sdk/models/operations/partition.ts
-  - src/sdk/models/errors/httpvalidationerror.ts
-  - src/sdk/models/errors/servererror.ts
-  - src/sdk/models/shared/validationerror.ts
-  - src/sdk/models/shared/partitionparameters.ts
-  - src/sdk/models/shared/security.ts
-  - src/sdk/models/errors/index.ts
-  - src/sdk/models/operations/index.ts
-  - src/sdk/models/shared/index.ts
-  - docs/sdk/models/operations/partitionrequest.md
-  - docs/sdk/models/operations/partitionresponse.md
-  - docs/sdk/models/errors/detail.md
-  - docs/sdk/models/errors/httpvalidationerror.md
-  - docs/sdk/models/errors/servererror.md
-  - docs/sdk/models/shared/loc.md
-  - docs/sdk/models/shared/validationerror.md
-  - docs/sdk/models/shared/chunkingstrategy.md
-  - docs/sdk/models/shared/files.md
-  - docs/sdk/models/shared/outputformat.md
-  - docs/sdk/models/shared/strategy.md
-  - docs/sdk/models/shared/partitionparameters.md
-  - docs/sdk/models/shared/security.md
-  - USAGE.md
-  - .gitattributes
-  - src/hooks/hooks.ts
-  - src/hooks/types.ts
-  - src/hooks/index.ts
-  - CONTRIBUTING.md
+examples:
+  partition:
+    speakeasy-default-partition:
+      requestBody:
+        multipart/form-data: {"chunking_strategy": "by_title", "files": {"": "{\"summary\":\"File to be partitioned\",\"externalValue\":\"https://github.com/Unstructured-IO/unstructured/blob/98d3541909f64290b5efb65a226fc3ee8a7cc5ee/example-docs/layout-parser-paper.pdf\"}"}, "split_pdf_page_range": [1, 10], "strategy": "hi_res"}
+      responses:
+        "200":
+          application/json: [{"type": "Title", "element_id": "6aa0ff22f91bbe7e26e8e25ca8052acd", "text": "LayoutParser: A Unified Toolkit for Deep Learning Based Document Image Analysis", "metadata": {"languages": ["eng"], "page_number": 1, "filename": "layout-parser-paper.pdf", "filetype": "application/pdf"}}]
+        "422":
+          application/json: {"detail": "<value>"}
+        5XX:
+          application/json: {"detail": "An error occurred"}

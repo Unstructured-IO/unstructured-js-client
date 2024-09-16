@@ -11,11 +11,11 @@ import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
 import {
-    ConnectionError,
-    InvalidRequestError,
-    RequestAbortedError,
-    RequestTimeoutError,
-    UnexpectedClientError,
+  ConnectionError,
+  InvalidRequestError,
+  RequestAbortedError,
+  RequestTimeoutError,
+  UnexpectedClientError,
 } from "../sdk/models/errors/httpclienterrors.js";
 import * as errors from "../sdk/models/errors/index.js";
 import { SDKError } from "../sdk/models/errors/sdkerror.js";
@@ -32,273 +32,305 @@ import { isReadableStream } from "../sdk/types/streams.js";
  * Description
  */
 export async function generalPartition(
-    client$: UnstructuredClientCore,
-    request: operations.PartitionRequest,
-    options?: RequestOptions
+  client$: UnstructuredClientCore,
+  request: operations.PartitionRequest,
+  options?: RequestOptions,
 ): Promise<
-    Result<
-        operations.PartitionResponse,
-        | errors.HTTPValidationError
-        | errors.ServerError
-        | SDKError
-        | SDKValidationError
-        | UnexpectedClientError
-        | InvalidRequestError
-        | RequestAbortedError
-        | RequestTimeoutError
-        | ConnectionError
-    >
+  Result<
+    operations.PartitionResponse,
+    | errors.HTTPValidationError
+    | errors.ServerError
+    | SDKError
+    | SDKValidationError
+    | UnexpectedClientError
+    | InvalidRequestError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | ConnectionError
+  >
 > {
-    const input$ = request;
+  const input$ = request;
 
-    const parsed$ = schemas$.safeParse(
-        input$,
-        (value$) => operations.PartitionRequest$outboundSchema.parse(value$),
-        "Input validation failed"
+  const parsed$ = schemas$.safeParse(
+    input$,
+    (value$) => operations.PartitionRequest$outboundSchema.parse(value$),
+    "Input validation failed",
+  );
+  if (!parsed$.ok) {
+    return parsed$;
+  }
+  const payload$ = parsed$.value;
+  const body$ = new FormData();
+
+  if (isBlobLike(payload$.partition_parameters.files)) {
+    body$.append("files", payload$.partition_parameters.files);
+  } else if (isReadableStream(payload$.partition_parameters.files.content)) {
+    const buffer = await readableStreamToArrayBuffer(
+      payload$.partition_parameters.files.content,
     );
-    if (!parsed$.ok) {
-        return parsed$;
-    }
-    const payload$ = parsed$.value;
-    const body$ = new FormData();
+    const blob = new Blob([buffer], { type: "application/octet-stream" });
+    body$.append("files", blob);
+  } else {
+    body$.append(
+      "files",
+      new Blob([payload$.partition_parameters.files.content], {
+        type: "application/octet-stream",
+      }),
+      payload$.partition_parameters.files.fileName,
+    );
+  }
+  if (payload$.partition_parameters.chunking_strategy !== undefined) {
+    body$.append(
+      "chunking_strategy",
+      String(payload$.partition_parameters.chunking_strategy),
+    );
+  }
+  if (payload$.partition_parameters.combine_under_n_chars !== undefined) {
+    body$.append(
+      "combine_under_n_chars",
+      String(payload$.partition_parameters.combine_under_n_chars),
+    );
+  }
+  if (payload$.partition_parameters.content_type !== undefined) {
+    body$.append(
+      "content_type",
+      String(payload$.partition_parameters.content_type),
+    );
+  }
+  if (payload$.partition_parameters.coordinates !== undefined) {
+    body$.append(
+      "coordinates",
+      String(payload$.partition_parameters.coordinates),
+    );
+  }
+  if (payload$.partition_parameters.encoding !== undefined) {
+    body$.append("encoding", String(payload$.partition_parameters.encoding));
+  }
+  if (payload$.partition_parameters.extract_image_block_types !== undefined) {
+    body$.append(
+      "extract_image_block_types",
+      String(payload$.partition_parameters.extract_image_block_types),
+    );
+  }
+  if (
+    payload$.partition_parameters.gz_uncompressed_content_type !== undefined
+  ) {
+    body$.append(
+      "gz_uncompressed_content_type",
+      String(payload$.partition_parameters.gz_uncompressed_content_type),
+    );
+  }
+  if (payload$.partition_parameters.hi_res_model_name !== undefined) {
+    body$.append(
+      "hi_res_model_name",
+      String(payload$.partition_parameters.hi_res_model_name),
+    );
+  }
+  if (payload$.partition_parameters.include_orig_elements !== undefined) {
+    body$.append(
+      "include_orig_elements",
+      String(payload$.partition_parameters.include_orig_elements),
+    );
+  }
+  if (payload$.partition_parameters.include_page_breaks !== undefined) {
+    body$.append(
+      "include_page_breaks",
+      String(payload$.partition_parameters.include_page_breaks),
+    );
+  }
+  if (payload$.partition_parameters.include_slide_notes !== undefined) {
+    body$.append(
+      "include_slide_notes",
+      String(payload$.partition_parameters.include_slide_notes),
+    );
+  }
+  if (payload$.partition_parameters.languages !== undefined) {
+    body$.append("languages", String(payload$.partition_parameters.languages));
+  }
+  if (payload$.partition_parameters.max_characters !== undefined) {
+    body$.append(
+      "max_characters",
+      String(payload$.partition_parameters.max_characters),
+    );
+  }
+  if (payload$.partition_parameters.multipage_sections !== undefined) {
+    body$.append(
+      "multipage_sections",
+      String(payload$.partition_parameters.multipage_sections),
+    );
+  }
+  if (payload$.partition_parameters.new_after_n_chars !== undefined) {
+    body$.append(
+      "new_after_n_chars",
+      String(payload$.partition_parameters.new_after_n_chars),
+    );
+  }
+  if (payload$.partition_parameters.ocr_languages !== undefined) {
+    body$.append(
+      "ocr_languages",
+      String(payload$.partition_parameters.ocr_languages),
+    );
+  }
+  if (payload$.partition_parameters.output_format !== undefined) {
+    body$.append("output_format", payload$.partition_parameters.output_format);
+  }
+  if (payload$.partition_parameters.overlap !== undefined) {
+    body$.append("overlap", String(payload$.partition_parameters.overlap));
+  }
+  if (payload$.partition_parameters.overlap_all !== undefined) {
+    body$.append(
+      "overlap_all",
+      String(payload$.partition_parameters.overlap_all),
+    );
+  }
+  if (payload$.partition_parameters.pdf_infer_table_structure !== undefined) {
+    body$.append(
+      "pdf_infer_table_structure",
+      String(payload$.partition_parameters.pdf_infer_table_structure),
+    );
+  }
+  if (payload$.partition_parameters.similarity_threshold !== undefined) {
+    body$.append(
+      "similarity_threshold",
+      String(payload$.partition_parameters.similarity_threshold),
+    );
+  }
+  if (payload$.partition_parameters.skip_infer_table_types !== undefined) {
+    body$.append(
+      "skip_infer_table_types",
+      String(payload$.partition_parameters.skip_infer_table_types),
+    );
+  }
+  if (payload$.partition_parameters.split_pdf_allow_failed !== undefined) {
+    body$.append(
+      "split_pdf_allow_failed",
+      String(payload$.partition_parameters.split_pdf_allow_failed),
+    );
+  }
+  if (payload$.partition_parameters.split_pdf_concurrency_level !== undefined) {
+    body$.append(
+      "split_pdf_concurrency_level",
+      String(payload$.partition_parameters.split_pdf_concurrency_level),
+    );
+  }
+  if (payload$.partition_parameters.split_pdf_page !== undefined) {
+    body$.append(
+      "split_pdf_page",
+      String(payload$.partition_parameters.split_pdf_page),
+    );
+  }
+  if (payload$.partition_parameters.split_pdf_page_range !== undefined) {
+    body$.append(
+      "split_pdf_page_range",
+      String(payload$.partition_parameters.split_pdf_page_range),
+    );
+  }
+  if (payload$.partition_parameters.starting_page_number !== undefined) {
+    body$.append(
+      "starting_page_number",
+      String(payload$.partition_parameters.starting_page_number),
+    );
+  }
+  if (payload$.partition_parameters.strategy !== undefined) {
+    body$.append("strategy", payload$.partition_parameters.strategy);
+  }
+  if (payload$.partition_parameters.unique_element_ids !== undefined) {
+    body$.append(
+      "unique_element_ids",
+      String(payload$.partition_parameters.unique_element_ids),
+    );
+  }
+  if (payload$.partition_parameters.xml_keep_tags !== undefined) {
+    body$.append(
+      "xml_keep_tags",
+      String(payload$.partition_parameters.xml_keep_tags),
+    );
+  }
 
-    if (isBlobLike(payload$.partition_parameters.files)) {
-        body$.append("files", payload$.partition_parameters.files);
-    } else if (isReadableStream(payload$.partition_parameters.files.content)) {
-        const buffer = await readableStreamToArrayBuffer(
-            payload$.partition_parameters.files.content
-        );
-        const blob = new Blob([buffer], { type: "application/octet-stream" });
-        body$.append("files", blob);
-    } else {
-        body$.append(
-            "files",
-            new Blob([payload$.partition_parameters.files.content], {
-                type: "application/octet-stream",
-            }),
-            payload$.partition_parameters.files.fileName
-        );
-    }
-    if (payload$.partition_parameters.chunking_strategy !== undefined) {
-        body$.append("chunking_strategy", String(payload$.partition_parameters.chunking_strategy));
-    }
-    if (payload$.partition_parameters.combine_under_n_chars !== undefined) {
-        body$.append(
-            "combine_under_n_chars",
-            String(payload$.partition_parameters.combine_under_n_chars)
-        );
-    }
-    if (payload$.partition_parameters.content_type !== undefined) {
-        body$.append("content_type", String(payload$.partition_parameters.content_type));
-    }
-    if (payload$.partition_parameters.coordinates !== undefined) {
-        body$.append("coordinates", String(payload$.partition_parameters.coordinates));
-    }
-    if (payload$.partition_parameters.encoding !== undefined) {
-        body$.append("encoding", String(payload$.partition_parameters.encoding));
-    }
-    if (payload$.partition_parameters.extract_image_block_types !== undefined) {
-        body$.append(
-            "extract_image_block_types",
-            String(payload$.partition_parameters.extract_image_block_types)
-        );
-    }
-    if (payload$.partition_parameters.gz_uncompressed_content_type !== undefined) {
-        body$.append(
-            "gz_uncompressed_content_type",
-            String(payload$.partition_parameters.gz_uncompressed_content_type)
-        );
-    }
-    if (payload$.partition_parameters.hi_res_model_name !== undefined) {
-        body$.append("hi_res_model_name", String(payload$.partition_parameters.hi_res_model_name));
-    }
-    if (payload$.partition_parameters.include_orig_elements !== undefined) {
-        body$.append(
-            "include_orig_elements",
-            String(payload$.partition_parameters.include_orig_elements)
-        );
-    }
-    if (payload$.partition_parameters.include_page_breaks !== undefined) {
-        body$.append(
-            "include_page_breaks",
-            String(payload$.partition_parameters.include_page_breaks)
-        );
-    }
-    if (payload$.partition_parameters.include_slide_notes !== undefined) {
-        body$.append(
-            "include_slide_notes",
-            String(payload$.partition_parameters.include_slide_notes)
-        );
-    }
-    if (payload$.partition_parameters.languages !== undefined) {
-        body$.append("languages", String(payload$.partition_parameters.languages));
-    }
-    if (payload$.partition_parameters.max_characters !== undefined) {
-        body$.append("max_characters", String(payload$.partition_parameters.max_characters));
-    }
-    if (payload$.partition_parameters.multipage_sections !== undefined) {
-        body$.append(
-            "multipage_sections",
-            String(payload$.partition_parameters.multipage_sections)
-        );
-    }
-    if (payload$.partition_parameters.new_after_n_chars !== undefined) {
-        body$.append("new_after_n_chars", String(payload$.partition_parameters.new_after_n_chars));
-    }
-    if (payload$.partition_parameters.ocr_languages !== undefined) {
-        body$.append("ocr_languages", String(payload$.partition_parameters.ocr_languages));
-    }
-    if (payload$.partition_parameters.output_format !== undefined) {
-        body$.append("output_format", payload$.partition_parameters.output_format);
-    }
-    if (payload$.partition_parameters.overlap !== undefined) {
-        body$.append("overlap", String(payload$.partition_parameters.overlap));
-    }
-    if (payload$.partition_parameters.overlap_all !== undefined) {
-        body$.append("overlap_all", String(payload$.partition_parameters.overlap_all));
-    }
-    if (payload$.partition_parameters.pdf_infer_table_structure !== undefined) {
-        body$.append(
-            "pdf_infer_table_structure",
-            String(payload$.partition_parameters.pdf_infer_table_structure)
-        );
-    }
-    if (payload$.partition_parameters.similarity_threshold !== undefined) {
-        body$.append(
-            "similarity_threshold",
-            String(payload$.partition_parameters.similarity_threshold)
-        );
-    }
-    if (payload$.partition_parameters.skip_infer_table_types !== undefined) {
-        body$.append(
-            "skip_infer_table_types",
-            String(payload$.partition_parameters.skip_infer_table_types)
-        );
-    }
-    if (payload$.partition_parameters.split_pdf_allow_failed !== undefined) {
-        body$.append(
-            "split_pdf_allow_failed",
-            String(payload$.partition_parameters.split_pdf_allow_failed)
-        );
-    }
-    if (payload$.partition_parameters.split_pdf_concurrency_level !== undefined) {
-        body$.append(
-            "split_pdf_concurrency_level",
-            String(payload$.partition_parameters.split_pdf_concurrency_level)
-        );
-    }
-    if (payload$.partition_parameters.split_pdf_page !== undefined) {
-        body$.append("split_pdf_page", String(payload$.partition_parameters.split_pdf_page));
-    }
-    if (payload$.partition_parameters.split_pdf_page_range !== undefined) {
-        body$.append(
-            "split_pdf_page_range",
-            String(payload$.partition_parameters.split_pdf_page_range)
-        );
-    }
-    if (payload$.partition_parameters.starting_page_number !== undefined) {
-        body$.append(
-            "starting_page_number",
-            String(payload$.partition_parameters.starting_page_number)
-        );
-    }
-    if (payload$.partition_parameters.strategy !== undefined) {
-        body$.append("strategy", payload$.partition_parameters.strategy);
-    }
-    if (payload$.partition_parameters.unique_element_ids !== undefined) {
-        body$.append(
-            "unique_element_ids",
-            String(payload$.partition_parameters.unique_element_ids)
-        );
-    }
-    if (payload$.partition_parameters.xml_keep_tags !== undefined) {
-        body$.append("xml_keep_tags", String(payload$.partition_parameters.xml_keep_tags));
-    }
+  const path$ = pathToFunc("/general/v0/general")();
 
-    const path$ = pathToFunc("/general/v0/general")();
+  const headers$ = new Headers({
+    Accept: "application/json",
+    "unstructured-api-key": encodeSimple$(
+      "unstructured-api-key",
+      payload$["unstructured-api-key"],
+      { explode: false, charEncoding: "none" },
+    ),
+  });
 
-    const headers$ = new Headers({
-        Accept: "application/json",
-        "unstructured-api-key": encodeSimple$(
-            "unstructured-api-key",
-            payload$["unstructured-api-key"],
-            { explode: false, charEncoding: "none" }
-        ),
-    });
+  const security$ = await extractSecurity(client$.options$.security);
+  const context = {
+    operationID: "partition",
+    oAuth2Scopes: [],
+    securitySource: client$.options$.security,
+  };
+  const securitySettings$ = resolveGlobalSecurity(security$);
 
-    const security$ = await extractSecurity(client$.options$.security);
-    const context = {
-        operationID: "partition",
-        oAuth2Scopes: [],
-        securitySource: client$.options$.security,
-    };
-    const securitySettings$ = resolveGlobalSecurity(security$);
+  const requestRes = client$.createRequest$(context, {
+    security: securitySettings$,
+    method: "POST",
+    path: path$,
+    headers: headers$,
+    body: body$,
+    timeoutMs: options?.timeoutMs || client$.options$.timeoutMs || -1,
+  }, options);
+  if (!requestRes.ok) {
+    return requestRes;
+  }
+  const request$ = requestRes.value;
 
-    const requestRes = client$.createRequest$(
-        context,
-        {
-            security: securitySettings$,
-            method: "POST",
-            path: path$,
-            headers: headers$,
-            body: body$,
-            timeoutMs: options?.timeoutMs || client$.options$.timeoutMs || -1,
+  const doResult = await client$.do$(request$, {
+    context,
+    errorCodes: ["422", "4XX", "5XX"],
+    retryConfig: options?.retries
+      || client$.options$.retryConfig
+      || {
+        strategy: "backoff",
+        backoff: {
+          initialInterval: 3000,
+          maxInterval: 720000,
+          exponent: 1.88,
+          maxElapsedTime: 1800000,
         },
-        options
-    );
-    if (!requestRes.ok) {
-        return requestRes;
-    }
-    const request$ = requestRes.value;
+        retryConnectionErrors: true,
+      },
+    retryCodes: options?.retryCodes || ["502", "503", "504"],
+  });
+  if (!doResult.ok) {
+    return doResult;
+  }
+  const response = doResult.value;
 
-    const doResult = await client$.do$(request$, {
-        context,
-        errorCodes: ["422", "4XX", "5XX"],
-        retryConfig: options?.retries ||
-            client$.options$.retryConfig || {
-                strategy: "backoff",
-                backoff: {
-                    initialInterval: 3000,
-                    maxInterval: 720000,
-                    exponent: 1.88,
-                    maxElapsedTime: 1800000,
-                },
-                retryConnectionErrors: true,
-            },
-        retryCodes: options?.retryCodes || ["502", "503", "504"],
-    });
-    if (!doResult.ok) {
-        return doResult;
-    }
-    const response = doResult.value;
+  const responseFields$ = {
+    ContentType: response.headers.get("content-type")
+      ?? "application/octet-stream",
+    StatusCode: response.status,
+    RawResponse: response,
+    Headers: {},
+  };
 
-    const responseFields$ = {
-        ContentType: response.headers.get("content-type") ?? "application/octet-stream",
-        StatusCode: response.status,
-        RawResponse: response,
-        Headers: {},
-    };
-
-    const [result$] = await m$.match<
-        operations.PartitionResponse,
-        | errors.HTTPValidationError
-        | errors.ServerError
-        | SDKError
-        | SDKValidationError
-        | UnexpectedClientError
-        | InvalidRequestError
-        | RequestAbortedError
-        | RequestTimeoutError
-        | ConnectionError
-    >(
-        m$.json(200, operations.PartitionResponse$inboundSchema, { key: "Elements" }),
-        m$.jsonErr(422, errors.HTTPValidationError$inboundSchema),
-        m$.fail("4XX"),
-        m$.jsonErr("5XX", errors.ServerError$inboundSchema)
-    )(response, { extraFields: responseFields$ });
-    if (!result$.ok) {
-        return result$;
-    }
-
+  const [result$] = await m$.match<
+    operations.PartitionResponse,
+    | errors.HTTPValidationError
+    | errors.ServerError
+    | SDKError
+    | SDKValidationError
+    | UnexpectedClientError
+    | InvalidRequestError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | ConnectionError
+  >(
+    m$.json(200, operations.PartitionResponse$inboundSchema, {
+      key: "Elements",
+    }),
+    m$.jsonErr(422, errors.HTTPValidationError$inboundSchema),
+    m$.fail("4XX"),
+    m$.jsonErr("5XX", errors.ServerError$inboundSchema),
+  )(response, { extraFields: responseFields$ });
+  if (!result$.ok) {
     return result$;
+  }
+
+  return result$;
 }

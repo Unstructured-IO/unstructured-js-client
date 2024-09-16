@@ -6,7 +6,7 @@
 import { Security } from "unstructured-client/sdk/models/shared";
 
 let value: Security = {
-    apiKeyAuth: "YOUR_API_KEY",
+  apiKeyAuth: "YOUR_API_KEY",
 };
 ```
 

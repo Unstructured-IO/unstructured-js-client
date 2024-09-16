@@ -8,16 +8,20 @@ import * as operations from "./models/operations/index.js";
 import { unwrapAsync } from "./types/fp.js";
 
 export class General extends ClientSDK {
-    /**
-     * Summary
-     *
-     * @remarks
-     * Description
-     */
-    async partition(
-        request: operations.PartitionRequest,
-        options?: RequestOptions
-    ): Promise<operations.PartitionResponse> {
-        return unwrapAsync(generalPartition(this, request, options));
-    }
+  /**
+   * Summary
+   *
+   * @remarks
+   * Description
+   */
+  async partition(
+    request: operations.PartitionRequest,
+    options?: RequestOptions,
+  ): Promise<operations.PartitionResponse> {
+    return unwrapAsync(generalPartition(
+      this,
+      request,
+      options,
+    ));
+  }
 }
