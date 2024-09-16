@@ -1,3 +1,5 @@
+import {HTTPClient} from "../../lib/http";
+
 /**
  * Regular expression pattern for matching base hostnames in the form of "*.unstructuredapp.io".
  */
@@ -23,3 +25,22 @@ export const MAX_NUMBER_OF_PARALLEL_REQUESTS = 15;
 
 export const MIN_PAGES_PER_THREAD = 2;
 export const MAX_PAGES_PER_THREAD = 20;
+
+export class HTTPClientExtension extends HTTPClient {
+  constructor() {
+    super();
+  }
+
+  override async request(request: Request): Promise<Response> {
+    if (request.url === "https://no-op/") {
+      return new Response('{}', {
+        headers: [
+            ["fake-response", "fake-response"]
+        ],
+        status: 200,
+        statusText: 'OK_NO_OP'
+      });
+    }
+    return super.request(request);
+   }
+}

@@ -1,6 +1,5 @@
 import async from "async";
 
-import { HTTPClient } from "../../lib/http.js";
 import {
   AfterErrorContext,
   AfterErrorHook,
@@ -25,10 +24,12 @@ import {
   stringToBoolean,
 } from "./utils/index.js";
 import {
+  HTTPClientExtension,
   MIN_PAGES_PER_THREAD,
   PARTITION_FORM_FILES_KEY,
   PARTITION_FORM_SPLIT_PDF_PAGE_KEY,
 } from "./common.js";
+import {retry, RetryConfig} from "../../lib/retries";
 
 /**
  * Represents a hook for splitting and sending PDF files as per page requests.
@@ -39,8 +40,7 @@ export class SplitPdfHook
   /**
    * The HTTP client used for making requests.
    */
-  client: HTTPClient | undefined;
-
+  client: HTTPClientExtension | undefined;
 
   /**
    * Keeps the strict-mode setting for splitPdfPage feature.
@@ -68,9 +68,16 @@ export class SplitPdfHook
    * @returns The initialized SDK options.
    */
   sdkInit(opts: SDKInitOptions): SDKInitOptions {
-    const { baseURL, client } = opts;
-    this.client = client;
-    return { baseURL: baseURL, client: client };
+    const { baseURL } = opts;
+    this.client = new HTTPClientExtension();
+
+    this.client.addHook("response", (res) => {
+        if (res.status != 200) {
+            console.error("Request failed with status code", `${res.status}`);
+        }
+    });
+
+    return { baseURL: baseURL, client: this.client };
   }
 
   /**
@@ -178,23 +185,48 @@ export class SplitPdfHook
         file.name,
         firstPageNumber
       );
+      const timeoutInMs = 60 * 10 * 1000;
       const req = new Request(requestClone, {
         headers,
         body,
+        signal: AbortSignal.timeout(timeoutInMs)
       });
       requests.push(req);
       setIndex+=1;
     }
 
     this.partitionSuccessfulResponses[operationID] = new Array(requests.length);
+    this.partitionFailedResponses[operationID] = new Array(requests.length);
 
     const allowFailed = this.allowFailed;
 
+    // These are the retry values from our api spec
+    // We need to hardcode them here until we're able to reuse the SDK
+    // from within this hook
+    const oneSecond = 1000;
+    const oneMinute = 1000 * 60;
+    const retryConfig = {
+        strategy: "backoff",
+        backoff: {
+            initialInterval: oneSecond * 3,
+            maxInterval: oneMinute * 12,
+            exponent: 1.88,
+            maxElapsedTime: oneMinute * 30,
+        },
+    } as RetryConfig;
+
+    const retryCodes = ["502", "503", "504"];
+
     this.partitionRequests[operationID] = async.parallelLimit(
-      requests.slice(0, -1).map((req, pageIndex) => async () => {
+      requests.map((req, pageIndex) => async () => {
         const pageNumber = pageIndex + startingPageNumber;
         try {
-          const response = await this.client!.request(req);
+         const response = await retry(
+              async () => {
+                return await this.client!.request(req.clone());
+              },
+              { config: retryConfig, statusCodes: retryCodes }
+          );
           if (response.status === 200) {
             (this.partitionSuccessfulResponses[operationID] as Response[])[pageIndex] =
               response.clone();
@@ -206,7 +238,7 @@ export class SplitPdfHook
               }
           }
         } catch (e) {
-          console.error(`Failed to send request for page ${pageNumber}.`);
+          console.error(`Failed to send request for page ${pageNumber}.`, e);
           if (!allowFailed) {
             throw e;
           }
@@ -215,7 +247,8 @@ export class SplitPdfHook
       concurrencyLevel
     );
 
-    return requests.at(-1) as Request;
+    const dummyRequest = new Request("https://no-op/");
+    return dummyRequest;
   }
 
     /**
@@ -230,28 +263,39 @@ export class SplitPdfHook
                     successfulResponses: Response[],
                     failedResponses: Response[]
   ): Promise<Response>  {
+    let realResponse = response.clone();
+    const firstSuccessfulResponse = successfulResponses.at(0);
+    const isFakeResponse = response.headers.has("fake-response");
+    if (firstSuccessfulResponse !== undefined && isFakeResponse) {
+      realResponse = firstSuccessfulResponse.clone();
+    }
+
     let responseBody, responseStatus, responseStatusText;
     const numFailedResponses = failedResponses?.length ?? 0;
-    const headers = prepareResponseHeaders(response);
+    const headers = prepareResponseHeaders(realResponse);
 
     if (!this.allowFailed && failedResponses && failedResponses.length > 0) {
        const failedResponse = failedResponses[0]?.clone();
        if (failedResponse) {
             responseBody = await failedResponse.text();
-            responseStatus = failedResponse.status;
             responseStatusText = failedResponse.statusText;
         } else {
             responseBody = JSON.stringify({"details:": "Unknown error"});
-            responseStatus = 503
             responseStatusText = "Unknown error"
         }
+        // if the response status is unknown or was 502, 503, 504, set back to 500 to ensure we don't cause more retries
+        responseStatus = 500;
         console.warn(
             `${numFailedResponses} requests failed. The partition operation is cancelled.`
           );
       } else {
-        responseBody = await prepareResponseBody([...successfulResponses, response]);
-        responseStatus = response.status
-        responseStatusText = response.statusText
+        if (isFakeResponse) {
+          responseBody = await prepareResponseBody([...successfulResponses]);
+        } else {
+          responseBody = await prepareResponseBody([...successfulResponses, response]);
+        }
+        responseStatus = realResponse.status
+        responseStatusText = realResponse.statusText
         if (numFailedResponses > 0) {
           console.warn(
             `${numFailedResponses} requests failed. The results might miss some pages.`

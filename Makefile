@@ -34,12 +34,12 @@ check:
 ## test-unit:					run unit tests
 .PHONY: test-unit
 test-unit:
-	npx jest --detectOpenHandles --config jest.config.js test/unit
+	npx jest --verbose --detectOpenHandles --config jest.config.js test/unit
 
 ## test-integration:			run integration tests
 .PHONY: test-integration
 test-integration:
-	npx jest --detectOpenHandles --config jest.config.js test/integration
+	npx jest --verbose --detectOpenHandles --config jest.config.js test/integration --forceExit
 
 ## test:					run all tests
 .PHONY: test
