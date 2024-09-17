@@ -5,7 +5,7 @@
 ```typescript
 import { Loc } from "unstructured-client/sdk/models/shared";
 
-let value: Loc = 857946;
+let value: Loc = 844266;
 ```
 
 ## Supported Types
