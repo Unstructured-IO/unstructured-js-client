@@ -163,36 +163,39 @@ To change the default retry strategy for a single API call, simply provide a ret
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
+import {
+  ChunkingStrategy,
+  Strategy,
+} from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
 
 async function run() {
-    const result = await unstructuredClient.general.partition(
-        {
-            partitionParameters: {
-                files: await openAsBlob("./sample-file"),
-                chunkingStrategy: ChunkingStrategy.ByTitle,
-                splitPdfPageRange: [1, 10],
-                strategy: Strategy.HiRes,
-            },
-        },
-        {
-            retries: {
-                strategy: "backoff",
-                backoff: {
-                    initialInterval: 1,
-                    maxInterval: 50,
-                    exponent: 1.1,
-                    maxElapsedTime: 100,
-                },
-                retryConnectionErrors: false,
-            },
-        }
-    );
+  const result = await unstructuredClient.general.partition({
+    partitionParameters: {
+      files: await openAsBlob("example.file"),
+      chunkingStrategy: ChunkingStrategy.ByTitle,
+      splitPdfPageRange: [
+        1,
+        10,
+      ],
+      strategy: Strategy.HiRes,
+    },
+  }, {
+    retries: {
+      strategy: "backoff",
+      backoff: {
+        initialInterval: 1,
+        maxInterval: 50,
+        exponent: 1.1,
+        maxElapsedTime: 100,
+      },
+      retryConnectionErrors: false,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -203,33 +206,39 @@ If you'd like to override the default retry strategy for all operations that sup
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
+import {
+  ChunkingStrategy,
+  Strategy,
+} from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient({
-    retryConfig: {
-        strategy: "backoff",
-        backoff: {
-            initialInterval: 1,
-            maxInterval: 50,
-            exponent: 1.1,
-            maxElapsedTime: 100,
-        },
-        retryConnectionErrors: false,
+  retryConfig: {
+    strategy: "backoff",
+    backoff: {
+      initialInterval: 1,
+      maxInterval: 50,
+      exponent: 1.1,
+      maxElapsedTime: 100,
     },
+    retryConnectionErrors: false,
+  },
 });
 
 async function run() {
-    const result = await unstructuredClient.general.partition({
-        partitionParameters: {
-            files: await openAsBlob("./sample-file"),
-            chunkingStrategy: ChunkingStrategy.ByTitle,
-            splitPdfPageRange: [1, 10],
-            strategy: Strategy.HiRes,
-        },
-    });
+  const result = await unstructuredClient.general.partition({
+    partitionParameters: {
+      files: await openAsBlob("example.file"),
+      chunkingStrategy: ChunkingStrategy.ByTitle,
+      splitPdfPageRange: [
+        1,
+        10,
+      ],
+      strategy: Strategy.HiRes,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -327,22 +336,28 @@ Certain SDK methods accept files as part of a multi-part request. It is possible
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
+import {
+  ChunkingStrategy,
+  Strategy,
+} from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
 
 async function run() {
-    const result = await unstructuredClient.general.partition({
-        partitionParameters: {
-            files: await openAsBlob("./sample-file"),
-            chunkingStrategy: ChunkingStrategy.ByTitle,
-            splitPdfPageRange: [1, 10],
-            strategy: Strategy.HiRes,
-        },
-    });
+  const result = await unstructuredClient.general.partition({
+    partitionParameters: {
+      files: await openAsBlob("example.file"),
+      chunkingStrategy: ChunkingStrategy.ByTitle,
+      splitPdfPageRange: [
+        1,
+        10,
+      ],
+      strategy: Strategy.HiRes,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
