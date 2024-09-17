@@ -53,7 +53,14 @@ export async function generalPartition(
 
   const parsed$ = schemas$.safeParse(
     input$,
-    (value$) => operations.PartitionRequest$outboundSchema.parse(value$),
+    (value$) => {
+      if(!isBlobLike(value$.partitionParameters.files) && !isReadableStream(value$.partitionParameters.files.content)) {
+        value$.partitionParameters.files.content = new Blob([value$.partitionParameters.files.content], {
+          type: "application/octet-stream",
+        })
+      }
+      return operations.PartitionRequest$outboundSchema.parse(value$)
+    },
     "Input validation failed",
   );
   if (!parsed$.ok) {
