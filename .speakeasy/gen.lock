@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 07648fa4a81409d493b04f9a0210053a
+  docChecksum: e1ddcc2cf71c4056b8ea02935f420820
   docVersion: 1.0.48
-  speakeasyVersion: 1.398.0
-  generationVersion: 2.415.8
-  releaseVersion: 0.17.0
-  configChecksum: 2c276110c3d851f4c60673861a0ec379
+  speakeasyVersion: 1.401.2
+  generationVersion: 2.421.3
+  releaseVersion: 0.17.1
+  configChecksum: 1055fe9a71bdb4cdbbe397b0bc8f8d65
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -15,7 +15,7 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.11
-    core: 3.17.3
+    core: 3.17.6
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.1
@@ -109,6 +109,6 @@ examples:
         "200":
           application/json: [{"type": "Title", "element_id": "6aa0ff22f91bbe7e26e8e25ca8052acd", "text": "LayoutParser: A Unified Toolkit for Deep Learning Based Document Image Analysis", "metadata": {"languages": ["eng"], "page_number": 1, "filename": "layout-parser-paper.pdf", "filetype": "application/pdf"}}]
         "422":
-          application/json: {"detail": "<value>"}
+          application/json: {"detail": []}
         5XX:
           application/json: {"detail": "An error occurred"}

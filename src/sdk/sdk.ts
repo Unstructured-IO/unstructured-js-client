@@ -8,6 +8,6 @@ import { General } from "./general.js";
 export class UnstructuredClient extends ClientSDK {
   private _general?: General;
   get general(): General {
-    return (this._general ??= new General(this.options$));
+    return (this._general ??= new General(this._options));
   }
 }

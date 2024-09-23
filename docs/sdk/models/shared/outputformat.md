@@ -7,7 +7,7 @@ The format of the response. Supported formats are application/json and text/csv.
 ```typescript
 import { OutputFormat } from "unstructured-client/sdk/models/shared";
 
-let value: OutputFormat = OutputFormat.ApplicationJson;
+let value: OutputFormat = OutputFormat.TextCsv;
 ```
 
 ## Values
