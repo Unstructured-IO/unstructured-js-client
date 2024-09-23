@@ -7,7 +7,7 @@ import { ValidationError } from "unstructured-client/sdk/models/shared";
 
 let value: ValidationError = {
   loc: [
-    857946,
+    "<value>",
   ],
   msg: "<value>",
   type: "<value>",
