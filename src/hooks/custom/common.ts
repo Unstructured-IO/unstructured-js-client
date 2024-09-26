@@ -32,7 +32,8 @@ export class HTTPClientExtension extends HTTPClient {
   }
 
   override async request(request: Request): Promise<Response> {
-    if (request.url === "https://no-op/") {
+    const clone = request.clone();
+    if (clone.url === "https://no-op/") {
       return new Response('{}', {
         headers: [
             ["fake-response", "fake-response"]
@@ -41,6 +42,6 @@ export class HTTPClientExtension extends HTTPClient {
         statusText: 'OK_NO_OP'
       });
     }
-    return super.request(request);
+    return super.request(clone);
    }
 }
