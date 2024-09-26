@@ -119,10 +119,7 @@ export async function loadPdf(
     const pagesCount = pdf.getPages().length;
     return [false, pdf, pagesCount];
   } catch (e) {
-    console.error(e);
-    console.warn(
-      "Attempted to interpret file as pdf, but error arose when splitting by pages. Reverting to non-split pdf handling path."
-    );
+    console.info("Loading PDF failed, so splitting is not enabled.");
     return [true, null, 0];
   }
 }
