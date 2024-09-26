@@ -207,6 +207,7 @@ export class SplitPdfHook
     // We need to hardcode them here until we're able to reuse the SDK
     // from within this hook
 
+    const allowedRetries = 3;
     const retryConfig = {
         strategy: "backoff",
         backoff: {
@@ -219,13 +220,19 @@ export class SplitPdfHook
 
     const retryCodes = ["502", "503", "504"];
 
+
     this.partitionRequests[operationID] = async.parallelLimit(
       requests.map((req, pageIndex) => async () => {
         const pageNumber = pageIndex + startingPageNumber;
+        let retryCount = 0;
         try {
          const response = await retry(
               async () => {
-                return await this.client!.request(req);
+                retryCount++;
+                if (retryCount > allowedRetries) {
+                  throw new Error(`Number of retries exceeded for page ${pageNumber}`);
+                }
+                return await this.client!.request(req.clone());
               },
               { config: retryConfig, statusCodes: retryCodes }
           );
