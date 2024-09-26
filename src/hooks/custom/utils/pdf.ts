@@ -119,7 +119,6 @@ export async function loadPdf(
     const pagesCount = pdf.getPages().length;
     return [false, pdf, pagesCount];
   } catch (e) {
-    console.info("Loading PDF failed, so splitting is not enabled.");
     return [true, null, 0];
   }
 }
