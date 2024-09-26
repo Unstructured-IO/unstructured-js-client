@@ -164,6 +164,10 @@ export class SplitPdfHook
         splitSize,
     )
 
+    const oneSecond = 1000;
+    const oneMinute = 1000 * 60;
+    const sixtyMinutes = oneMinute * 60;
+
     const headers = prepareRequestHeaders(request);
 
     const requests: Request[] = [];
@@ -185,11 +189,10 @@ export class SplitPdfHook
         file.name,
         firstPageNumber
       );
-      const timeoutInMs = 60 * 10 * 1000;
       const req = new Request(requestClone, {
         headers,
         body,
-        signal: AbortSignal.timeout(timeoutInMs)
+        signal: AbortSignal.timeout(sixtyMinutes)
       });
       requests.push(req);
       setIndex+=1;
@@ -203,26 +206,32 @@ export class SplitPdfHook
     // These are the retry values from our api spec
     // We need to hardcode them here until we're able to reuse the SDK
     // from within this hook
-    const oneSecond = 1000;
-    const oneMinute = 1000 * 60;
+
+    const allowedRetries = 3;
     const retryConfig = {
         strategy: "backoff",
         backoff: {
             initialInterval: oneSecond * 3,
             maxInterval: oneMinute * 12,
             exponent: 1.88,
-            maxElapsedTime: oneMinute * 30,
+            maxElapsedTime: sixtyMinutes,
         },
     } as RetryConfig;
 
     const retryCodes = ["502", "503", "504"];
 
+
     this.partitionRequests[operationID] = async.parallelLimit(
       requests.map((req, pageIndex) => async () => {
         const pageNumber = pageIndex + startingPageNumber;
+        let retryCount = 0;
         try {
          const response = await retry(
               async () => {
+                retryCount++;
+                if (retryCount > allowedRetries) {
+                  throw new Error(`Number of retries exceeded for page ${pageNumber}`);
+                }
                 return await this.client!.request(req.clone());
               },
               { config: retryConfig, statusCodes: retryCodes }

@@ -5,7 +5,7 @@
 ```typescript
 import { ChunkingStrategy } from "unstructured-client/sdk/models/shared";
 
-let value: ChunkingStrategy = ChunkingStrategy.ByTitle;
+let value: ChunkingStrategy = ChunkingStrategy.Basic;
 ```
 
 ## Values
