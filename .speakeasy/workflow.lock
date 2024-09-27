@@ -1,8 +1,8 @@
-speakeasyVersion: 1.402.14
+speakeasyVersion: 1.403.3
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:9f9fd4ae0320f28c292ea90778bfa55ecfad47d42e93d27d0bae0a10fca34eb9
+        sourceRevisionDigest: sha256:ecc480f02170320aec000c633b53b2e09b5753b56f0619a14980873ce623646c
         sourceBlobDigest: sha256:339446a3ddb92ef648b5881135a44848f08cec15d2c4785d1000884ec29bd801
         tags:
             - latest
@@ -11,7 +11,7 @@ targets:
     unstructed-typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:9f9fd4ae0320f28c292ea90778bfa55ecfad47d42e93d27d0bae0a10fca34eb9
+        sourceRevisionDigest: sha256:ecc480f02170320aec000c633b53b2e09b5753b56f0619a14980873ce623646c
         sourceBlobDigest: sha256:339446a3ddb92ef648b5881135a44848f08cec15d2c4785d1000884ec29bd801
 workflow:
     workflowVersion: 1.0.0
