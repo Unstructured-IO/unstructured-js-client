@@ -98,8 +98,7 @@ export async function splitPdf(
 }
 
 /**
- * Checks if the given file is a PDF. First it checks the `.pdf` file extension, then
- * it tries to load the file as a PDF using the `PDFDocument.load` method.
+ * Checks if the given file is a PDF by loading the file as a PDF using the `PDFDocument.load` method.
  * @param file - The file to check.
  * @returns A promise that resolves to three values, first is a boolean representing
  * whether there was an error during PDF load, second is a PDFDocument object or null
@@ -109,8 +108,8 @@ export async function splitPdf(
 export async function loadPdf(
   file: File | null
 ): Promise<[boolean, PDFDocument | null, number]> {
-  if (!file?.name.endsWith(".pdf")) {
-    console.info("Given file is not a PDF, so splitting is not enabled.");
+  if (!file) {
+    console.info("Given file is null, so splitting is not enabled.");
     return [true, null, 0];
   }
 
@@ -120,10 +119,6 @@ export async function loadPdf(
     const pagesCount = pdf.getPages().length;
     return [false, pdf, pagesCount];
   } catch (e) {
-    console.error(e);
-    console.warn(
-      "Attempted to interpret file as pdf, but error arose when splitting by pages. Reverting to non-split pdf handling path."
-    );
     return [true, null, 0];
   }
 }

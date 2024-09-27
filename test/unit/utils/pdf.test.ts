@@ -97,7 +97,7 @@ describe("Pdf utility functions", () => {
   });
 
   describe("loadPdf", () => {
-    it("should return true, null, and 0 if the file is not a PDF", async () => {
+    it("should return true, null, and 0 if the file is null", async () => {
       const result = await loadPdf(null);
 
       expect(result).toEqual([true, null, 0]);
@@ -114,6 +114,19 @@ describe("Pdf utility functions", () => {
       expect(result).toEqual([true, null, 0]);
       expect(file.content).not.toHaveBeenCalled();
     });
+
+    it("should return true, null, and 0 if the file is not a PDF without basing on file extension", async () => {
+      const file = {
+        name: "uuid1234",
+        content: jest.fn().mockResolvedValue(new ArrayBuffer(0)),
+      };
+
+      const result = await loadPdf(file as any);
+
+      expect(result).toEqual([true, null, 0]);
+      expect(file.content).not.toHaveBeenCalled();
+    });
+
 
     it("should return true, null, and 0 if there is an error while loading the PDF", async () => {
       const file = {
@@ -143,5 +156,24 @@ describe("Pdf utility functions", () => {
       expect(loadMock).toHaveBeenCalledTimes(1);
       expect(loadMock).toHaveBeenCalledWith(f.arrayBuffer());
     });
+
+    it("should return false, PDFDocument object, and the number of pages if the PDF is loaded successfully without basing on file extension", async () => {
+      const file = readFileSync("test/data/layout-parser-paper-fast.pdf");
+      const f = {
+        name: "uuid1234",
+        arrayBuffer: () => file.buffer,
+      };
+
+      jest.clearAllMocks(); // Reset Mocks Between Tests
+      const loadMock = jest.spyOn(PDFDocument, "load");
+
+      const [error, _, pages] = await loadPdf(f as any);
+
+      expect(error).toBeFalsy();
+      expect(pages).toEqual(2);
+      expect(loadMock).toHaveBeenCalledTimes(1);
+      expect(loadMock).toHaveBeenCalledWith(f.arrayBuffer());
+    });
+
   });
 });
