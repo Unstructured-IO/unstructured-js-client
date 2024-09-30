@@ -97,8 +97,11 @@ export class SplitPdfHook
     hookCtx: BeforeRequestContext,
     request: Request
   ): Promise<Request> {
+
+    // setting the current operationID to be unique
     const operationID = "partition-" + uuidv4();
     hookCtx.operationID = operationID;
+
     const requestClone = request.clone();
     const formData = await requestClone.formData();
     const splitPdfPage = stringToBoolean(
