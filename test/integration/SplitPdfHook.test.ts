@@ -439,6 +439,7 @@ describe("SplitPDF async can be used to send multiple files concurrently", () =>
           },
         });
         expect(res.statusCode).toEqual(200);
+        expect(res.elements?.length).toBeGreaterThan(0);
         if (res.elements) {
           serialElements.push(res.elements);
         }
@@ -454,6 +455,7 @@ describe("SplitPDF async can be used to send multiple files concurrently", () =>
 
       for (const res of concurrentResponses) {
         expect(res.statusCode).toEqual(200);
+        expect(res.elements?.length).toBeGreaterThan(0);
         if (res.elements) {
           concurrentElements.push(res.elements);
         }
