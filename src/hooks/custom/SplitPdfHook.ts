@@ -1,5 +1,4 @@
 import async from "async";
-import { v4 as uuidv4 } from 'uuid';
 
 import {
   AfterErrorContext,
@@ -97,8 +96,7 @@ export class SplitPdfHook
     hookCtx: BeforeRequestContext,
     request: Request
   ): Promise<Request> {
-    const operationID = uuidv4(); 
-    hookCtx.operationID = operationID;
+    const { operationID } = hookCtx;
     const requestClone = request.clone();
     const formData = await requestClone.formData();
     const splitPdfPage = stringToBoolean(
@@ -333,8 +331,7 @@ export class SplitPdfHook
     hookCtx: AfterSuccessContext,
     response: Response
   ): Promise<Response> {
-    const operationID = uuidv4(); 
-    hookCtx.operationID = operationID;
+    const { operationID } = hookCtx;
     const responses = await this.awaitAllRequests(operationID);
     const successfulResponses = responses?.get("success") ?? [];
     const failedResponses = responses?.get("failed") ?? [];
@@ -365,8 +362,7 @@ export class SplitPdfHook
     response: Response | null,
     error: unknown
   ): Promise<{ response: Response | null; error: unknown }> {
-    const operationID = uuidv4(); 
-    hookCtx.operationID = operationID;
+    const { operationID } = hookCtx;
     const responses = await this.awaitAllRequests(operationID);
     const successfulResponses = responses?.get("success") ?? [];
     const failedResponses = responses?.get("failed") ?? [];
