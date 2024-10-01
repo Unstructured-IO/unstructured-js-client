@@ -18,6 +18,8 @@ export const PARTITION_FORM_SPLIT_PDF_PAGE_RANGE_KEY = "split_pdf_page_range";
 export const PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL =
   "split_pdf_concurrency_level";
 
+export const EXTRACT_IMAGE_BLOCK_TYPES = "extract_image_block_types";
+
 export const DEFAULT_STARTING_PAGE_NUMBER = 1;
 export const DEFAULT_NUMBER_OF_PARALLEL_REQUESTS = 8;
 export const DEFAULT_SPLIT_PDF_ALLOW_FAILED_KEY = false;
