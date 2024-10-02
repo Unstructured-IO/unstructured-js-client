@@ -1,4 +1,5 @@
 import async from "async";
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   AfterErrorContext,
@@ -96,7 +97,11 @@ export class SplitPdfHook
     hookCtx: BeforeRequestContext,
     request: Request
   ): Promise<Request> {
-    const { operationID } = hookCtx;
+
+    // setting the current operationID to be unique
+    const operationID = "partition-" + uuidv4();
+    hookCtx.operationID = operationID;
+
     const requestClone = request.clone();
     const formData = await requestClone.formData();
     const splitPdfPage = stringToBoolean(
