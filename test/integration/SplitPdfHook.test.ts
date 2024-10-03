@@ -394,3 +394,77 @@ describe("SplitPDF succeeds for large PDF with high concurrency", () => {
     },
     300000);
 });
+
+
+describe("SplitPDF async can be used to send multiple files concurrently", () => {
+  const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+  it.each([
+    `${localServer}/general/v0/general`,
+  ])("succeed", async (serverURL) => {
+      const client = new UnstructuredClient({
+          serverURL: serverURL,
+          security: {
+              apiKeyAuth: FAKE_API_KEY,
+          },
+      });
+
+      const file = {
+          content: readFileSync("test/data/layout-parser-paper.pdf"),
+          fileName: "test/data/layout-parser-paper.pdf"
+      };
+
+      const RequestsParams = [
+        {
+            files: file,
+            splitPdfPage: true,
+            strategy: Strategy.Fast,
+            splitPdfPageRange: [1, 3],
+            languages: ["eng"],
+        },
+        {
+            files: file,
+            splitPdfPage: true,
+            strategy: Strategy.Fast,
+            splitPdfPageRange: [10, 12],
+            languages: ["eng"],
+        }
+      ];
+
+      // Process requests serially
+      const serialElements: any[][] = [];
+      for (const requestParams of RequestsParams) {
+        const res: PartitionResponse = await client.general.partition({
+          partitionParameters: {
+            ...requestParams
+          },
+        });
+        expect(res.statusCode).toEqual(200);
+        expect(res.elements?.length).toBeGreaterThan(0);
+        if (res.elements) {
+          serialElements.push(res.elements);
+        }
+      }
+
+      // Process requests concurrently
+      const concurrentElements: any[][] = [];
+      const concurrentResponses = await Promise.all(RequestsParams.map(req =>
+        client.general.partition({
+            partitionParameters: req
+        })
+      ));
+
+      for (const res of concurrentResponses) {
+        expect(res.statusCode).toEqual(200);
+        expect(res.elements?.length).toBeGreaterThan(0);
+        if (res.elements) {
+          concurrentElements.push(res.elements);
+        }
+      }
+
+      const isEqual = JSON.stringify(serialElements) === JSON.stringify(concurrentElements);
+      expect(isEqual).toBe(true);
+
+  },
+  300000);
+});

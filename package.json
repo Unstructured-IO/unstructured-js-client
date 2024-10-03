@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/async": "^3.2.24",
     "@types/jest": "^29.5.12",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
     "eslint": "^8.57.0",
@@ -32,6 +33,7 @@
   },
   "dependencies": {
     "async": "^3.2.5",
-    "pdf-lib": "^1.17.1"
+    "pdf-lib": "^1.17.1",
+    "uuid": "^10.0.0"
   }
 }
