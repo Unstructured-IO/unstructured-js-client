@@ -1,4 +1,5 @@
 import {
+  EXTRACT_IMAGE_BLOCK_TYPES,
   PARTITION_FORM_FILES_KEY,
   PARTITION_FORM_SPLIT_PDF_PAGE_KEY,
   PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
@@ -90,5 +91,14 @@ export async function prepareRequestBody(
     PARTITION_FORM_STARTING_PAGE_NUMBER_KEY,
     startingPageNumber.toString()
   );
+
+  if (formData.has(EXTRACT_IMAGE_BLOCK_TYPES)) {
+    newFormData.delete(EXTRACT_IMAGE_BLOCK_TYPES);
+    const extractImageBlockTypes = (formData.get(EXTRACT_IMAGE_BLOCK_TYPES)?.toString() || "").split(",");
+    for(const blockType of extractImageBlockTypes) {
+      newFormData.append(EXTRACT_IMAGE_BLOCK_TYPES, blockType);
+    }
+  }
+
   return newFormData;
 }

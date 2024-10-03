@@ -379,7 +379,8 @@ describe("SplitPDF succeeds for large PDF with high concurrency", () => {
             splitPdfPage: true,
             strategy: Strategy.HiRes,
             splitPdfAllowFailed: false,
-            splitPdfConcurrencyLevel: 15
+            splitPdfConcurrencyLevel: 15,
+            extractImageBlockTypes: ["Image", "Table"]
         };
 
         const res: PartitionResponse = await client.general.partition({
