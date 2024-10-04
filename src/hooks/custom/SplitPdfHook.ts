@@ -1,5 +1,5 @@
 import async from "async";
-import { v4 as uuidv4 } from 'uuid';
+import 'crypto';
 
 import {
   AfterErrorContext,
@@ -99,7 +99,7 @@ export class SplitPdfHook
   ): Promise<Request> {
 
     // setting the current operationID to be unique
-    const operationID = "partition-" + uuidv4();
+    const operationID = "partition-" + crypto.randomUUID();
     hookCtx.operationID = operationID;
 
     const requestClone = request.clone();
