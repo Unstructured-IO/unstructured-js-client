@@ -49,10 +49,8 @@ export async function generalPartition(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) => operations.PartitionRequest$outboundSchema.parse(value),
     "Input validation failed",
   );

@@ -313,8 +313,7 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 <summary>Available standalone functions</summary>
 
-- [generalPartition](docs/sdks/general/README.md#partition)
-
+- [`generalPartition`](docs/sdks/general/README.md#partition) - Summary
 
 </details>
 <!-- End Standalone functions [standalone-funcs] -->
