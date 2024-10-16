@@ -1,8 +1,9 @@
 import { HttpsCheckHook } from "../../src/hooks/custom/HttpsCheckHook";
 import { HTTPClient } from "../../src/lib/http";
+import { describe, it, expect, vi, afterEach } from 'vitest';
 
 describe("HttpsCheckHook", () => {
-  const consoleSpy = jest.spyOn(global.console, "warn");
+  const consoleSpy = vi.spyOn(global.console, "warn");
 
   afterEach(() => {
     consoleSpy.mockClear();
