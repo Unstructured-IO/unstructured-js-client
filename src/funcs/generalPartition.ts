@@ -246,7 +246,7 @@ export async function generalPartition(
   const path = pathToFunc("/general/v0/general")();
 
   const headers = new Headers({
-    Accept: "application/json",
+    Accept: payload.partition_parameters.output_format,
     "unstructured-api-key": encodeSimple(
       "unstructured-api-key",
       payload["unstructured-api-key"],
