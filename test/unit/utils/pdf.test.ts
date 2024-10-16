@@ -1,5 +1,6 @@
 import { PDFDocument } from "pdf-lib";
 import { readFileSync } from "node:fs";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import {
   loadPdf,
@@ -20,14 +21,14 @@ describe("Pdf utility functions", () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("pdfPagesToBlob", () => {
     it("should convert range of pages to a Blob object", async () => {
-      const copyMock = jest.spyOn(PDFDocument.prototype, "copyPages");
-      const saveMock = jest.spyOn(PDFDocument.prototype, "save");
-      const addMock = jest.spyOn(PDFDocument.prototype, "addPage");
+      const copyMock = vi.spyOn(PDFDocument.prototype, "copyPages");
+      const saveMock = vi.spyOn(PDFDocument.prototype, "save");
+      const addMock = vi.spyOn(PDFDocument.prototype, "addPage");
 
       // Call the method
       const result = await pdfPagesToBlob(pdf, 4, 8);
@@ -106,7 +107,7 @@ describe("Pdf utility functions", () => {
     it("should return true, null, and 0 if the file is not a PDF", async () => {
       const file = {
         name: "document.txt",
-        content: jest.fn().mockResolvedValue(new ArrayBuffer(0)),
+        content: vi.fn().mockResolvedValue(new ArrayBuffer(0)),
       };
 
       const result = await loadPdf(file as any);
@@ -118,7 +119,7 @@ describe("Pdf utility functions", () => {
     it("should return true, null, and 0 if the file is not a PDF without basing on file extension", async () => {
       const file = {
         name: "uuid1234",
-        content: jest.fn().mockResolvedValue(new ArrayBuffer(0)),
+        content: vi.fn().mockResolvedValue(new ArrayBuffer(0)),
       };
 
       const result = await loadPdf(file as any);
@@ -131,7 +132,7 @@ describe("Pdf utility functions", () => {
     it("should return true, null, and 0 if there is an error while loading the PDF", async () => {
       const file = {
         name: "document.pdf",
-        arrayBuffer: jest.fn().mockRejectedValue(new ArrayBuffer(0)),
+        arrayBuffer: vi.fn().mockRejectedValue(new ArrayBuffer(0)),
       };
 
       const result = await loadPdf(file as any);
@@ -147,7 +148,7 @@ describe("Pdf utility functions", () => {
         arrayBuffer: () => file.buffer,
       };
 
-      const loadMock = jest.spyOn(PDFDocument, "load");
+      const loadMock = vi.spyOn(PDFDocument, "load");
 
       const [error, _, pages] = await loadPdf(f as any);
 
@@ -164,8 +165,8 @@ describe("Pdf utility functions", () => {
         arrayBuffer: () => file.buffer,
       };
 
-      jest.clearAllMocks(); // Reset Mocks Between Tests
-      const loadMock = jest.spyOn(PDFDocument, "load");
+      vi.clearAllMocks(); // Reset Mocks Between Tests
+      const loadMock = vi.spyOn(PDFDocument, "load");
 
       const [error, _, pages] = await loadPdf(f as any);
 

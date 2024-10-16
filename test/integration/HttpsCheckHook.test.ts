@@ -3,6 +3,7 @@ import { readFileSync } from "fs";
 import { UnstructuredClient } from "../../src";
 import { PartitionResponse } from "../../src/sdk/models/operations";
 import { PartitionParameters, Strategy } from "../../src/sdk/models/shared";
+import { describe, it, expect} from 'vitest';
 
 const localServer = "http://localhost:8000"
 
