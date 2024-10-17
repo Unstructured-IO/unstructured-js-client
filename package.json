@@ -2,7 +2,7 @@
   "name": "unstructured-client",
   "version": "0.18.1",
   "author": "Unstructured",
-  "main": "src/index.js",
+  "main": "./index.js",
   "sideEffects": false,
   "repository": {
     "type": "git",

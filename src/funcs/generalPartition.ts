@@ -245,8 +245,19 @@ export async function generalPartition(
 
   const path = pathToFunc("/general/v0/general")();
 
+  let acceptHeader = "application/json";
+  if (payload.partition_parameters.output_format) {
+    switch (payload.partition_parameters.output_format) {
+      case "text/csv":
+        acceptHeader = "text/csv";
+        break;
+      default:
+        acceptHeader = "application/json";
+    }
+  }
+
   const headers = new Headers({
-    Accept: payload.partition_parameters.output_format,
+    Accept: acceptHeader,
     "unstructured-api-key": encodeSimple(
       "unstructured-api-key",
       payload["unstructured-api-key"],
