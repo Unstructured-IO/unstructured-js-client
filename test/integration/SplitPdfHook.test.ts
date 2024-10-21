@@ -3,14 +3,15 @@ import { readFileSync } from "fs";
 import { UnstructuredClient } from "../../src";
 import { PartitionResponse } from "../../src/sdk/models/operations";
 import { PartitionParameters, Strategy } from "../../src/sdk/models/shared";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 const localServer = "http://localhost:8000";
 
 describe("SplitPdfHook integration tests check splitted file is same as not splitted", () => {
   const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-  const consoleInfoSpy = jest.spyOn(console, "info");
-  const consoleWarnSpy = jest.spyOn(console, "warn");
-  const consoleErrorSpy = jest.spyOn(console, "error");
+  const consoleInfoSpy = vi.spyOn(console, "info");
+  const consoleWarnSpy = vi.spyOn(console, "warn");
+  const consoleErrorSpy = vi.spyOn(console, "error");
 
   let client = new UnstructuredClient({
     serverURL: localServer,
@@ -273,9 +274,9 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
 
 describe("SplitPdfHook integration tests page range parameter", () => {
   const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-  const consoleInfoSpy = jest.spyOn(console, "info");
-  const consoleWarnSpy = jest.spyOn(console, "warn");
-  const consoleErrorSpy = jest.spyOn(console, "error");
+  const consoleInfoSpy = vi.spyOn(console, "info");
+  const consoleWarnSpy = vi.spyOn(console, "warn");
+  const consoleErrorSpy = vi.spyOn(console, "error");
 
   let client = new UnstructuredClient({
     serverURL: localServer,

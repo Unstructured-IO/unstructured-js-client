@@ -34,12 +34,12 @@ check:
 ## test-unit:					run unit tests
 .PHONY: test-unit
 test-unit:
-	npx jest --verbose --detectOpenHandles --config jest.config.js test/unit
+	npx vitest --dir test/unit --run --reporter verbose --config vitest.config.mjs
 
 ## test-integration:			run integration tests
 .PHONY: test-integration
 test-integration:
-	npx jest --verbose --detectOpenHandles --config jest.config.js test/integration --forceExit
+	npx vitest --dir test/integration --run --reporter verbose --config vitest.config.mjs
 
 ## test:					run all tests
 .PHONY: test
