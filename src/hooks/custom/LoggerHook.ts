@@ -46,7 +46,6 @@ export class LoggerHook implements AfterSuccessHook, AfterErrorHook {
   afterSuccess(hookCtx: AfterSuccessContext, response: Response): Response {
     this.retriesCounter.delete(hookCtx.operationID);
     // NOTE: In case of split page partition this means - at least one of the splits was partitioned successfully
-    console.info("Successfully partitioned the document.");
     return response;
   }
 
@@ -67,15 +66,14 @@ export class LoggerHook implements AfterSuccessHook, AfterErrorHook {
     this.logRetries(response, error, hookCtx.operationID);
 
     if (response && response.status === 200) {
-      console.info("Successfully partitioned the document.");
-    } else {
-      console.error("Failed to partition the document.");
-      if (response) {
-        console.error(`Server responded with ${response.status} - ${response.statusText}`);
-      }
-      if (error) {
-        console.error(`Following error occurred - ${(error as Error).message}`);
-      }
+      return { response, error };
+    }
+    console.error("Failed to partition the document.");
+    if (response) {
+      console.error(`Server responded with ${response.status} - ${response.statusText}`);
+    }
+    if (error) {
+      console.error(`Following error occurred - ${(error as Error).message}`);
     }
     return { response, error };
   }

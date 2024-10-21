@@ -31,9 +31,7 @@ export async function prepareResponseBody(
   const allElements: any[] = [];
   let index = 1;
   for (const res of responses) {
-    if (res.status == 200) {
-      console.info("Successfully partitioned set #%d, elements added to the final result.", index);
-    } else {
+    if (res.status != 200) {
       console.warn("Failed to partition set #%d, its elements will be omitted in the final result.", index);
     }
 

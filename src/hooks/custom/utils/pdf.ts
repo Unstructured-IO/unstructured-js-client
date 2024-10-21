@@ -109,7 +109,6 @@ export async function loadPdf(
   file: File | null
 ): Promise<[boolean, PDFDocument | null, number]> {
   if (!file) {
-    console.info("Given file is null, so splitting is not enabled.");
     return [true, null, 0];
   }
 

@@ -135,13 +135,6 @@ export function getSplitPdfConcurrencyLevel(formData: FormData): number {
     );
     splitPdfConcurrencyLevel = DEFAULT_NUMBER_OF_PARALLEL_REQUESTS;
   }
-
-  console.info(
-    `Splitting PDF by page on client. Using ${splitPdfConcurrencyLevel} threads when calling API.`
-  );
-  console.info(
-    `Set ${PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL} parameter if you want to change that.`
-  );
   return splitPdfConcurrencyLevel;
 }
 
@@ -164,25 +157,6 @@ export function getSplitPdfAllowFailed(formData: FormData): boolean {
     formData,
     PARTITION_FORM_SPLIT_PDF_ALLOW_FAILED_KEY,
     DEFAULT_SPLIT_PDF_ALLOW_FAILED_KEY
-  );
-
-
-  if (splitPdfAllowFailed) {
-    console.info(
-    `Running split PDF requests in parallel with no-strict mode - 
-      the failed requests will not stop the process, and the resulting elements might miss
-      some pages in case of failure.`
-    );
-  } else {
-    console.info(
-    `Running split PDF requests in parallel with strict mode - 
-      the failed requests will stop the process, and the resulting elements will have all pages
-      or error out.`
-    )
-  }
-
-  console.info(
-    `Set ${PARTITION_FORM_SPLIT_PDF_CONCURRENCY_LEVEL} parameter if you want to change that.`
   );
   return splitPdfAllowFailed;
 }
