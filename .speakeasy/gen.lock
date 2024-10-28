@@ -3,10 +3,10 @@ id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
   docChecksum: 0ecb1bbbef6c9805d6a3edcc0afd098a
   docVersion: 1.0.51
-  speakeasyVersion: 1.412.6
-  generationVersion: 2.436.3
-  releaseVersion: 0.18.1
-  configChecksum: 85feae8322e909e03a92ff8ccb1fdaf2
+  speakeasyVersion: 1.422.1
+  generationVersion: 2.438.15
+  releaseVersion: 0.18.2
+  configChecksum: ca25abf7161ef39bf7793f0e79caf68e
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
