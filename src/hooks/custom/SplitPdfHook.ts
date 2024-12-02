@@ -1,5 +1,4 @@
 import async from "async";
-import {randomUUID} from 'crypto';
 
 import {
   AfterErrorContext,
@@ -26,6 +25,7 @@ import {
 } from "./utils/index.js";
 import {
   HTTPClientExtension,
+  generateGuid,
   MIN_PAGES_PER_THREAD,
   PARTITION_FORM_FILES_KEY,
   PARTITION_FORM_SPLIT_PDF_PAGE_KEY,
@@ -99,7 +99,7 @@ export class SplitPdfHook
   ): Promise<Request> {
 
     // setting the current operationID to be unique
-    const operationID = "partition-" + randomUUID();
+    const operationID = "partition-" + generateGuid();
     hookCtx.operationID = operationID;
 
     const requestClone = request.clone();
