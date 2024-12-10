@@ -25,6 +25,11 @@ import { isBlobLike } from "../sdk/types/blobs.js";
 import { Result } from "../sdk/types/fp.js";
 import { isReadableStream } from "../sdk/types/streams.js";
 
+export enum PartitionAcceptEnum {
+  applicationJson = "application/json",
+  textCsv = "text/csv",
+}
+
 /**
  * Summary
  *
@@ -34,7 +39,7 @@ import { isReadableStream } from "../sdk/types/streams.js";
 export async function generalPartition(
   client: UnstructuredClientCore,
   request: operations.PartitionRequest,
-  options?: RequestOptions,
+  options?: RequestOptions & { acceptHeaderOverride?: PartitionAcceptEnum },
 ): Promise<
   Result<
     operations.PartitionResponse,
@@ -230,6 +235,12 @@ export async function generalPartition(
   if (payload.partition_parameters.strategy !== undefined) {
     body.append("strategy", payload.partition_parameters.strategy);
   }
+  if (payload.partition_parameters.table_ocr_agent !== undefined) {
+    body.append(
+      "table_ocr_agent",
+      String(payload.partition_parameters.table_ocr_agent),
+    );
+  }
   if (payload.partition_parameters.unique_element_ids !== undefined) {
     body.append(
       "unique_element_ids",
@@ -246,7 +257,8 @@ export async function generalPartition(
   const path = pathToFunc("/general/v0/general")();
 
   const headers = new Headers({
-    Accept: "application/json",
+    Accept: options?.acceptHeaderOverride
+      || "application/json;q=1, text/csv;q=0",
     "unstructured-api-key": encodeSimple(
       "unstructured-api-key",
       payload["unstructured-api-key"],
@@ -255,12 +267,30 @@ export async function generalPartition(
   });
 
   const securityInput = await extractSecurity(client._options.security);
+  const requestSecurity = resolveGlobalSecurity(securityInput);
+
   const context = {
     operationID: "partition",
     oAuth2Scopes: [],
+
+    resolvedSecurity: requestSecurity,
+
     securitySource: client._options.security,
+    retryConfig: options?.retries
+      || client._options.retryConfig
+      || {
+        strategy: "backoff",
+        backoff: {
+          initialInterval: 3000,
+          maxInterval: 720000,
+          exponent: 1.88,
+          maxElapsedTime: 1800000,
+        },
+        retryConnectionErrors: true,
+      }
+      || { strategy: "none" },
+    retryCodes: options?.retryCodes || ["502", "503", "504"],
   };
-  const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
@@ -278,19 +308,8 @@ export async function generalPartition(
   const doResult = await client._do(req, {
     context,
     errorCodes: ["422", "4XX", "5XX"],
-    retryConfig: options?.retries
-      || client._options.retryConfig
-      || {
-        strategy: "backoff",
-        backoff: {
-          initialInterval: 3000,
-          maxInterval: 720000,
-          exponent: 1.88,
-          maxElapsedTime: 1800000,
-        },
-        retryConnectionErrors: true,
-      },
-    retryCodes: options?.retryCodes || ["502", "503", "504"],
+    retryConfig: context.retryConfig,
+    retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
     return doResult;
@@ -318,7 +337,11 @@ export async function generalPartition(
     | ConnectionError
   >(
     M.json(200, operations.PartitionResponse$inboundSchema, {
-      key: "Elements",
+      key: "elements",
+    }),
+    M.text(200, operations.PartitionResponse$inboundSchema, {
+      ctype: "text/csv",
+      key: "csv_elements",
     }),
     M.jsonErr(422, errors.HTTPValidationError$inboundSchema),
     M.fail("4XX"),
