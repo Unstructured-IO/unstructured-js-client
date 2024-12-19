@@ -42,6 +42,10 @@ export type RequestOptions = {
    */
   retryCodes?: string[];
   /**
+   * Overrides the base server URL that will be used by an operation.
+   */
+  serverURL?: string | URL;
+  /**
    * Sets various request options on the `fetch` call made by an SDK method.
    *
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options|Request}
@@ -52,7 +56,7 @@ export type RequestOptions = {
 type RequestConfig = {
   method: string;
   path: string;
-  baseURL?: string | URL;
+  baseURL?: string | URL | undefined;
   query?: string;
   body?: RequestInit["body"];
   headers?: HeadersInit;
@@ -119,6 +123,7 @@ export class ClientSDK {
     const inputURL = new URL(path, reqURL);
 
     if (path) {
+      reqURL.pathname += reqURL.pathname.endsWith("/") ? "" : "/";
       reqURL.pathname += inputURL.pathname.replace(/^\/+/, "");
     }
 
@@ -220,8 +225,8 @@ export class ClientSDK {
     options: {
       context: HookContext;
       errorCodes: number | string | (number | string)[];
-      retryConfig?: RetryConfig | undefined;
-      retryCodes?: string[] | undefined;
+      retryConfig: RetryConfig;
+      retryCodes: string[];
     },
   ): Promise<
     Result<
@@ -233,8 +238,6 @@ export class ClientSDK {
     >
   > {
     const { context, errorCodes } = options;
-    const retryConfig = options.retryConfig || { strategy: "none" };
-    const retryCodes = options.retryCodes || [];
 
     return retry(
       async () => {
@@ -245,22 +248,28 @@ export class ClientSDK {
 
         let response = await this.#httpClient.request(req);
 
-        if (matchStatusCode(response, errorCodes)) {
-          const result = await this.#hooks.afterError(context, response, null);
-          if (result.error) {
-            throw result.error;
+        try {
+          if (matchStatusCode(response, errorCodes)) {
+            const result = await this.#hooks.afterError(
+              context,
+              response,
+              null,
+            );
+            if (result.error) {
+              throw result.error;
+            }
+            response = result.response || response;
+          } else {
+            response = await this.#hooks.afterSuccess(context, response);
           }
-          response = result.response || response;
-        } else {
-          response = await this.#hooks.afterSuccess(context, response);
+        } finally {
+          await logResponse(this.#logger, response, req)
+            .catch(e => this.#logger?.log("Failed to log response:", e));
         }
-
-        await logResponse(this.#logger, response, req)
-          .catch(e => this.#logger?.log("Failed to log response:", e));
 
         return response;
       },
-      { config: retryConfig, statusCodes: retryCodes },
+      { config: options.retryConfig, statusCodes: options.retryCodes },
     ).then(
       (r) => OK(r),
       (err) => {

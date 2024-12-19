@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 import * as shared from "../shared/index.js";
 
 export type PartitionRequest = {
@@ -17,10 +20,6 @@ export type PartitionResponse = {
    */
   contentType: string;
   /**
-   * Successful Response
-   */
-  elements?: Array<{ [k: string]: any }> | undefined;
-  /**
    * HTTP response status code for this operation
    */
   statusCode: number;
@@ -28,6 +27,14 @@ export type PartitionResponse = {
    * Raw HTTP response; suitable for custom response parsing
    */
   rawResponse: Response;
+  /**
+   * Successful Response
+   */
+  csvElements?: string | undefined;
+  /**
+   * Successful Response
+   */
+  elements?: Array<{ [k: string]: any }> | undefined;
 };
 
 /** @internal */
@@ -79,6 +86,24 @@ export namespace PartitionRequest$ {
   export type Outbound = PartitionRequest$Outbound;
 }
 
+export function partitionRequestToJSON(
+  partitionRequest: PartitionRequest,
+): string {
+  return JSON.stringify(
+    PartitionRequest$outboundSchema.parse(partitionRequest),
+  );
+}
+
+export function partitionRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<PartitionRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PartitionRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PartitionRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const PartitionResponse$inboundSchema: z.ZodType<
   PartitionResponse,
@@ -86,24 +111,26 @@ export const PartitionResponse$inboundSchema: z.ZodType<
   unknown
 > = z.object({
   ContentType: z.string(),
-  Elements: z.array(z.record(z.any())).optional(),
   StatusCode: z.number().int(),
   RawResponse: z.instanceof(Response),
+  csv_elements: z.string().optional(),
+  elements: z.array(z.record(z.any())).optional(),
 }).transform((v) => {
   return remap$(v, {
     "ContentType": "contentType",
-    "Elements": "elements",
     "StatusCode": "statusCode",
     "RawResponse": "rawResponse",
+    "csv_elements": "csvElements",
   });
 });
 
 /** @internal */
 export type PartitionResponse$Outbound = {
   ContentType: string;
-  Elements?: Array<{ [k: string]: any }> | undefined;
   StatusCode: number;
   RawResponse: never;
+  csv_elements?: string | undefined;
+  elements?: Array<{ [k: string]: any }> | undefined;
 };
 
 /** @internal */
@@ -113,17 +140,18 @@ export const PartitionResponse$outboundSchema: z.ZodType<
   PartitionResponse
 > = z.object({
   contentType: z.string(),
-  elements: z.array(z.record(z.any())).optional(),
   statusCode: z.number().int(),
   rawResponse: z.instanceof(Response).transform(() => {
     throw new Error("Response cannot be serialized");
   }),
+  csvElements: z.string().optional(),
+  elements: z.array(z.record(z.any())).optional(),
 }).transform((v) => {
   return remap$(v, {
     contentType: "ContentType",
-    elements: "Elements",
     statusCode: "StatusCode",
     rawResponse: "RawResponse",
+    csvElements: "csv_elements",
   });
 });
 
@@ -138,4 +166,22 @@ export namespace PartitionResponse$ {
   export const outboundSchema = PartitionResponse$outboundSchema;
   /** @deprecated use `PartitionResponse$Outbound` instead. */
   export type Outbound = PartitionResponse$Outbound;
+}
+
+export function partitionResponseToJSON(
+  partitionResponse: PartitionResponse,
+): string {
+  return JSON.stringify(
+    PartitionResponse$outboundSchema.parse(partitionResponse),
+  );
+}
+
+export function partitionResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<PartitionResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PartitionResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PartitionResponse' from JSON`,
+  );
 }
