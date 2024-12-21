@@ -3,7 +3,10 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as shared from "../shared/index.js";
+import { SDKValidationError } from "./sdkvalidationerror.js";
 
 export type Detail = Array<shared.ValidationError> | string;
 
@@ -55,6 +58,20 @@ export namespace Detail$ {
   export const outboundSchema = Detail$outboundSchema;
   /** @deprecated use `Detail$Outbound` instead. */
   export type Outbound = Detail$Outbound;
+}
+
+export function detailToJSON(detail: Detail): string {
+  return JSON.stringify(Detail$outboundSchema.parse(detail));
+}
+
+export function detailFromJSON(
+  jsonString: string,
+): SafeParseResult<Detail, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Detail$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Detail' from JSON`,
+  );
 }
 
 /** @internal */

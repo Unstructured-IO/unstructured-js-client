@@ -4,12 +4,15 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../../lib/primitives.js";
+import { safeParse } from "../../../lib/schemas.js";
 import { blobLikeSchema } from "../../types/blobs.js";
 import {
   catchUnrecognizedEnum,
   OpenEnum,
   Unrecognized,
 } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export enum ChunkingStrategy {
   Basic = "basic",
@@ -44,6 +47,7 @@ export enum Strategy {
   HiRes = "hi_res",
   Auto = "auto",
   OcrOnly = "ocr_only",
+  OdOnly = "od_only",
 }
 /**
  * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: hi_res
@@ -168,6 +172,10 @@ export type PartitionParameters = {
    */
   strategy?: StrategyOpen | undefined;
   /**
+   * The OCR agent to use for table ocr inference.
+   */
+  tableOcrAgent?: string | null | undefined;
+  /**
    * When `True`, assign UUIDs to element IDs, which guarantees their uniqueness (useful when using them as primary keys in database). Otherwise a SHA-256 of element text is used. Default: `False`
    */
   uniqueElementIds?: boolean | undefined;
@@ -253,6 +261,20 @@ export namespace Files$ {
   export const outboundSchema = Files$outboundSchema;
   /** @deprecated use `Files$Outbound` instead. */
   export type Outbound = Files$Outbound;
+}
+
+export function filesToJSON(files: Files): string {
+  return JSON.stringify(Files$outboundSchema.parse(files));
+}
+
+export function filesFromJSON(
+  jsonString: string,
+): SafeParseResult<Files, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Files$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Files' from JSON`,
+  );
 }
 
 /** @internal */
@@ -356,6 +378,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   split_pdf_page_range: z.array(z.number().int()).optional(),
   starting_page_number: z.nullable(z.number().int()).optional(),
   strategy: Strategy$inboundSchema.default(Strategy.HiRes),
+  table_ocr_agent: z.nullable(z.string()).optional(),
   unique_element_ids: z.boolean().default(false),
   xml_keep_tags: z.boolean().default(false),
 }).transform((v) => {
@@ -383,6 +406,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
     "split_pdf_page": "splitPdfPage",
     "split_pdf_page_range": "splitPdfPageRange",
     "starting_page_number": "startingPageNumber",
+    "table_ocr_agent": "tableOcrAgent",
     "unique_element_ids": "uniqueElementIds",
     "xml_keep_tags": "xmlKeepTags",
   });
@@ -419,6 +443,7 @@ export type PartitionParameters$Outbound = {
   split_pdf_page_range?: Array<number> | undefined;
   starting_page_number?: number | null | undefined;
   strategy: string;
+  table_ocr_agent?: string | null | undefined;
   unique_element_ids: boolean;
   xml_keep_tags: boolean;
 };
@@ -460,6 +485,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   splitPdfPageRange: z.array(z.number().int()).optional(),
   startingPageNumber: z.nullable(z.number().int()).optional(),
   strategy: Strategy$outboundSchema.default(Strategy.HiRes),
+  tableOcrAgent: z.nullable(z.string()).optional(),
   uniqueElementIds: z.boolean().default(false),
   xmlKeepTags: z.boolean().default(false),
 }).transform((v) => {
@@ -487,6 +513,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
     splitPdfPage: "split_pdf_page",
     splitPdfPageRange: "split_pdf_page_range",
     startingPageNumber: "starting_page_number",
+    tableOcrAgent: "table_ocr_agent",
     uniqueElementIds: "unique_element_ids",
     xmlKeepTags: "xml_keep_tags",
   });
@@ -503,4 +530,22 @@ export namespace PartitionParameters$ {
   export const outboundSchema = PartitionParameters$outboundSchema;
   /** @deprecated use `PartitionParameters$Outbound` instead. */
   export type Outbound = PartitionParameters$Outbound;
+}
+
+export function partitionParametersToJSON(
+  partitionParameters: PartitionParameters,
+): string {
+  return JSON.stringify(
+    PartitionParameters$outboundSchema.parse(partitionParameters),
+  );
+}
+
+export function partitionParametersFromJSON(
+  jsonString: string,
+): SafeParseResult<PartitionParameters, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PartitionParameters$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PartitionParameters' from JSON`,
+  );
 }
