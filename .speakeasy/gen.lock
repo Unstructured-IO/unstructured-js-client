@@ -1,26 +1,27 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 0ecb1bbbef6c9805d6a3edcc0afd098a
-  docVersion: 1.0.51
-  speakeasyVersion: 1.422.1
-  generationVersion: 2.438.15
-  releaseVersion: 0.18.2
-  configChecksum: ca25abf7161ef39bf7793f0e79caf68e
+  docChecksum: 4717c00d28425bfad21b5c8706ed4ca7
+  docVersion: 1.0.58
+  speakeasyVersion: 1.468.6
+  generationVersion: 2.493.13
+  releaseVersion: 0.19.0
+  configChecksum: 756522998ca4a24ef07ae29599125e94
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
   published: true
 features:
   typescript:
+    acceptHeaders: 2.81.2
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.11
-    core: 3.18.2
+    core: 3.18.14
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
-    envVarSecurityUsage: 0.1.1
-    examples: 2.81.4
-    globalSecurity: 2.82.11
+    envVarSecurityUsage: 0.1.2
+    examples: 2.81.5
+    globalSecurity: 2.82.12
     globalSecurityCallbacks: 0.1.0
     globalServerURLs: 2.82.4
     nameOverrides: 2.81.2
@@ -28,18 +29,18 @@ features:
     openEnums: 0.1.1
     responseFormat: 0.2.3
     retries: 2.83.0
-    sdkHooks: 0.1.0
+    sdkHooks: 0.2.0
     serverIDs: 2.81.2
-    unions: 2.85.7
+    unions: 2.85.8
     uploadStreams: 0.1.0
 generatedFiles:
   - .eslintrc.cjs
   - .gitattributes
   - .npmignore
-  - CONTRIBUTING.md
   - FUNCTIONS.md
   - RUNTIMES.md
   - USAGE.md
+  - docs/lib/utils/retryconfig.md
   - docs/sdk/models/errors/detail.md
   - docs/sdk/models/errors/httpvalidationerror.md
   - docs/sdk/models/errors/servererror.md
@@ -53,6 +54,8 @@ generatedFiles:
   - docs/sdk/models/shared/security.md
   - docs/sdk/models/shared/strategy.md
   - docs/sdk/models/shared/validationerror.md
+  - docs/sdks/general/README.md
+  - docs/sdks/unstructuredclient/README.md
   - jsr.json
   - package.json
   - src/core.ts
@@ -108,7 +111,9 @@ examples:
       responses:
         "200":
           application/json: [{"type": "Title", "element_id": "6aa0ff22f91bbe7e26e8e25ca8052acd", "text": "LayoutParser: A Unified Toolkit for Deep Learning Based Document Image Analysis", "metadata": {"languages": ["eng"], "page_number": 1, "filename": "layout-parser-paper.pdf", "filetype": "application/pdf"}}]
+          text/csv: "<value>"
         "422":
           application/json: {"detail": []}
         5XX:
           application/json: {"detail": "An error occurred"}
+generatedTests: {}
