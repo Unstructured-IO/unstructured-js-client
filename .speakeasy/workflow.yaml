@@ -17,3 +17,5 @@ targets:
                 token: $NPM_TOKEN
         codeSamples:
             output: codeSamples.yaml
+            registry:
+                location: registry.speakeasyapi.dev/unstructured/unstructured5xr/my-source-typescript-code-samples

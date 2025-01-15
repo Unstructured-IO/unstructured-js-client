@@ -20,4 +20,5 @@ This is an open enum. Unrecognized values will be captured as the `Unrecognized<
 | `HiRes`                | hi_res                 |
 | `Auto`                 | auto                   |
 | `OcrOnly`              | ocr_only               |
+| `OdOnly`               | od_only                |
 | -                      | `Unrecognized<string>` |

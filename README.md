@@ -268,19 +268,17 @@ client.general.partition({
 
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
+<!-- $toc-max-depth=2 -->
+  * [SDK Installation](#sdk-installation)
+  * [SDK Example Usage](#sdk-example-usage)
+  * [Change the base URL](#change-the-base-url)
+  * [Custom HTTP Client](#custom-http-client)
+  * [Retries](#retries)
+  * [Requirements](#requirements)
+  * [Standalone functions](#standalone-functions)
+  * [File uploads](#file-uploads)
+  * [Debugging](#debugging)
 
-* [SDK Installation](#sdk-installation)
-* [Requirements](#requirements)
-* [SDK Example Usage](#sdk-example-usage)
-* [Available Resources and Operations](#available-resources-and-operations)
-* [Standalone functions](#standalone-functions)
-* [File uploads](#file-uploads)
-* [Retries](#retries)
-* [Error Handling](#error-handling)
-* [Server Selection](#server-selection)
-* [Custom HTTP Client](#custom-http-client)
-* [Authentication](#authentication)
-* [Debugging](#debugging)
 <!-- End Table of Contents [toc] -->
 
 <!-- Start Requirements [requirements] -->
