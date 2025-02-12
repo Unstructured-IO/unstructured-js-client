@@ -14,14 +14,6 @@ import {
 import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
-export enum ChunkingStrategy {
-  Basic = "basic",
-  ByPage = "by_page",
-  BySimilarity = "by_similarity",
-  ByTitle = "by_title",
-}
-export type ChunkingStrategyOpen = OpenEnum<typeof ChunkingStrategy>;
-
 export type Files = {
   content: ReadableStream<Uint8Array> | Blob | ArrayBuffer | Uint8Array;
   fileName: string;
@@ -62,7 +54,7 @@ export type PartitionParameters = {
   /**
    * Use one of the supported strategies to chunk the returned elements after partitioning. When 'chunking_strategy' is not specified, no chunking is performed and any other chunking parameters provided are ignored. Supported strategies: 'basic', 'by_page', 'by_similarity', or 'by_title'
    */
-  chunkingStrategy?: ChunkingStrategyOpen | null | undefined;
+  chunkingStrategy?: string | null | undefined;
   /**
    * If chunking strategy is set, combine elements until a section reaches a length of n chars. Default: 500
    */
@@ -184,38 +176,6 @@ export type PartitionParameters = {
    */
   xmlKeepTags?: boolean | undefined;
 };
-
-/** @internal */
-export const ChunkingStrategy$inboundSchema: z.ZodType<
-  ChunkingStrategyOpen,
-  z.ZodTypeDef,
-  unknown
-> = z
-  .union([
-    z.nativeEnum(ChunkingStrategy),
-    z.string().transform(catchUnrecognizedEnum),
-  ]);
-
-/** @internal */
-export const ChunkingStrategy$outboundSchema: z.ZodType<
-  ChunkingStrategyOpen,
-  z.ZodTypeDef,
-  ChunkingStrategyOpen
-> = z.union([
-  z.nativeEnum(ChunkingStrategy),
-  z.string().and(z.custom<Unrecognized<string>>()),
-]);
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace ChunkingStrategy$ {
-  /** @deprecated use `ChunkingStrategy$inboundSchema` instead. */
-  export const inboundSchema = ChunkingStrategy$inboundSchema;
-  /** @deprecated use `ChunkingStrategy$outboundSchema` instead. */
-  export const outboundSchema = ChunkingStrategy$outboundSchema;
-}
 
 /** @internal */
 export const Files$inboundSchema: z.ZodType<Files, z.ZodTypeDef, unknown> = z
@@ -348,7 +308,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   unknown
 > = z.object({
   files: z.lazy(() => Files$inboundSchema),
-  chunking_strategy: z.nullable(ChunkingStrategy$inboundSchema).optional(),
+  chunking_strategy: z.nullable(z.string()).optional(),
   combine_under_n_chars: z.nullable(z.number().int()).optional(),
   content_type: z.nullable(z.string()).optional(),
   coordinates: z.boolean().default(false),
@@ -455,7 +415,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   PartitionParameters
 > = z.object({
   files: z.lazy(() => Files$outboundSchema).or(blobLikeSchema),
-  chunkingStrategy: z.nullable(ChunkingStrategy$outboundSchema).optional(),
+  chunkingStrategy: z.nullable(z.string()).optional(),
   combineUnderNChars: z.nullable(z.number().int()).optional(),
   contentType: z.nullable(z.string()).optional(),
   coordinates: z.boolean().default(false),

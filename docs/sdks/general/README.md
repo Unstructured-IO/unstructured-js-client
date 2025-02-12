@@ -16,7 +16,6 @@ Description
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
 
@@ -24,12 +23,11 @@ async function run() {
   const result = await unstructuredClient.general.partition({
     partitionParameters: {
       files: await openAsBlob("example.file"),
-      chunkingStrategy: ChunkingStrategy.ByTitle,
+      chunkingStrategy: "by_title",
       splitPdfPageRange: [
         1,
         10,
       ],
-      strategy: Strategy.HiRes,
     },
   });
 
@@ -48,7 +46,6 @@ The standalone function version of this method:
 import { openAsBlob } from "node:fs";
 import { UnstructuredClientCore } from "unstructured-client/core.js";
 import { generalPartition } from "unstructured-client/funcs/generalPartition.js";
-import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
 
 // Use `UnstructuredClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -58,12 +55,11 @@ async function run() {
   const res = await generalPartition(unstructuredClient, {
     partitionParameters: {
       files: await openAsBlob("example.file"),
-      chunkingStrategy: ChunkingStrategy.ByTitle,
+      chunkingStrategy: "by_title",
       splitPdfPageRange: [
         1,
         10,
       ],
-      strategy: Strategy.HiRes,
     },
   });
 
