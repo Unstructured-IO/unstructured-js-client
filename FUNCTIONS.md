@@ -23,7 +23,6 @@ import { openAsBlob } from "node:fs";
 import { UnstructuredClientCore } from "unstructured-client/core.js";
 import { generalPartition } from "unstructured-client/funcs/generalPartition.js";
 import { SDKValidationError } from "unstructured-client/sdk/models/errors/sdkvalidationerror.js";
-import { ChunkingStrategy, Strategy } from "unstructured-client/sdk/models/shared";
 
 // Use `UnstructuredClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -33,12 +32,11 @@ async function run() {
   const res = await generalPartition(unstructuredClient, {
     partitionParameters: {
       files: await openAsBlob("example.file"),
-      chunkingStrategy: ChunkingStrategy.ByTitle,
+      chunkingStrategy: "by_title",
       splitPdfPageRange: [
         1,
         10,
       ],
-      strategy: Strategy.HiRes,
     },
   });
 
