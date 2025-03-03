@@ -7,7 +7,7 @@ The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. 
 ```typescript
 import { Strategy } from "unstructured-client/sdk/models/shared";
 
-let value: Strategy = Strategy.HiRes;
+let value: Strategy = Strategy.Vlm;
 ```
 
 ## Values
@@ -21,4 +21,5 @@ This is an open enum. Unrecognized values will be captured as the `Unrecognized<
 | `Auto`                 | auto                   |
 | `OcrOnly`              | ocr_only               |
 | `OdOnly`               | od_only                |
+| `Vlm`                  | vlm                    |
 | -                      | `Unrecognized<string>` |

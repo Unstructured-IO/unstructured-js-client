@@ -40,11 +40,59 @@ export enum Strategy {
   Auto = "auto",
   OcrOnly = "ocr_only",
   OdOnly = "od_only",
+  Vlm = "vlm",
 }
 /**
  * The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. Default: hi_res
  */
 export type StrategyOpen = OpenEnum<typeof Strategy>;
+
+/**
+ * The VLM Model to use.
+ */
+export enum PartitionParametersStrategy {
+  Claude35Sonnet20241022 = "claude-3-5-sonnet-20241022",
+  Gpt4o = "gpt-4o",
+  Gemini15Pro = "gemini-1.5-pro",
+  UsAmazonNovaProV10 = "us.amazon.nova-pro-v1:0",
+  UsAmazonNovaLiteV10 = "us.amazon.nova-lite-v1:0",
+  UsAnthropicClaude35Sonnet20241022V20 =
+    "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+  UsAnthropicClaude3Opus20240229V10 =
+    "us.anthropic.claude-3-opus-20240229-v1:0",
+  UsAnthropicClaude3Haiku20240307V10 =
+    "us.anthropic.claude-3-haiku-20240307-v1:0",
+  UsAnthropicClaude3Sonnet20240229V10 =
+    "us.anthropic.claude-3-sonnet-20240229-v1:0",
+  UsMetaLlama3290bInstructV10 = "us.meta.llama3-2-90b-instruct-v1:0",
+  UsMetaLlama3211bInstructV10 = "us.meta.llama3-2-11b-instruct-v1:0",
+  Gemini20Flash001 = "gemini-2.0-flash-001",
+}
+/**
+ * The VLM Model to use.
+ */
+export type PartitionParametersStrategyOpen = OpenEnum<
+  typeof PartitionParametersStrategy
+>;
+
+/**
+ * The VLM Model provider to use.
+ */
+export enum PartitionParametersSchemasStrategy {
+  Openai = "openai",
+  Anthropic = "anthropic",
+  Bedrock = "bedrock",
+  AnthropicBedrock = "anthropic_bedrock",
+  Vertexai = "vertexai",
+  Google = "google",
+  AzureOpenai = "azure_openai",
+}
+/**
+ * The VLM Model provider to use.
+ */
+export type PartitionParametersSchemasStrategyOpen = OpenEnum<
+  typeof PartitionParametersSchemasStrategy
+>;
 
 export type PartitionParameters = {
   /**
@@ -171,6 +219,14 @@ export type PartitionParameters = {
    * When `True`, assign UUIDs to element IDs, which guarantees their uniqueness (useful when using them as primary keys in database). Otherwise a SHA-256 of element text is used. Default: `False`
    */
   uniqueElementIds?: boolean | undefined;
+  /**
+   * The VLM Model to use.
+   */
+  vlmModel?: PartitionParametersStrategyOpen | undefined;
+  /**
+   * The VLM Model provider to use.
+   */
+  vlmModelProvider?: PartitionParametersSchemasStrategyOpen | undefined;
   /**
    * If `True`, will retain the XML tags in the output. Otherwise it will simply extract the text from within the tags. Only applies to XML documents.
    */
@@ -302,6 +358,71 @@ export namespace Strategy$ {
 }
 
 /** @internal */
+export const PartitionParametersStrategy$inboundSchema: z.ZodType<
+  PartitionParametersStrategyOpen,
+  z.ZodTypeDef,
+  unknown
+> = z
+  .union([
+    z.nativeEnum(PartitionParametersStrategy),
+    z.string().transform(catchUnrecognizedEnum),
+  ]);
+
+/** @internal */
+export const PartitionParametersStrategy$outboundSchema: z.ZodType<
+  PartitionParametersStrategyOpen,
+  z.ZodTypeDef,
+  PartitionParametersStrategyOpen
+> = z.union([
+  z.nativeEnum(PartitionParametersStrategy),
+  z.string().and(z.custom<Unrecognized<string>>()),
+]);
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace PartitionParametersStrategy$ {
+  /** @deprecated use `PartitionParametersStrategy$inboundSchema` instead. */
+  export const inboundSchema = PartitionParametersStrategy$inboundSchema;
+  /** @deprecated use `PartitionParametersStrategy$outboundSchema` instead. */
+  export const outboundSchema = PartitionParametersStrategy$outboundSchema;
+}
+
+/** @internal */
+export const PartitionParametersSchemasStrategy$inboundSchema: z.ZodType<
+  PartitionParametersSchemasStrategyOpen,
+  z.ZodTypeDef,
+  unknown
+> = z
+  .union([
+    z.nativeEnum(PartitionParametersSchemasStrategy),
+    z.string().transform(catchUnrecognizedEnum),
+  ]);
+
+/** @internal */
+export const PartitionParametersSchemasStrategy$outboundSchema: z.ZodType<
+  PartitionParametersSchemasStrategyOpen,
+  z.ZodTypeDef,
+  PartitionParametersSchemasStrategyOpen
+> = z.union([
+  z.nativeEnum(PartitionParametersSchemasStrategy),
+  z.string().and(z.custom<Unrecognized<string>>()),
+]);
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace PartitionParametersSchemasStrategy$ {
+  /** @deprecated use `PartitionParametersSchemasStrategy$inboundSchema` instead. */
+  export const inboundSchema = PartitionParametersSchemasStrategy$inboundSchema;
+  /** @deprecated use `PartitionParametersSchemasStrategy$outboundSchema` instead. */
+  export const outboundSchema =
+    PartitionParametersSchemasStrategy$outboundSchema;
+}
+
+/** @internal */
 export const PartitionParameters$inboundSchema: z.ZodType<
   PartitionParameters,
   z.ZodTypeDef,
@@ -340,6 +461,9 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   strategy: Strategy$inboundSchema.default(Strategy.HiRes),
   table_ocr_agent: z.nullable(z.string()).optional(),
   unique_element_ids: z.boolean().default(false),
+  vlm_model: PartitionParametersStrategy$inboundSchema.optional(),
+  vlm_model_provider: PartitionParametersSchemasStrategy$inboundSchema
+    .optional(),
   xml_keep_tags: z.boolean().default(false),
 }).transform((v) => {
   return remap$(v, {
@@ -368,6 +492,8 @@ export const PartitionParameters$inboundSchema: z.ZodType<
     "starting_page_number": "startingPageNumber",
     "table_ocr_agent": "tableOcrAgent",
     "unique_element_ids": "uniqueElementIds",
+    "vlm_model": "vlmModel",
+    "vlm_model_provider": "vlmModelProvider",
     "xml_keep_tags": "xmlKeepTags",
   });
 });
@@ -405,6 +531,8 @@ export type PartitionParameters$Outbound = {
   strategy: string;
   table_ocr_agent?: string | null | undefined;
   unique_element_ids: boolean;
+  vlm_model?: string | undefined;
+  vlm_model_provider?: string | undefined;
   xml_keep_tags: boolean;
 };
 
@@ -447,6 +575,9 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   strategy: Strategy$outboundSchema.default(Strategy.HiRes),
   tableOcrAgent: z.nullable(z.string()).optional(),
   uniqueElementIds: z.boolean().default(false),
+  vlmModel: PartitionParametersStrategy$outboundSchema.optional(),
+  vlmModelProvider: PartitionParametersSchemasStrategy$outboundSchema
+    .optional(),
   xmlKeepTags: z.boolean().default(false),
 }).transform((v) => {
   return remap$(v, {
@@ -475,6 +606,8 @@ export const PartitionParameters$outboundSchema: z.ZodType<
     startingPageNumber: "starting_page_number",
     tableOcrAgent: "table_ocr_agent",
     uniqueElementIds: "unique_element_ids",
+    vlmModel: "vlm_model",
+    vlmModelProvider: "vlm_model_provider",
     xmlKeepTags: "xml_keep_tags",
   });
 });

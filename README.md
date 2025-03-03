@@ -155,6 +155,10 @@ To change the default retry strategy for a single API call, simply provide a ret
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
+import {
+  PartitionParametersSchemasStrategy,
+  PartitionParametersStrategy,
+} from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
 
@@ -167,6 +171,8 @@ async function run() {
         1,
         10,
       ],
+      vlmModel: PartitionParametersStrategy.Gpt4o,
+      vlmModelProvider: PartitionParametersSchemasStrategy.Openai,
     },
   }, {
     retries: {
@@ -193,6 +199,10 @@ If you'd like to override the default retry strategy for all operations that sup
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
+import {
+  PartitionParametersSchemasStrategy,
+  PartitionParametersStrategy,
+} from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient({
   retryConfig: {
@@ -216,6 +226,8 @@ async function run() {
         1,
         10,
       ],
+      vlmModel: PartitionParametersStrategy.Gpt4o,
+      vlmModelProvider: PartitionParametersSchemasStrategy.Openai,
     },
   });
 
@@ -315,6 +327,10 @@ Certain SDK methods accept files as part of a multi-part request. It is possible
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
+import {
+  PartitionParametersSchemasStrategy,
+  PartitionParametersStrategy,
+} from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
 
@@ -327,6 +343,8 @@ async function run() {
         1,
         10,
       ],
+      vlmModel: PartitionParametersStrategy.Gpt4o,
+      vlmModelProvider: PartitionParametersSchemasStrategy.Openai,
     },
   });
 
