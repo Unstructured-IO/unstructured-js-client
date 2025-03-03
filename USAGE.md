@@ -2,6 +2,10 @@
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
+import {
+  PartitionParametersSchemasStrategy,
+  PartitionParametersStrategy,
+} from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
 
@@ -14,6 +18,8 @@ async function run() {
         1,
         10,
       ],
+      vlmModel: PartitionParametersStrategy.Gpt4o,
+      vlmModelProvider: PartitionParametersSchemasStrategy.Openai,
     },
   });
 

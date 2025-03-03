@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 7fee91d87907efe050b134e8b5b5e567
-  docVersion: 1.0.68
-  speakeasyVersion: 1.488.0
-  generationVersion: 2.506.0
-  releaseVersion: 0.20.0
-  configChecksum: ded2fcd70f95791912c933a433b8800a
+  docChecksum: f2a95da32ec2c53d1f83bd13ad725334
+  docVersion: 1.0.78
+  speakeasyVersion: 1.509.0
+  generationVersion: 2.539.0
+  releaseVersion: 0.21.0
+  configChecksum: 13f5e8bad8597e9ba62b12b6ffeed9c5
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -16,16 +16,16 @@ features:
     acceptHeaders: 2.81.2
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.11
-    core: 3.19.0
+    core: 3.21.3
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.2
     examples: 2.81.5
-    globalSecurity: 2.82.12
+    globalSecurity: 2.82.13
     globalSecurityCallbacks: 0.1.0
     globalServerURLs: 2.82.4
     nameOverrides: 2.81.2
-    nullables: 0.1.0
+    nullables: 0.1.1
     openEnums: 0.1.1
     responseFormat: 0.2.3
     retries: 2.83.0
@@ -49,6 +49,8 @@ generatedFiles:
   - docs/sdk/models/shared/loc.md
   - docs/sdk/models/shared/outputformat.md
   - docs/sdk/models/shared/partitionparameters.md
+  - docs/sdk/models/shared/partitionparametersschemasstrategy.md
+  - docs/sdk/models/shared/partitionparametersstrategy.md
   - docs/sdk/models/shared/security.md
   - docs/sdk/models/shared/strategy.md
   - docs/sdk/models/shared/validationerror.md
@@ -93,6 +95,7 @@ generatedFiles:
   - src/sdk/models/shared/security.ts
   - src/sdk/models/shared/validationerror.ts
   - src/sdk/sdk.ts
+  - src/sdk/types/async.ts
   - src/sdk/types/blobs.ts
   - src/sdk/types/constdatetime.ts
   - src/sdk/types/enums.ts
@@ -106,7 +109,7 @@ examples:
   partition:
     speakeasy-default-partition:
       requestBody:
-        multipart/form-data: {"chunking_strategy": "by_title", "coordinates": false, "files": {"": "{\"summary\":\"File to be partitioned\",\"externalValue\":\"https://github.com/Unstructured-IO/unstructured/blob/98d3541909f64290b5efb65a226fc3ee8a7cc5ee/example-docs/layout-parser-paper.pdf\"}"}, "include_page_breaks": false, "include_slide_notes": true, "multipage_sections": true, "output_format": "application/json", "overlap": 0, "overlap_all": false, "pdf_infer_table_structure": true, "split_pdf_allow_failed": false, "split_pdf_concurrency_level": 5, "split_pdf_page": true, "split_pdf_page_range": [1, 10], "strategy": "hi_res", "unique_element_ids": false, "xml_keep_tags": false}
+        multipart/form-data: {"chunking_strategy": "by_title", "coordinates": false, "files": {"": "{\"summary\":\"File to be partitioned\",\"externalValue\":\"https://github.com/Unstructured-IO/unstructured/blob/98d3541909f64290b5efb65a226fc3ee8a7cc5ee/example-docs/layout-parser-paper.pdf\"}"}, "include_page_breaks": false, "include_slide_notes": true, "multipage_sections": true, "output_format": "application/json", "overlap": 0, "overlap_all": false, "pdf_infer_table_structure": true, "split_pdf_allow_failed": false, "split_pdf_concurrency_level": 5, "split_pdf_page": true, "split_pdf_page_range": [1, 10], "strategy": "vlm", "unique_element_ids": false, "vlm_model": "gpt-4o", "vlm_model_provider": "openai", "xml_keep_tags": false}
       responses:
         "200":
           application/json: [{"type": "Title", "element_id": "6aa0ff22f91bbe7e26e8e25ca8052acd", "text": "LayoutParser: A Unified Toolkit for Deep Learning Based Document Image Analysis", "metadata": {"languages": ["eng"], "page_number": 1, "filename": "layout-parser-paper.pdf", "filetype": "application/pdf"}}]

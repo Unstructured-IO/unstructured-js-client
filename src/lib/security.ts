@@ -3,7 +3,6 @@
  */
 
 import * as shared from "../sdk/models/shared/index.js";
-
 type OAuth2PasswordFlow = {
   username: string;
   password?: string | undefined;

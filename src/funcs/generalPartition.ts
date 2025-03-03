@@ -22,6 +22,7 @@ import * as errors from "../sdk/models/errors/index.js";
 import { SDKError } from "../sdk/models/errors/sdkerror.js";
 import { SDKValidationError } from "../sdk/models/errors/sdkvalidationerror.js";
 import * as operations from "../sdk/models/operations/index.js";
+import { APICall, APIPromise } from "../sdk/types/async.js";
 import { isBlobLike } from "../sdk/types/blobs.js";
 import { Result } from "../sdk/types/fp.js";
 import { isReadableStream } from "../sdk/types/streams.js";
@@ -37,11 +38,11 @@ export enum PartitionAcceptEnum {
  * @remarks
  * Description
  */
-export async function generalPartition(
+export function generalPartition(
   client: UnstructuredClientCore,
   request: operations.PartitionRequest,
   options?: RequestOptions & { acceptHeaderOverride?: PartitionAcceptEnum },
-): Promise<
+): APIPromise<
   Result<
     operations.PartitionResponse,
     | errors.HTTPValidationError
@@ -55,13 +56,41 @@ export async function generalPartition(
     | ConnectionError
   >
 > {
+  return new APIPromise($do(
+    client,
+    request,
+    options,
+  ));
+}
+
+async function $do(
+  client: UnstructuredClientCore,
+  request: operations.PartitionRequest,
+  options?: RequestOptions & { acceptHeaderOverride?: PartitionAcceptEnum },
+): Promise<
+  [
+    Result<
+      operations.PartitionResponse,
+      | errors.HTTPValidationError
+      | errors.ServerError
+      | SDKError
+      | SDKValidationError
+      | UnexpectedClientError
+      | InvalidRequestError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | ConnectionError
+    >,
+    APICall,
+  ]
+> {
   const parsed = safeParse(
     request,
     (value) => operations.PartitionRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
-    return parsed;
+    return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
   const body = new FormData();
@@ -266,6 +295,16 @@ export async function generalPartition(
       payload.partition_parameters.unique_element_ids,
     );
   }
+  if (payload.partition_parameters.vlm_model !== undefined) {
+    appendForm(body, "vlm_model", payload.partition_parameters.vlm_model);
+  }
+  if (payload.partition_parameters.vlm_model_provider !== undefined) {
+    appendForm(
+      body,
+      "vlm_model_provider",
+      payload.partition_parameters.vlm_model_provider,
+    );
+  }
   if (payload.partition_parameters.xml_keep_tags !== undefined) {
     appendForm(
       body,
@@ -290,6 +329,7 @@ export async function generalPartition(
   const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const context = {
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "partition",
     oAuth2Scopes: [],
 
@@ -322,7 +362,7 @@ export async function generalPartition(
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
-    return requestRes;
+    return [requestRes, { status: "invalid" }];
   }
   const req = requestRes.value;
 
@@ -333,7 +373,7 @@ export async function generalPartition(
     retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
@@ -369,8 +409,8 @@ export async function generalPartition(
     M.jsonErr("5XX", errors.ServerError$inboundSchema),
   )(response, { extraFields: responseFields });
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }
