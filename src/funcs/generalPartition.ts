@@ -349,7 +349,7 @@ async function $do(
         retryConnectionErrors: true,
       }
       || { strategy: "none" },
-    retryCodes: options?.retryCodes || ["502", "503", "504"],
+    retryCodes: options?.retryCodes || ["5xx"],
   };
 
   const requestRes = client._createRequest(context, {

@@ -156,8 +156,8 @@ To change the default retry strategy for a single API call, simply provide a ret
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 import {
-  PartitionParametersSchemasStrategy,
-  PartitionParametersStrategy,
+  VLMModel,
+  VLMModelProvider,
 } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
@@ -171,8 +171,8 @@ async function run() {
         1,
         10,
       ],
-      vlmModel: PartitionParametersStrategy.Gpt4o,
-      vlmModelProvider: PartitionParametersSchemasStrategy.Openai,
+      vlmModel: VLMModel.Gpt4o,
+      vlmModelProvider: VLMModelProvider.Openai,
     },
   }, {
     retries: {
@@ -200,8 +200,8 @@ If you'd like to override the default retry strategy for all operations that sup
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 import {
-  PartitionParametersSchemasStrategy,
-  PartitionParametersStrategy,
+  VLMModel,
+  VLMModelProvider,
 } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient({
@@ -226,8 +226,8 @@ async function run() {
         1,
         10,
       ],
-      vlmModel: PartitionParametersStrategy.Gpt4o,
-      vlmModelProvider: PartitionParametersSchemasStrategy.Openai,
+      vlmModel: VLMModel.Gpt4o,
+      vlmModelProvider: VLMModelProvider.Openai,
     },
   });
 
@@ -328,8 +328,8 @@ Certain SDK methods accept files as part of a multi-part request. It is possible
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 import {
-  PartitionParametersSchemasStrategy,
-  PartitionParametersStrategy,
+  VLMModel,
+  VLMModelProvider,
 } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
@@ -343,8 +343,8 @@ async function run() {
         1,
         10,
       ],
-      vlmModel: PartitionParametersStrategy.Gpt4o,
-      vlmModelProvider: PartitionParametersSchemasStrategy.Openai,
+      vlmModel: VLMModel.Gpt4o,
+      vlmModelProvider: VLMModelProvider.Openai,
     },
   });
 
