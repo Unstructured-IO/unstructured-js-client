@@ -7,8 +7,8 @@ import {
   pdfPagesToBlob,
   splitPdf,
 } from "../../../src/hooks/custom/utils";
-import { getOptimalSplitSize } from "../../../hooks/custom/utils/index";
-import { MAX_PAGES_PER_THREAD, MIN_PAGES_PER_THREAD } from "../../../hooks/custom/common";
+import { getOptimalSplitSize } from "../../../src/hooks/custom/utils";
+import { MAX_PAGES_PER_THREAD, MIN_PAGES_PER_THREAD } from "../../../src/hooks/custom/common.js";
 
 describe("Pdf utility functions", () => {
   const filename = "test/data/layout-parser-paper.pdf";
