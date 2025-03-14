@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: f2a95da32ec2c53d1f83bd13ad725334
-  docVersion: 1.0.78
-  speakeasyVersion: 1.509.0
-  generationVersion: 2.539.0
-  releaseVersion: 0.21.0
-  configChecksum: 13f5e8bad8597e9ba62b12b6ffeed9c5
+  docChecksum: 2e7f129641ad96d49fcda2ceb173d43c
+  docVersion: 1.0.81
+  speakeasyVersion: 1.517.3
+  generationVersion: 2.548.6
+  releaseVersion: 0.21.1
+  configChecksum: e65806695f558e569e7327b62f146277
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -16,7 +16,7 @@ features:
     acceptHeaders: 2.81.2
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.11
-    core: 3.21.3
+    core: 3.21.4
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.2
@@ -49,11 +49,11 @@ generatedFiles:
   - docs/sdk/models/shared/loc.md
   - docs/sdk/models/shared/outputformat.md
   - docs/sdk/models/shared/partitionparameters.md
-  - docs/sdk/models/shared/partitionparametersschemasstrategy.md
-  - docs/sdk/models/shared/partitionparametersstrategy.md
   - docs/sdk/models/shared/security.md
   - docs/sdk/models/shared/strategy.md
   - docs/sdk/models/shared/validationerror.md
+  - docs/sdk/models/shared/vlmmodel.md
+  - docs/sdk/models/shared/vlmmodelprovider.md
   - docs/sdks/general/README.md
   - docs/sdks/unstructuredclient/README.md
   - eslint.config.mjs

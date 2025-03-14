@@ -1,13 +1,13 @@
-# PartitionParametersStrategy
+# VLMModel
 
 The VLM Model to use.
 
 ## Example Usage
 
 ```typescript
-import { PartitionParametersStrategy } from "unstructured-client/sdk/models/shared";
+import { VLMModel } from "unstructured-client/sdk/models/shared";
 
-let value: PartitionParametersStrategy = PartitionParametersStrategy.Gpt4o;
+let value: VLMModel = VLMModel.Gpt4o;
 ```
 
 ## Values

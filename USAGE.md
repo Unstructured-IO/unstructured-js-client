@@ -3,8 +3,8 @@
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 import {
-  PartitionParametersSchemasStrategy,
-  PartitionParametersStrategy,
+  VLMModel,
+  VLMModelProvider,
 } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
@@ -18,8 +18,8 @@ async function run() {
         1,
         10,
       ],
-      vlmModel: PartitionParametersStrategy.Gpt4o,
-      vlmModelProvider: PartitionParametersSchemasStrategy.Openai,
+      vlmModel: VLMModel.Gpt4o,
+      vlmModelProvider: VLMModelProvider.Openai,
     },
   });
 

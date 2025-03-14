@@ -1,14 +1,13 @@
-# PartitionParametersSchemasStrategy
+# VLMModelProvider
 
 The VLM Model provider to use.
 
 ## Example Usage
 
 ```typescript
-import { PartitionParametersSchemasStrategy } from "unstructured-client/sdk/models/shared";
+import { VLMModelProvider } from "unstructured-client/sdk/models/shared";
 
-let value: PartitionParametersSchemasStrategy =
-  PartitionParametersSchemasStrategy.Openai;
+let value: VLMModelProvider = VLMModelProvider.Openai;
 ```
 
 ## Values

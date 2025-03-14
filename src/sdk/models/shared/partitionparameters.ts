@@ -50,7 +50,7 @@ export type StrategyOpen = OpenEnum<typeof Strategy>;
 /**
  * The VLM Model to use.
  */
-export enum PartitionParametersStrategy {
+export enum VLMModel {
   Claude35Sonnet20241022 = "claude-3-5-sonnet-20241022",
   Gpt4o = "gpt-4o",
   Gemini15Pro = "gemini-1.5-pro",
@@ -71,14 +71,12 @@ export enum PartitionParametersStrategy {
 /**
  * The VLM Model to use.
  */
-export type PartitionParametersStrategyOpen = OpenEnum<
-  typeof PartitionParametersStrategy
->;
+export type VLMModelOpen = OpenEnum<typeof VLMModel>;
 
 /**
  * The VLM Model provider to use.
  */
-export enum PartitionParametersSchemasStrategy {
+export enum VLMModelProvider {
   Openai = "openai",
   Anthropic = "anthropic",
   Bedrock = "bedrock",
@@ -90,9 +88,7 @@ export enum PartitionParametersSchemasStrategy {
 /**
  * The VLM Model provider to use.
  */
-export type PartitionParametersSchemasStrategyOpen = OpenEnum<
-  typeof PartitionParametersSchemasStrategy
->;
+export type VLMModelProviderOpen = OpenEnum<typeof VLMModelProvider>;
 
 export type PartitionParameters = {
   /**
@@ -222,11 +218,11 @@ export type PartitionParameters = {
   /**
    * The VLM Model to use.
    */
-  vlmModel?: PartitionParametersStrategyOpen | undefined;
+  vlmModel?: VLMModelOpen | undefined;
   /**
    * The VLM Model provider to use.
    */
-  vlmModelProvider?: PartitionParametersSchemasStrategyOpen | undefined;
+  vlmModelProvider?: VLMModelProviderOpen | undefined;
   /**
    * If `True`, will retain the XML tags in the output. Otherwise it will simply extract the text from within the tags. Only applies to XML documents.
    */
@@ -358,23 +354,23 @@ export namespace Strategy$ {
 }
 
 /** @internal */
-export const PartitionParametersStrategy$inboundSchema: z.ZodType<
-  PartitionParametersStrategyOpen,
+export const VLMModel$inboundSchema: z.ZodType<
+  VLMModelOpen,
   z.ZodTypeDef,
   unknown
 > = z
   .union([
-    z.nativeEnum(PartitionParametersStrategy),
+    z.nativeEnum(VLMModel),
     z.string().transform(catchUnrecognizedEnum),
   ]);
 
 /** @internal */
-export const PartitionParametersStrategy$outboundSchema: z.ZodType<
-  PartitionParametersStrategyOpen,
+export const VLMModel$outboundSchema: z.ZodType<
+  VLMModelOpen,
   z.ZodTypeDef,
-  PartitionParametersStrategyOpen
+  VLMModelOpen
 > = z.union([
-  z.nativeEnum(PartitionParametersStrategy),
+  z.nativeEnum(VLMModel),
   z.string().and(z.custom<Unrecognized<string>>()),
 ]);
 
@@ -382,31 +378,31 @@ export const PartitionParametersStrategy$outboundSchema: z.ZodType<
  * @internal
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
-export namespace PartitionParametersStrategy$ {
-  /** @deprecated use `PartitionParametersStrategy$inboundSchema` instead. */
-  export const inboundSchema = PartitionParametersStrategy$inboundSchema;
-  /** @deprecated use `PartitionParametersStrategy$outboundSchema` instead. */
-  export const outboundSchema = PartitionParametersStrategy$outboundSchema;
+export namespace VLMModel$ {
+  /** @deprecated use `VLMModel$inboundSchema` instead. */
+  export const inboundSchema = VLMModel$inboundSchema;
+  /** @deprecated use `VLMModel$outboundSchema` instead. */
+  export const outboundSchema = VLMModel$outboundSchema;
 }
 
 /** @internal */
-export const PartitionParametersSchemasStrategy$inboundSchema: z.ZodType<
-  PartitionParametersSchemasStrategyOpen,
+export const VLMModelProvider$inboundSchema: z.ZodType<
+  VLMModelProviderOpen,
   z.ZodTypeDef,
   unknown
 > = z
   .union([
-    z.nativeEnum(PartitionParametersSchemasStrategy),
+    z.nativeEnum(VLMModelProvider),
     z.string().transform(catchUnrecognizedEnum),
   ]);
 
 /** @internal */
-export const PartitionParametersSchemasStrategy$outboundSchema: z.ZodType<
-  PartitionParametersSchemasStrategyOpen,
+export const VLMModelProvider$outboundSchema: z.ZodType<
+  VLMModelProviderOpen,
   z.ZodTypeDef,
-  PartitionParametersSchemasStrategyOpen
+  VLMModelProviderOpen
 > = z.union([
-  z.nativeEnum(PartitionParametersSchemasStrategy),
+  z.nativeEnum(VLMModelProvider),
   z.string().and(z.custom<Unrecognized<string>>()),
 ]);
 
@@ -414,12 +410,11 @@ export const PartitionParametersSchemasStrategy$outboundSchema: z.ZodType<
  * @internal
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
-export namespace PartitionParametersSchemasStrategy$ {
-  /** @deprecated use `PartitionParametersSchemasStrategy$inboundSchema` instead. */
-  export const inboundSchema = PartitionParametersSchemasStrategy$inboundSchema;
-  /** @deprecated use `PartitionParametersSchemasStrategy$outboundSchema` instead. */
-  export const outboundSchema =
-    PartitionParametersSchemasStrategy$outboundSchema;
+export namespace VLMModelProvider$ {
+  /** @deprecated use `VLMModelProvider$inboundSchema` instead. */
+  export const inboundSchema = VLMModelProvider$inboundSchema;
+  /** @deprecated use `VLMModelProvider$outboundSchema` instead. */
+  export const outboundSchema = VLMModelProvider$outboundSchema;
 }
 
 /** @internal */
@@ -461,9 +456,8 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   strategy: Strategy$inboundSchema.default(Strategy.HiRes),
   table_ocr_agent: z.nullable(z.string()).optional(),
   unique_element_ids: z.boolean().default(false),
-  vlm_model: PartitionParametersStrategy$inboundSchema.optional(),
-  vlm_model_provider: PartitionParametersSchemasStrategy$inboundSchema
-    .optional(),
+  vlm_model: VLMModel$inboundSchema.optional(),
+  vlm_model_provider: VLMModelProvider$inboundSchema.optional(),
   xml_keep_tags: z.boolean().default(false),
 }).transform((v) => {
   return remap$(v, {
@@ -575,9 +569,8 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   strategy: Strategy$outboundSchema.default(Strategy.HiRes),
   tableOcrAgent: z.nullable(z.string()).optional(),
   uniqueElementIds: z.boolean().default(false),
-  vlmModel: PartitionParametersStrategy$outboundSchema.optional(),
-  vlmModelProvider: PartitionParametersSchemasStrategy$outboundSchema
-    .optional(),
+  vlmModel: VLMModel$outboundSchema.optional(),
+  vlmModelProvider: VLMModelProvider$outboundSchema.optional(),
   xmlKeepTags: z.boolean().default(false),
 }).transform((v) => {
   return remap$(v, {
