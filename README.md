@@ -31,6 +31,56 @@ npm install unstructured-client --include=dev
 ```bash
 yarn add unstructured-client --dev
 ```
+
+### Model Context Protocol (MCP) Server
+
+This SDK is also an installable MCP server where the various SDK methods are
+exposed as tools that can be invoked by AI applications.
+
+> Node.js v20 or greater is required to run the MCP server.
+
+<details>
+<summary>Claude installation steps</summary>
+
+Add the following server definition to your `claude_desktop_config.json` file:
+
+```json
+{
+  "mcpServers": {
+    "Unstructured": {
+      "command": "npx",
+      "args": [
+        "-y", "--package", "unstructured-client",
+        "--",
+        "mcp", "start",
+      ]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary>Cursor installation steps</summary>
+
+Go to `Cursor Settings > Features > MCP Servers > Add new MCP server` and use the following settings:
+
+- Name: Unstructured
+- Type: `command`
+- Command:
+```sh
+npx -y --package unstructured-client -- mcp start
+```
+
+</details>
+
+For a full list of server arguments, run:
+
+```sh
+npx -y --package unstructured-client -- mcp start --help
+```
+
 <!-- No SDK Installation -->
 
 ## SDK Example Usage
