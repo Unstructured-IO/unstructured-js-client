@@ -5,8 +5,8 @@ management:
   docVersion: 1.0.81
   speakeasyVersion: 1.517.3
   generationVersion: 2.548.6
-  releaseVersion: 0.21.1
-  configChecksum: e65806695f558e569e7327b62f146277
+  releaseVersion: 0.22.1
+  configChecksum: 2cebaaef5f17f81677d245e1b6606f99
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -24,6 +24,7 @@ features:
     globalSecurity: 2.82.13
     globalSecurityCallbacks: 0.1.0
     globalServerURLs: 2.82.4
+    mcpServer: 0.7.0
     nameOverrides: 2.81.2
     nullables: 0.1.1
     openEnums: 0.1.1
@@ -80,6 +81,19 @@ generatedFiles:
   - src/lib/sdks.ts
   - src/lib/security.ts
   - src/lib/url.ts
+  - src/mcp-server/build.mts
+  - src/mcp-server/cli.ts
+  - src/mcp-server/cli/start/command.ts
+  - src/mcp-server/cli/start/impl.ts
+  - src/mcp-server/console-logger.ts
+  - src/mcp-server/extensions.ts
+  - src/mcp-server/mcp-server.ts
+  - src/mcp-server/resources.ts
+  - src/mcp-server/scopes.ts
+  - src/mcp-server/server.ts
+  - src/mcp-server/shared.ts
+  - src/mcp-server/tools.ts
+  - src/mcp-server/tools/generalPartition.ts
   - src/sdk/general.ts
   - src/sdk/index.ts
   - src/sdk/models/errors/httpclienterrors.ts

@@ -30,7 +30,7 @@ import {
   PARTITION_FORM_FILES_KEY,
   PARTITION_FORM_SPLIT_PDF_PAGE_KEY,
 } from "./common.js";
-import {retry, RetryConfig} from "../../lib/retries";
+import {retry, RetryConfig} from "../../lib/retries.js";
 
 /**
  * Represents a hook for splitting and sending PDF files as per page requests.
