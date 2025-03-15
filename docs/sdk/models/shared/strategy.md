@@ -7,7 +7,7 @@ The strategy to use for partitioning PDF/image. Options are fast, hi_res, auto. 
 ```typescript
 import { Strategy } from "unstructured-client/sdk/models/shared";
 
-let value: Strategy = Strategy.Vlm;
+let value: Strategy = Strategy.HiRes;
 ```
 
 ## Values

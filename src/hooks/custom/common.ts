@@ -1,4 +1,4 @@
-import {HTTPClient} from "../../lib/http";
+import {HTTPClient} from "../../lib/http.js";
 
 /**
  * Regular expression pattern for matching base hostnames in the form of "*.unstructuredapp.io".

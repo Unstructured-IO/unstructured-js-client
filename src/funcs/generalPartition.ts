@@ -378,11 +378,7 @@ async function $do(
   const response = doResult.value;
 
   const responseFields = {
-    ContentType: response.headers.get("content-type")
-      ?? "application/octet-stream",
-    StatusCode: response.status,
-    RawResponse: response,
-    Headers: {},
+    HttpMeta: { Response: response, Request: req },
   };
 
   const [result] = await M.match<
@@ -397,12 +393,9 @@ async function $do(
     | RequestTimeoutError
     | ConnectionError
   >(
-    M.json(200, operations.PartitionResponse$inboundSchema, {
-      key: "elements",
-    }),
+    M.json(200, operations.PartitionResponse$inboundSchema),
     M.text(200, operations.PartitionResponse$inboundSchema, {
       ctype: "text/csv",
-      key: "csv_elements",
     }),
     M.jsonErr(422, errors.HTTPValidationError$inboundSchema),
     M.fail("4XX"),

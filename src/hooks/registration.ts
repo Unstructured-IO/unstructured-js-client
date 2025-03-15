@@ -1,4 +1,4 @@
-import { Hooks } from "./types";
+import { Hooks } from "./types.js";
 
 import { LoggerHook } from "./custom/LoggerHook.js";
 import { SplitPdfHook } from "./custom/SplitPdfHook.js";
