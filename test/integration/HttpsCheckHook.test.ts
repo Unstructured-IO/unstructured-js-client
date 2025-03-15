@@ -38,6 +38,6 @@ describe("HttpsCheckHook integration tests", () => {
             },
         });
 
-        expect(res.statusCode).toEqual(200);
+        expect(res.length).toBeGreaterThan(0)
     });
 });
