@@ -195,19 +195,16 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
         },
       });
 
-      expect(respSplit.elements?.length).toEqual(respSingle.elements?.length);
-      expect(respSplit.contentType).toEqual(respSingle.contentType);
-      expect(respSplit.statusCode).toEqual(respSingle.statusCode);
-
+      expect(respSplit.length).toEqual(respSingle.length);
       // Remove 'parent_id' metadata
-      const splitElements = respSplit.elements?.map((el) => ({
+      const splitElements = respSplit.map((el) => ({
         ...el,
         metadata: {
           ...el['metadata'],
           parent_id: undefined,
         },
       }));
-      const singleElements = respSingle.elements?.map((el) => ({
+      const singleElements = respSingle.map((el) => ({
         ...el,
         metadata: {
           ...el['metadata'],
@@ -323,9 +320,9 @@ describe("SplitPdfHook integration tests page range parameter", () => {
       const filename = "test/data/layout-parser-paper.pdf";
       const file = { content: readFileSync(filename), fileName: filename };
 
-      let startingPageNumber = 1;
+      const startingPageNumber = 1;
       try {
-        let response = await client.general.partition({
+        const response = await client.general.partition({
           partitionParameters: {
             files: file,
             strategy: Strategy.Fast,
@@ -336,7 +333,7 @@ describe("SplitPdfHook integration tests page range parameter", () => {
 
         // Grab the set of page numbers in the result
         // Assert that all returned elements are in the expected page range
-        const pageNumbers = new Set(response?.elements?.map((element: any) => element.metadata.page_number));
+        const pageNumbers = new Set(response?.map((element: any) => element.metadata.page_number));
         const minPageNumber = expectedPages?.[0] ?? 0 + startingPageNumber - 1;
         const maxPageNumber = expectedPages?.[1] ?? 0 + startingPageNumber - 1;
 
@@ -390,8 +387,7 @@ describe("SplitPDF succeeds for large PDF with high concurrency", () => {
             },
         });
 
-        expect(res.statusCode).toEqual(200);
-        expect(res.elements?.length).toBeGreaterThan(0);
+        expect(res.length).toBeGreaterThan(0);
     },
     300000);
 });
@@ -440,10 +436,9 @@ describe("SplitPDF async can be used to send multiple files concurrently", () =>
             ...requestParams
           },
         });
-        expect(res.statusCode).toEqual(200);
-        expect(res.elements?.length).toBeGreaterThan(0);
-        if (res.elements) {
-          serialElements.push(res.elements);
+        expect(res.length).toBeGreaterThan(0);
+        if (res) {
+          serialElements.push(res);
         }
       }
 
@@ -456,10 +451,9 @@ describe("SplitPDF async can be used to send multiple files concurrently", () =>
       ));
 
       for (const res of concurrentResponses) {
-        expect(res.statusCode).toEqual(200);
-        expect(res.elements?.length).toBeGreaterThan(0);
-        if (res.elements) {
-          concurrentElements.push(res.elements);
+        expect(res.length).toBeGreaterThan(0);
+        if (res) {
+          concurrentElements.push(res);
         }
       }
 
