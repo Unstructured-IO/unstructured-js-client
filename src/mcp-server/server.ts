@@ -6,11 +6,14 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { UnstructuredClientCore } from "../core.js";
 import { SDKOptions } from "../lib/config.js";
 import type { ConsoleLogger } from "./console-logger.js";
+import { Register } from "./extensions.js";
+import { createRegisterPrompt } from "./prompts.js";
 import {
   createRegisterResource,
   createRegisterResourceTemplate,
 } from "./resources.js";
 import { MCPScope, mcpScopes } from "./scopes.js";
+import { registerMCPExtensions } from "./server.extensions.js";
 import { createRegisterTool } from "./tools.js";
 import { tool$generalPartition } from "./tools/generalPartition.js";
 
@@ -24,7 +27,7 @@ export function createMCPServer(deps: {
 }) {
   const server = new McpServer({
     name: "UnstructuredClient",
-    version: "0.22.0",
+    version: "0.23.0",
   });
 
   const client = new UnstructuredClientCore({
@@ -50,10 +53,13 @@ export function createMCPServer(deps: {
     client,
     scopes,
   );
-  const register = { tool, resource, resourceTemplate };
+  const prompt = createRegisterPrompt(deps.logger, server, client, scopes);
+  const register = { tool, resource, resourceTemplate, prompt };
   void register; // suppress unused warnings
 
   tool(tool$generalPartition);
+
+  registerMCPExtensions(register satisfies Register);
 
   return server;
 }
