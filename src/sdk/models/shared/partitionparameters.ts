@@ -176,6 +176,22 @@ export type PartitionParameters = {
    */
   pdfInferTableStructure?: boolean | undefined;
   /**
+   * If two characters are closer together than this margin they are considered part of the same line. The margin is specified relative to the width of the character.
+   */
+  pdfminerCharMargin?: number | null | undefined;
+  /**
+   * If two lines are close together they are considered to be part of the same paragraph. The margin is specified relative to the height of a line.
+   */
+  pdfminerLineMargin?: number | null | undefined;
+  /**
+   * If two characters have more overlap than this they are considered to be on the same line. The overlap is specified relative to the minimum height of both characters.
+   */
+  pdfminerLineOverlap?: number | null | undefined;
+  /**
+   * If two characters on the same line are further apart than this margin then they are considered to be two separate words, and an intermediate space will be added for readability. The margin is specified relative to the width of the character.
+   */
+  pdfminerWordMargin?: number | null | undefined;
+  /**
    * A value between 0.0 and 1.0 describing the minimum similarity two elements must have to be included in the same chunk. Note that similar elements may be separated to meet chunk-size criteria; this value can only guarantees that two elements with similarity below the threshold will appear in separate chunks.
    */
   similarityThreshold?: number | null | undefined;
@@ -446,6 +462,10 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   overlap: z.number().int().default(0),
   overlap_all: z.boolean().default(false),
   pdf_infer_table_structure: z.boolean().default(true),
+  pdfminer_char_margin: z.nullable(z.number()).optional(),
+  pdfminer_line_margin: z.nullable(z.number()).optional(),
+  pdfminer_line_overlap: z.nullable(z.number()).optional(),
+  pdfminer_word_margin: z.nullable(z.number()).optional(),
   similarity_threshold: z.nullable(z.number()).optional(),
   skip_infer_table_types: z.array(z.string()).optional(),
   split_pdf_allow_failed: z.boolean().default(false),
@@ -477,6 +497,10 @@ export const PartitionParameters$inboundSchema: z.ZodType<
     "output_format": "outputFormat",
     "overlap_all": "overlapAll",
     "pdf_infer_table_structure": "pdfInferTableStructure",
+    "pdfminer_char_margin": "pdfminerCharMargin",
+    "pdfminer_line_margin": "pdfminerLineMargin",
+    "pdfminer_line_overlap": "pdfminerLineOverlap",
+    "pdfminer_word_margin": "pdfminerWordMargin",
     "similarity_threshold": "similarityThreshold",
     "skip_infer_table_types": "skipInferTableTypes",
     "split_pdf_allow_failed": "splitPdfAllowFailed",
@@ -515,6 +539,10 @@ export type PartitionParameters$Outbound = {
   overlap: number;
   overlap_all: boolean;
   pdf_infer_table_structure: boolean;
+  pdfminer_char_margin?: number | null | undefined;
+  pdfminer_line_margin?: number | null | undefined;
+  pdfminer_line_overlap?: number | null | undefined;
+  pdfminer_word_margin?: number | null | undefined;
   similarity_threshold?: number | null | undefined;
   skip_infer_table_types?: Array<string> | undefined;
   split_pdf_allow_failed: boolean;
@@ -559,6 +587,10 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   overlap: z.number().int().default(0),
   overlapAll: z.boolean().default(false),
   pdfInferTableStructure: z.boolean().default(true),
+  pdfminerCharMargin: z.nullable(z.number()).optional(),
+  pdfminerLineMargin: z.nullable(z.number()).optional(),
+  pdfminerLineOverlap: z.nullable(z.number()).optional(),
+  pdfminerWordMargin: z.nullable(z.number()).optional(),
   similarityThreshold: z.nullable(z.number()).optional(),
   skipInferTableTypes: z.array(z.string()).optional(),
   splitPdfAllowFailed: z.boolean().default(false),
@@ -590,6 +622,10 @@ export const PartitionParameters$outboundSchema: z.ZodType<
     outputFormat: "output_format",
     overlapAll: "overlap_all",
     pdfInferTableStructure: "pdf_infer_table_structure",
+    pdfminerCharMargin: "pdfminer_char_margin",
+    pdfminerLineMargin: "pdfminer_line_margin",
+    pdfminerLineOverlap: "pdfminer_line_overlap",
+    pdfminerWordMargin: "pdfminer_word_margin",
     similarityThreshold: "similarity_threshold",
     skipInferTableTypes: "skip_infer_table_types",
     splitPdfAllowFailed: "split_pdf_allow_failed",

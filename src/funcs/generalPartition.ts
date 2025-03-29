@@ -229,6 +229,34 @@ async function $do(
       payload.partition_parameters.pdf_infer_table_structure,
     );
   }
+  if (payload.partition_parameters.pdfminer_char_margin !== undefined) {
+    appendForm(
+      body,
+      "pdfminer_char_margin",
+      payload.partition_parameters.pdfminer_char_margin,
+    );
+  }
+  if (payload.partition_parameters.pdfminer_line_margin !== undefined) {
+    appendForm(
+      body,
+      "pdfminer_line_margin",
+      payload.partition_parameters.pdfminer_line_margin,
+    );
+  }
+  if (payload.partition_parameters.pdfminer_line_overlap !== undefined) {
+    appendForm(
+      body,
+      "pdfminer_line_overlap",
+      payload.partition_parameters.pdfminer_line_overlap,
+    );
+  }
+  if (payload.partition_parameters.pdfminer_word_margin !== undefined) {
+    appendForm(
+      body,
+      "pdfminer_word_margin",
+      payload.partition_parameters.pdfminer_word_margin,
+    );
+  }
   if (payload.partition_parameters.similarity_threshold !== undefined) {
     appendForm(
       body,
