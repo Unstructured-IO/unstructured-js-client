@@ -13,10 +13,6 @@ import { Params, pathToFunc } from "./url.js";
  */
 export const ServerSaasApi = "saas-api";
 /**
- * Hosted API Free
- */
-export const ServerFreeApi = "free-api";
-/**
  * Development server
  */
 export const ServerDevelopment = "development";
@@ -25,7 +21,6 @@ export const ServerDevelopment = "development";
  */
 export const ServerList = {
   [ServerSaasApi]: "https://api.unstructuredapp.io",
-  [ServerFreeApi]: "https://api.unstructured.io",
   [ServerDevelopment]: "http://localhost:8000",
 } as const;
 
@@ -68,9 +63,9 @@ export function serverURLFromOptions(options: SDKOptions): URL | null {
 
 export const SDK_METADATA = {
   language: "typescript",
-  openapiDocVersion: "1.1.4",
-  sdkVersion: "0.24.0",
-  genVersion: "2.563.0",
+  openapiDocVersion: "1.1.7",
+  sdkVersion: "0.24.1",
+  genVersion: "2.568.2",
   userAgent:
-    "speakeasy-sdk/typescript 0.24.0 2.563.0 1.1.4 unstructured-client",
+    "speakeasy-sdk/typescript 0.24.1 2.568.2 1.1.7 unstructured-client",
 } as const;

@@ -17,6 +17,7 @@ This is an open enum. Unrecognized values will be captured as the `Unrecognized<
 | Name                                         | Value                                        |
 | -------------------------------------------- | -------------------------------------------- |
 | `Claude35Sonnet20241022`                     | claude-3-5-sonnet-20241022                   |
+| `Claude37Sonnet20250219`                     | claude-3-7-sonnet-20250219                   |
 | `Gpt4o`                                      | gpt-4o                                       |
 | `Gemini15Pro`                                | gemini-1.5-pro                               |
 | `UsAmazonNovaProV10`                         | us.amazon.nova-pro-v1:0                      |

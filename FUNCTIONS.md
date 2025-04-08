@@ -32,8 +32,8 @@ const unstructuredClient = new UnstructuredClientCore();
 async function run() {
   const res = await generalPartition(unstructuredClient, {
     partitionParameters: {
-      files: await openAsBlob("example.file"),
       chunkingStrategy: "by_title",
+      files: await openAsBlob("example.file"),
       splitPdfPageRange: [
         1,
         10,
