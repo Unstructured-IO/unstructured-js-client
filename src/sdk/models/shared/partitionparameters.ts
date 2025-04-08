@@ -52,6 +52,7 @@ export type StrategyOpen = OpenEnum<typeof Strategy>;
  */
 export enum VLMModel {
   Claude35Sonnet20241022 = "claude-3-5-sonnet-20241022",
+  Claude37Sonnet20250219 = "claude-3-7-sonnet-20250219",
   Gpt4o = "gpt-4o",
   Gemini15Pro = "gemini-1.5-pro",
   UsAmazonNovaProV10 = "us.amazon.nova-pro-v1:0",
@@ -92,10 +93,6 @@ export type VLMModelProviderOpen = OpenEnum<typeof VLMModelProvider>;
 
 export type PartitionParameters = {
   /**
-   * The file to extract
-   */
-  files: Files | Blob;
-  /**
    * Use one of the supported strategies to chunk the returned elements after partitioning. When 'chunking_strategy' is not specified, no chunking is performed and any other chunking parameters provided are ignored. Supported strategies: 'basic', 'by_page', 'by_similarity', or 'by_title'
    */
   chunkingStrategy?: string | null | undefined;
@@ -119,6 +116,10 @@ export type PartitionParameters = {
    * The types of elements to extract, for use in extracting image blocks as base64 encoded data stored in metadata fields.
    */
   extractImageBlockTypes?: Array<string> | undefined;
+  /**
+   * The file to extract
+   */
+  files: Files | Blob;
   /**
    * If file is gzipped, use this content type after unzipping.
    */
@@ -439,13 +440,13 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   z.ZodTypeDef,
   unknown
 > = z.object({
-  files: z.lazy(() => Files$inboundSchema),
   chunking_strategy: z.nullable(z.string()).optional(),
   combine_under_n_chars: z.nullable(z.number().int()).optional(),
   content_type: z.nullable(z.string()).optional(),
   coordinates: z.boolean().default(false),
   encoding: z.nullable(z.string()).optional(),
   extract_image_block_types: z.array(z.string()).optional(),
+  files: z.lazy(() => Files$inboundSchema),
   gz_uncompressed_content_type: z.nullable(z.string()).optional(),
   hi_res_model_name: z.nullable(z.string()).optional(),
   include_orig_elements: z.nullable(z.boolean()).optional(),
@@ -518,13 +519,13 @@ export const PartitionParameters$inboundSchema: z.ZodType<
 
 /** @internal */
 export type PartitionParameters$Outbound = {
-  files: Files$Outbound | Blob;
   chunking_strategy?: string | null | undefined;
   combine_under_n_chars?: number | null | undefined;
   content_type?: string | null | undefined;
   coordinates: boolean;
   encoding?: string | null | undefined;
   extract_image_block_types?: Array<string> | undefined;
+  files: Files$Outbound | Blob;
   gz_uncompressed_content_type?: string | null | undefined;
   hi_res_model_name?: string | null | undefined;
   include_orig_elements?: boolean | null | undefined;
@@ -564,13 +565,13 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   z.ZodTypeDef,
   PartitionParameters
 > = z.object({
-  files: z.lazy(() => Files$outboundSchema).or(blobLikeSchema),
   chunkingStrategy: z.nullable(z.string()).optional(),
   combineUnderNChars: z.nullable(z.number().int()).optional(),
   contentType: z.nullable(z.string()).optional(),
   coordinates: z.boolean().default(false),
   encoding: z.nullable(z.string()).optional(),
   extractImageBlockTypes: z.array(z.string()).optional(),
+  files: z.lazy(() => Files$outboundSchema).or(blobLikeSchema),
   gzUncompressedContentType: z.nullable(z.string()).optional(),
   hiResModelName: z.nullable(z.string()).optional(),
   includeOrigElements: z.nullable(z.boolean()).optional(),

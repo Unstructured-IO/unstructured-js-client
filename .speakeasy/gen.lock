@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 836a71c214bbd252ed63f3ce3ba6b20f
-  docVersion: 1.1.4
-  speakeasyVersion: 1.526.0
-  generationVersion: 2.563.0
-  releaseVersion: 0.24.0
-  configChecksum: bf57ed240e6647b8f46d61e7a668981f
+  docChecksum: 9e84e8d53fbc7c48d4bf35240b476a5b
+  docVersion: 1.1.7
+  speakeasyVersion: 1.531.0
+  generationVersion: 2.568.2
+  releaseVersion: 0.24.1
+  configChecksum: e318c02067c106739f38d2f8e11f5407
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -16,7 +16,7 @@ features:
     acceptHeaders: 2.81.2
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.11
-    core: 3.21.4
+    core: 3.21.5
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.2
@@ -24,7 +24,7 @@ features:
     globalSecurity: 2.82.13
     globalSecurityCallbacks: 0.1.0
     globalServerURLs: 2.82.4
-    mcpServer: 0.9.0
+    mcpServer: 0.9.1
     nameOverrides: 2.81.2
     nullables: 0.1.1
     openEnums: 0.1.1
@@ -133,5 +133,5 @@ examples:
           application/json: {"detail": []}
         5XX:
           application/json: {"detail": "An error occurred"}
-examplesVersion: 1.0.0
+examplesVersion: 1.0.1
 generatedTests: {}

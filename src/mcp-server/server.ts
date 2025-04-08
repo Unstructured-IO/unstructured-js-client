@@ -12,7 +12,7 @@ import {
   createRegisterResource,
   createRegisterResourceTemplate,
 } from "./resources.js";
-import { MCPScope, mcpScopes } from "./scopes.js";
+import { MCPScope } from "./scopes.js";
 import { registerMCPExtensions } from "./server.extensions.js";
 import { createRegisterTool } from "./tools.js";
 import { tool$generalPartition } from "./tools/generalPartition.js";
@@ -27,7 +27,7 @@ export function createMCPServer(deps: {
 }) {
   const server = new McpServer({
     name: "UnstructuredClient",
-    version: "0.24.0",
+    version: "0.24.1",
   });
 
   const client = new UnstructuredClientCore({
@@ -36,7 +36,7 @@ export function createMCPServer(deps: {
     server: deps.server,
   });
 
-  const scopes = new Set(deps.scopes ?? mcpScopes);
+  const scopes = new Set(deps.scopes);
 
   const allowedTools = deps.allowedTools && new Set(deps.allowedTools);
   const tool = createRegisterTool(
