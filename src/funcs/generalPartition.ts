@@ -316,6 +316,13 @@ async function $do(
       payload.partition_parameters.table_ocr_agent,
     );
   }
+  if (payload.partition_parameters.tracking_enabled !== undefined) {
+    appendForm(
+      body,
+      "tracking_enabled",
+      payload.partition_parameters.tracking_enabled,
+    );
+  }
   if (payload.partition_parameters.unique_element_ids !== undefined) {
     appendForm(
       body,

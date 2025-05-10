@@ -1,3 +1,7 @@
+.DS_Store
+**/.speakeasy/temp/
+**/.speakeasy/logs/
+.DS_Store
 /mcp-server
 /bin
 /.eslintcache
