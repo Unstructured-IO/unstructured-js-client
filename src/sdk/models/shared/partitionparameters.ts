@@ -229,10 +229,6 @@ export type PartitionParameters = {
    */
   tableOcrAgent?: string | null | undefined;
   /**
-   * Tracking enabled
-   */
-  trackingEnabled?: boolean | null | undefined;
-  /**
    * When `True`, assign UUIDs to element IDs, which guarantees their uniqueness (useful when using them as primary keys in database). Otherwise a SHA-256 of element text is used. Default: `False`
    */
   uniqueElementIds?: boolean | undefined;
@@ -480,7 +476,6 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   starting_page_number: z.nullable(z.number().int()).optional(),
   strategy: Strategy$inboundSchema.default(Strategy.HiRes),
   table_ocr_agent: z.nullable(z.string()).optional(),
-  tracking_enabled: z.nullable(z.boolean()).optional(),
   unique_element_ids: z.boolean().default(false),
   vlm_model: VLMModel$inboundSchema.optional(),
   vlm_model_provider: VLMModelProvider$inboundSchema.optional(),
@@ -515,7 +510,6 @@ export const PartitionParameters$inboundSchema: z.ZodType<
     "split_pdf_page_range": "splitPdfPageRange",
     "starting_page_number": "startingPageNumber",
     "table_ocr_agent": "tableOcrAgent",
-    "tracking_enabled": "trackingEnabled",
     "unique_element_ids": "uniqueElementIds",
     "vlm_model": "vlmModel",
     "vlm_model_provider": "vlmModelProvider",
@@ -559,7 +553,6 @@ export type PartitionParameters$Outbound = {
   starting_page_number?: number | null | undefined;
   strategy: string;
   table_ocr_agent?: string | null | undefined;
-  tracking_enabled?: boolean | null | undefined;
   unique_element_ids: boolean;
   vlm_model?: string | undefined;
   vlm_model_provider?: string | undefined;
@@ -608,7 +601,6 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   startingPageNumber: z.nullable(z.number().int()).optional(),
   strategy: Strategy$outboundSchema.default(Strategy.HiRes),
   tableOcrAgent: z.nullable(z.string()).optional(),
-  trackingEnabled: z.nullable(z.boolean()).optional(),
   uniqueElementIds: z.boolean().default(false),
   vlmModel: VLMModel$outboundSchema.optional(),
   vlmModelProvider: VLMModelProvider$outboundSchema.optional(),
@@ -643,7 +635,6 @@ export const PartitionParameters$outboundSchema: z.ZodType<
     splitPdfPageRange: "split_pdf_page_range",
     startingPageNumber: "starting_page_number",
     tableOcrAgent: "table_ocr_agent",
-    trackingEnabled: "tracking_enabled",
     uniqueElementIds: "unique_element_ids",
     vlmModel: "vlm_model",
     vlmModelProvider: "vlm_model_provider",
