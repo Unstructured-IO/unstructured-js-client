@@ -42,3 +42,6 @@ actions:
           "type": "boolean",
           "default": false,
         }
+  - target: $["components"]["schemas"]["partition_parameters"]["properties"]["tracking_enabled"]
+    description: Remove tracking_enabled from partition_parameters
+    remove: true
