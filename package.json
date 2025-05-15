@@ -1,6 +1,6 @@
 {
   "name": "unstructured-client",
-  "version": "0.24.2",
+  "version": "0.24.3",
   "author": "Unstructured",
   "type": "module",
   "bin": {
@@ -38,7 +38,9 @@
     "zod": ">= 3"
   },
   "peerDependenciesMeta": {
-    "@modelcontextprotocol/sdk": {"optional":true}
+    "@modelcontextprotocol/sdk": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
@@ -60,5 +62,88 @@
   "dependencies": {
     "async": "^3.2.5",
     "pdf-lib": "^1.17.1"
-  }
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "unstructured-client/source": "./src/index.ts",
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/index.d.ts",
+        "default": "./dist/commonjs/index.js"
+      }
+    },
+    "./package.json": "./package.json",
+    "./sdk/types": {
+      "import": {
+        "unstructured-client/source": "./src/sdk/types/index.ts",
+        "types": "./dist/esm/sdk/types/index.d.ts",
+        "default": "./dist/esm/sdk/types/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/sdk/types/index.d.ts",
+        "default": "./dist/commonjs/sdk/types/index.js"
+      }
+    },
+    "./sdk/models/errors": {
+      "import": {
+        "unstructured-client/source": "./src/sdk/models/errors/index.ts",
+        "types": "./dist/esm/sdk/models/errors/index.d.ts",
+        "default": "./dist/esm/sdk/models/errors/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/sdk/models/errors/index.d.ts",
+        "default": "./dist/commonjs/sdk/models/errors/index.js"
+      }
+    },
+    "./sdk/models/shared": {
+      "import": {
+        "unstructured-client/source": "./src/sdk/models/shared/index.ts",
+        "types": "./dist/esm/sdk/models/shared/index.d.ts",
+        "default": "./dist/esm/sdk/models/shared/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/sdk/models/shared/index.d.ts",
+        "default": "./dist/commonjs/sdk/models/shared/index.js"
+      }
+    },
+    "./sdk/models/operations": {
+      "import": {
+        "unstructured-client/source": "./src/sdk/models/operations/index.ts",
+        "types": "./dist/esm/sdk/models/operations/index.d.ts",
+        "default": "./dist/esm/sdk/models/operations/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/sdk/models/operations/index.d.ts",
+        "default": "./dist/commonjs/sdk/models/operations/index.js"
+      }
+    },
+    "./*.js": {
+      "import": {
+        "unstructured-client/source": "./src/*.ts",
+        "types": "./dist/esm/*.d.ts",
+        "default": "./dist/esm/*.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/*.d.ts",
+        "default": "./dist/commonjs/*.js"
+      }
+    },
+    "./*": {
+      "import": {
+        "unstructured-client/source": "./src/*.ts",
+        "types": "./dist/esm/*.d.ts",
+        "default": "./dist/esm/*.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/*.d.ts",
+        "default": "./dist/commonjs/*.js"
+      }
+    }
+  },
+  "main": "./dist/commonjs/index.js",
+  "types": "./dist/commonjs/index.d.ts",
+  "module": "./dist/esm/index.js"
 }
