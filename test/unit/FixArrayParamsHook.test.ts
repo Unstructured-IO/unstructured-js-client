@@ -11,8 +11,6 @@ describe("FixArrayParamsHook unit tests", () => {
         vi.resetAllMocks();
     });
 
-    const FAKE_API_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-
     // Assert that array parameters are sent in the correct format
     // This should work with and without pdf splitting
     it.each([
