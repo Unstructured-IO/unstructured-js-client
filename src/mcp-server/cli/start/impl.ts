@@ -50,7 +50,7 @@ async function startStdio(flags: StartCommandFlags) {
     logger,
     allowedTools: flags.tool,
     scopes: flags.scope,
-    security: { apiKeyAuth: flags["api-key-auth"] },
+    security: { apiKeyAuth: flags["api-key-auth"] ?? "" },
     serverURL: flags["server-url"],
     server: flags.server,
   });
@@ -71,7 +71,7 @@ async function startSSE(flags: StartCommandFlags) {
     logger,
     allowedTools: flags.tool,
     scopes: flags.scope,
-    security: { apiKeyAuth: flags["api-key-auth"] },
+    security: { apiKeyAuth: flags["api-key-auth"] ?? "" },
     serverURL: flags["server-url"],
     server: flags.server,
   });
