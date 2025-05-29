@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 6c28c48f4266d95c45657bae345b82fb
-  docVersion: 1.1.13
-  speakeasyVersion: 1.545.0
-  generationVersion: 2.599.0
-  releaseVersion: 0.24.3
-  configChecksum: d78bbaea86964404b34bc0a62b6aeb8d
+  docChecksum: 3e42d77bf491e4e7a999ec6d27d41fd1
+  docVersion: 1.1.17
+  speakeasyVersion: 1.552.0
+  generationVersion: 2.610.0
+  releaseVersion: 0.24.4
+  configChecksum: c0e0d6524bed361c1a8ebeda0e6333df
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -16,7 +16,7 @@ features:
     acceptHeaders: 2.81.2
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.11
-    core: 3.21.7
+    core: 3.21.9
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.2
@@ -124,14 +124,14 @@ examples:
   partition:
     speakeasy-default-partition:
       requestBody:
-        multipart/form-data: {"chunking_strategy": "by_title", "coordinates": false, "files": {"": "{\"summary\":\"File to be partitioned\",\"externalValue\":\"https://github.com/Unstructured-IO/unstructured/blob/98d3541909f64290b5efb65a226fc3ee8a7cc5ee/example-docs/layout-parser-paper.pdf\"}"}, "include_page_breaks": false, "include_slide_notes": true, "multipage_sections": true, "output_format": "application/json", "overlap": 0, "overlap_all": false, "pdf_infer_table_structure": true, "split_pdf_allow_failed": false, "split_pdf_concurrency_level": 5, "split_pdf_page": true, "split_pdf_page_range": [1, 10], "strategy": "vlm", "unique_element_ids": false, "vlm_model": "gpt-4o", "vlm_model_provider": "openai", "xml_keep_tags": false}
+        multipart/form-data: {"chunking_strategy": "by_title", "coordinates": false, "files": {"": "{\"summary\":\"File to be partitioned\",\"externalValue\":\"https://github.com/Unstructured-IO/unstructured/blob/98d3541909f64290b5efb65a226fc3ee8a7cc5ee/example-docs/layout-parser-paper.pdf\"}"}, "include_page_breaks": false, "include_slide_notes": true, "multipage_sections": true, "output_format": "application/json", "overlap": 0, "overlap_all": false, "pdf_infer_table_structure": true, "split_pdf_allow_failed": false, "split_pdf_concurrency_level": 5, "split_pdf_page": true, "split_pdf_page_range": [1, 10], "strategy": "auto", "unique_element_ids": false, "vlm_model": "gpt-4o", "vlm_model_provider": "openai", "xml_keep_tags": false}
       responses:
         "200":
           application/json: [{"type": "Title", "element_id": "6aa0ff22f91bbe7e26e8e25ca8052acd", "text": "LayoutParser: A Unified Toolkit for Deep Learning Based Document Image Analysis", "metadata": {"languages": ["eng"], "page_number": 1, "filename": "layout-parser-paper.pdf", "filetype": "application/pdf"}}]
           text/csv: "<value>"
         "422":
-          application/json: {"detail": []}
+          application/json: {"detail": "<value>"}
         5XX:
           application/json: {"detail": "An error occurred"}
-examplesVersion: 1.0.1
+examplesVersion: 1.0.2
 generatedTests: {}
