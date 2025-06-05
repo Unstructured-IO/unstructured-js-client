@@ -9,7 +9,7 @@
 const value: shared.ValidationError[] = [
   {
     loc: [
-      569227,
+      "<value>",
     ],
     msg: "<value>",
     type: "<value>",

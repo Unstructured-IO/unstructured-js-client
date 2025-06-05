@@ -206,6 +206,7 @@ To change the default retry strategy for a single API call, simply provide a ret
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 import {
+  Strategy,
   VLMModel,
   VLMModelProvider,
 } from "unstructured-client/sdk/models/shared";
@@ -221,6 +222,7 @@ async function run() {
         1,
         10,
       ],
+      strategy: Strategy.Auto,
       vlmModel: VLMModel.Gpt4o,
       vlmModelProvider: VLMModelProvider.Openai,
     },
@@ -237,7 +239,6 @@ async function run() {
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -250,6 +251,7 @@ If you'd like to override the default retry strategy for all operations that sup
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 import {
+  Strategy,
   VLMModel,
   VLMModelProvider,
 } from "unstructured-client/sdk/models/shared";
@@ -276,12 +278,12 @@ async function run() {
         1,
         10,
       ],
+      strategy: Strategy.Auto,
       vlmModel: VLMModel.Gpt4o,
       vlmModelProvider: VLMModelProvider.Openai,
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -378,6 +380,7 @@ Certain SDK methods accept files as part of a multi-part request. It is possible
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 import {
+  Strategy,
   VLMModel,
   VLMModelProvider,
 } from "unstructured-client/sdk/models/shared";
@@ -393,12 +396,12 @@ async function run() {
         1,
         10,
       ],
+      strategy: Strategy.Auto,
       vlmModel: VLMModel.Gpt4o,
       vlmModelProvider: VLMModelProvider.Openai,
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 

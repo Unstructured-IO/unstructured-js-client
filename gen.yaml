@@ -3,6 +3,7 @@ generation:
   sdkClassName: unstructured_client
   usageSnippets:
     optionalPropertyRendering: withExample
+    sdkInitStyle: constructor
   fixes:
     nameResolutionFeb2025: false
     parameterOrderingFeb2024: false
@@ -13,7 +14,7 @@ generation:
     oAuth2ClientCredentialsEnabled: false
     oAuth2PasswordEnabled: false
 typescript:
-  version: 0.24.4
+  version: 0.25.0
   additionalDependencies:
     dependencies:
       async: ^3.2.5

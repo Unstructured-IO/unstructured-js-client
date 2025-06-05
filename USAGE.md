@@ -3,6 +3,7 @@
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
 import {
+  Strategy,
   VLMModel,
   VLMModelProvider,
 } from "unstructured-client/sdk/models/shared";
@@ -18,12 +19,12 @@ async function run() {
         1,
         10,
       ],
+      strategy: Strategy.Auto,
       vlmModel: VLMModel.Gpt4o,
       vlmModelProvider: VLMModelProvider.Openai,
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
