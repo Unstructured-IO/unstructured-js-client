@@ -22,8 +22,7 @@ specific category of applications.
 import { openAsBlob } from "node:fs";
 import { UnstructuredClientCore } from "unstructured-client/core.js";
 import { generalPartition } from "unstructured-client/funcs/generalPartition.js";
-import { SDKValidationError } from "unstructured-client/sdk/models/errors/sdkvalidationerror.js";
-import { VLMModel, VLMModelProvider } from "unstructured-client/sdk/models/shared";
+import { Strategy, VLMModel, VLMModelProvider } from "unstructured-client/sdk/models/shared";
 
 // Use `UnstructuredClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -38,32 +37,17 @@ async function run() {
         1,
         10,
       ],
+      strategy: Strategy.Auto,
       vlmModel: VLMModel.Gpt4o,
       vlmModelProvider: VLMModelProvider.Openai,
     },
   });
-
-  switch (true) {
-    case res.ok:
-      // The success case will be handled outside of the switch block
-      break;
-    case res.error instanceof SDKValidationError:
-      // Pretty-print validation errors.
-      return console.log(res.error.pretty());
-    case res.error instanceof Error:
-      return console.log(res.error);
-    default:
-      // TypeScript's type checking will fail on the following line if the above
-      // cases were not exhaustive.
-      res.error satisfies never;
-      throw new Error("Assertion failed: expected error checks to be exhaustive: " + res.error);
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("generalPartition failed:", res.error);
   }
-
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();

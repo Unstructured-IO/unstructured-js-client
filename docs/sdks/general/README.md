@@ -16,7 +16,7 @@ Description
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { VLMModel, VLMModelProvider } from "unstructured-client/sdk/models/shared";
+import { Strategy, VLMModel, VLMModelProvider } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
 
@@ -29,12 +29,12 @@ async function run() {
         1,
         10,
       ],
+      strategy: Strategy.Auto,
       vlmModel: VLMModel.Gpt4o,
       vlmModelProvider: VLMModelProvider.Openai,
     },
   });
 
-  // Handle the result
   console.log(result);
 }
 
@@ -49,7 +49,7 @@ The standalone function version of this method:
 import { openAsBlob } from "node:fs";
 import { UnstructuredClientCore } from "unstructured-client/core.js";
 import { generalPartition } from "unstructured-client/funcs/generalPartition.js";
-import { VLMModel, VLMModelProvider } from "unstructured-client/sdk/models/shared";
+import { Strategy, VLMModel, VLMModelProvider } from "unstructured-client/sdk/models/shared";
 
 // Use `UnstructuredClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -64,19 +64,17 @@ async function run() {
         1,
         10,
       ],
+      strategy: Strategy.Auto,
       vlmModel: VLMModel.Gpt4o,
       vlmModelProvider: VLMModelProvider.Openai,
     },
   });
-
-  if (!res.ok) {
-    throw res.error;
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("generalPartition failed:", res.error);
   }
-
-  const { value: result } = res;
-
-  // Handle the result
-  console.log(result);
 }
 
 run();
