@@ -7,6 +7,7 @@ import { safeParse } from "../../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import * as shared from "../shared/index.js";
 import { SDKValidationError } from "./sdkvalidationerror.js";
+import { UnstructuredClientError } from "./unstructuredclienterror.js";
 
 export type Detail = Array<shared.ValidationError> | string;
 
@@ -14,19 +15,21 @@ export type HTTPValidationErrorData = {
   detail?: Array<shared.ValidationError> | string | undefined;
 };
 
-export class HTTPValidationError extends Error {
+export class HTTPValidationError extends UnstructuredClientError {
   detail?: Array<shared.ValidationError> | string | undefined;
 
   /** The original data that was passed to this error instance. */
   data$: HTTPValidationErrorData;
 
-  constructor(err: HTTPValidationErrorData) {
+  constructor(
+    err: HTTPValidationErrorData,
+    httpMeta: { response: Response; request: Request; body: string },
+  ) {
     const message = "message" in err && typeof err.message === "string"
       ? err.message
       : `API error occurred: ${JSON.stringify(err)}`;
-    super(message);
+    super(message, httpMeta);
     this.data$ = err;
-
     if (err.detail != null) this.detail = err.detail;
 
     this.name = "HTTPValidationError";
@@ -82,9 +85,16 @@ export const HTTPValidationError$inboundSchema: z.ZodType<
 > = z.object({
   detail: z.union([z.array(shared.ValidationError$inboundSchema), z.string()])
     .optional(),
+  request$: z.instanceof(Request),
+  response$: z.instanceof(Response),
+  body$: z.string(),
 })
   .transform((v) => {
-    return new HTTPValidationError(v);
+    return new HTTPValidationError(v, {
+      request: v.request$,
+      response: v.response$,
+      body: v.body$,
+    });
   });
 
 /** @internal */
