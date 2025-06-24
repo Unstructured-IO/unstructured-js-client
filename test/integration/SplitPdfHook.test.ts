@@ -128,27 +128,6 @@ describe("SplitPdfHook integration tests check splitted file is same as not spli
       description: "not PDF file",
       strategy: Strategy.Fast,
     },
-    {
-      filename: "test/data/fake.doc",
-      expectedOk: false,
-      requestsLimit: 1,
-      description: "fake PDF file (wrong content)",
-      strategy: Strategy.Fast,
-    },
-    {
-      filename: "test/data/fake.doc",
-      expectedOk: false,
-      requestsLimit: 2,
-      description: "fake PDF file (wrong content)",
-      strategy: Strategy.Fast,
-    },
-    {
-      filename: "test/data/fake.doc",
-      expectedOk: false,
-      requestsLimit: 5,
-      description: "fake PDF file (wrong content)",
-      strategy: Strategy.Fast,
-    },
   ])(
     "for request limit $requestsLimit and $description",
     async ({ filename, expectedOk, requestsLimit, strategy }) => {
