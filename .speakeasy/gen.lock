@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 251a87fb7643cd585e4ddf956bb1ae1f
-  docVersion: 1.1.23
-  speakeasyVersion: 1.555.3
-  generationVersion: 2.620.2
-  releaseVersion: 0.25.0
-  configChecksum: 3cf3f043a49108bf9cbc7c2f2476b151
+  docChecksum: 7c9084aa5b0e10020a8f9e2954f0637a
+  docVersion: 1.1.25
+  speakeasyVersion: 1.568.1
+  generationVersion: 2.634.1
+  releaseVersion: 0.25.1
+  configChecksum: 0197c95e1e5ef91e7b26f9b0cdfe33ef
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -15,8 +15,8 @@ features:
   typescript:
     acceptHeaders: 2.81.2
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.1.11
-    core: 3.21.10
+    constsAndDefaults: 0.1.12
+    core: 3.21.11
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.2
@@ -32,7 +32,7 @@ features:
     retries: 2.83.0
     sdkHooks: 0.3.0
     serverIDs: 2.81.2
-    unions: 2.85.8
+    unions: 2.85.11
     uploadStreams: 0.1.0
 generatedFiles:
   - .gitattributes
@@ -100,9 +100,11 @@ generatedFiles:
   - src/sdk/models/errors/httpclienterrors.ts
   - src/sdk/models/errors/httpvalidationerror.ts
   - src/sdk/models/errors/index.ts
+  - src/sdk/models/errors/responsevalidationerror.ts
   - src/sdk/models/errors/sdkerror.ts
   - src/sdk/models/errors/sdkvalidationerror.ts
   - src/sdk/models/errors/servererror.ts
+  - src/sdk/models/errors/unstructuredclienterror.ts
   - src/sdk/models/operations/index.ts
   - src/sdk/models/operations/partition.ts
   - src/sdk/models/shared/index.ts
