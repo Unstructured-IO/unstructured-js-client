@@ -14,7 +14,7 @@ generation:
     oAuth2ClientCredentialsEnabled: false
     oAuth2PasswordEnabled: false
 typescript:
-  version: 0.25.0
+  version: 0.25.1
   additionalDependencies:
     dependencies:
       async: ^3.2.5
@@ -25,7 +25,9 @@ typescript:
     peerDependencies: {}
   additionalPackageJSON: {}
   author: Unstructured
+  baseErrorName: UnstructuredClientError
   clientServerStatusCodesAsErrors: true
+  constFieldsAlwaysOptional: true
   defaultErrorName: SDKError
   enableCustomCodeRegions: false
   enableMCPServer: true
