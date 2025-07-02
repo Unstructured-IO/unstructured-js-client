@@ -22,6 +22,7 @@ This is an open enum. Unrecognized values will be captured as the `Unrecognized<
 | `Gemini15Pro`                                | gemini-1.5-pro                               |
 | `UsAmazonNovaProV10`                         | us.amazon.nova-pro-v1:0                      |
 | `UsAmazonNovaLiteV10`                        | us.amazon.nova-lite-v1:0                     |
+| `UsAnthropicClaude37Sonnet20250219V10`       | us.anthropic.claude-3-7-sonnet-20250219-v1:0 |
 | `UsAnthropicClaude35Sonnet20241022V20`       | us.anthropic.claude-3-5-sonnet-20241022-v2:0 |
 | `UsAnthropicClaude3Opus20240229V10`          | us.anthropic.claude-3-opus-20240229-v1:0     |
 | `UsAnthropicClaude3Haiku20240307V10`         | us.anthropic.claude-3-haiku-20240307-v1:0    |
