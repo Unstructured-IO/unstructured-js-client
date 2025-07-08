@@ -18,7 +18,7 @@ generation:
     generateNewTests: false
     skipResponseBodyAssertions: false
 typescript:
-  version: 0.25.2
+  version: 0.26.0
   additionalDependencies:
     dependencies:
       async: ^3.2.5
@@ -39,6 +39,7 @@ typescript:
   enumFormat: enum
   flattenGlobalSecurity: false
   flatteningOrder: body-first
+  generateExamples: true
   imports:
     option: openapi
     paths:
