@@ -1,6 +1,6 @@
 {
   "name": "unstructured-client",
-  "version": "0.26.0",
+  "version": "0.26.1",
   "author": "Unstructured",
   "type": "module",
   "bin": {
@@ -35,7 +35,7 @@
   },
   "peerDependencies": {
     "@modelcontextprotocol/sdk": ">=1.5.0 <1.10.0",
-    "zod": ">= 3"
+    "zod": "^3"
   },
   "peerDependenciesMeta": {
     "@modelcontextprotocol/sdk": {
