@@ -160,7 +160,7 @@ The `HTTPClient` constructor takes an optional `fetcher` argument that can be
 used to integrate a third-party HTTP client or when writing tests to mock out
 the HTTP client and feed in fixtures.
 
-The following example shows how to use the `"beforeRequest"` hook to to add a
+The following example shows how to use the `"beforeRequest"` hook to add a
 custom header and a timeout to requests and how to use the `"requestError"` hook
 to log errors:
 
