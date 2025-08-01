@@ -1,6 +1,6 @@
 {
   "name": "unstructured-client",
-  "version": "0.26.2",
+  "version": "0.26.3",
   "author": "Unstructured",
   "type": "module",
   "bin": {
@@ -34,8 +34,7 @@
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "@modelcontextprotocol/sdk": ">=1.5.0 <1.10.0",
-    "zod": "^3"
+    "@modelcontextprotocol/sdk": ">=1.5.0 <1.10.0"
   },
   "peerDependenciesMeta": {
     "@modelcontextprotocol/sdk": {
@@ -56,12 +55,12 @@
     "tshy": "^2.0.0",
     "typescript": "^5.4.5",
     "typescript-eslint": "^8.22.0",
-    "vitest": "^2.1.3",
-    "zod": "^3.25.17"
+    "vitest": "^2.1.3"
   },
   "dependencies": {
     "async": "^3.2.5",
-    "pdf-lib": "^1.17.1"
+    "pdf-lib": "^1.17.1",
+    "zod": "^3.20.0"
   },
   "exports": {
     ".": {

@@ -13,6 +13,7 @@ Description
 
 ### Example Usage
 
+<!-- UsageSnippet language="typescript" operationID="partition" method="post" path="/general/v0/general" -->
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
