@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 8e9d88e0631cbf193120f69906d764b8
-  docVersion: 1.1.39
-  speakeasyVersion: 1.583.0
-  generationVersion: 2.658.3
-  releaseVersion: 0.26.2
-  configChecksum: 6038ab44f9c67a08af5af7046ec8b96c
+  docChecksum: cd27ee62248f546725afe6647656e4b4
+  docVersion: 1.1.45
+  speakeasyVersion: 1.595.0
+  generationVersion: 2.670.1
+  releaseVersion: 0.26.3
+  configChecksum: dfa3fe196489685301649fa907100f57
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -16,7 +16,7 @@ features:
     acceptHeaders: 2.81.2
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.12
-    core: 3.21.14
+    core: 3.21.17
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.2
