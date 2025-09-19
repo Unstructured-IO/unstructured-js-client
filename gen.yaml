@@ -13,12 +13,13 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
     oAuth2PasswordEnabled: false
+    hoistGlobalSecurity: true
   tests:
     generateTests: true
     generateNewTests: false
     skipResponseBodyAssertions: false
 typescript:
-  version: 0.26.3
+  version: 0.26.4
   additionalDependencies:
     dependencies:
       async: ^3.2.5
@@ -57,5 +58,7 @@ typescript:
   outputModelSuffix: output
   packageName: unstructured-client
   responseFormat: flat
+  sseFlatResponse: false
   templateVersion: v2
+  usageSDKInitImports: []
   useIndexModules: true
