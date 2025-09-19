@@ -8,7 +8,7 @@ dotenv.config();
  * Example usage of the unstructured-client SDK
  *
  * To run this example from the examples directory:
- * npm run build && npx tsx generalPartition.ts
+ * npm run build && npx tsx generalPartition.example.ts
  */
 
 import { openAsBlob } from "node:fs";
@@ -22,7 +22,7 @@ import {
 const unstructuredClient = new UnstructuredClient();
 
 async function main() {
-  const result = await unstructuredClient.partition({
+  const result = await unstructuredClient.general.partition({
     partitionParameters: {
       chunkingStrategy: "by_title",
       files: await openAsBlob("example.file"),
