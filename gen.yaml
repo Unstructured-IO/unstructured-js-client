@@ -19,7 +19,8 @@ generation:
     generateNewTests: false
     skipResponseBodyAssertions: false
 typescript:
-  version: 0.26.4
+  version: 0.27.0
+  acceptHeaderEnum: true
   additionalDependencies:
     dependencies:
       async: ^3.2.5
@@ -54,6 +55,7 @@ typescript:
   license: MIT
   maxMethodParams: 0
   methodArguments: require-security-and-request
+  modelPropertyCasing: camel
   moduleFormat: dual
   outputModelSuffix: output
   packageName: unstructured-client

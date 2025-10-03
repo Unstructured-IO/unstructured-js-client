@@ -192,7 +192,7 @@ httpClient.addHook("requestError", (error, request) => {
   console.groupEnd();
 });
 
-const sdk = new UnstructuredClient({ httpClient });
+const sdk = new UnstructuredClient({ httpClient: httpClient });
 ```
 <!-- End Custom HTTP Client [http-client] -->
 
