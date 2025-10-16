@@ -17,7 +17,7 @@ Description
 ```typescript
 import { openAsBlob } from "node:fs";
 import { UnstructuredClient } from "unstructured-client";
-import { Strategy, VLMModel, VLMModelProvider } from "unstructured-client/sdk/models/shared";
+import { Strategy, VLMModelProvider } from "unstructured-client/sdk/models/shared";
 
 const unstructuredClient = new UnstructuredClient();
 
@@ -31,7 +31,7 @@ async function run() {
         10,
       ],
       strategy: Strategy.Auto,
-      vlmModel: VLMModel.Gpt4o,
+      vlmModel: "gpt-4o",
       vlmModelProvider: VLMModelProvider.Openai,
     },
   });
@@ -50,7 +50,7 @@ The standalone function version of this method:
 import { openAsBlob } from "node:fs";
 import { UnstructuredClientCore } from "unstructured-client/core.js";
 import { generalPartition } from "unstructured-client/funcs/generalPartition.js";
-import { Strategy, VLMModel, VLMModelProvider } from "unstructured-client/sdk/models/shared";
+import { Strategy, VLMModelProvider } from "unstructured-client/sdk/models/shared";
 
 // Use `UnstructuredClientCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -66,7 +66,7 @@ async function run() {
         10,
       ],
       strategy: Strategy.Auto,
-      vlmModel: VLMModel.Gpt4o,
+      vlmModel: "gpt-4o",
       vlmModelProvider: VLMModelProvider.Openai,
     },
   });

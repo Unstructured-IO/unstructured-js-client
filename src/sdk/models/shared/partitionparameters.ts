@@ -48,35 +48,6 @@ export enum Strategy {
 export type StrategyOpen = OpenEnum<typeof Strategy>;
 
 /**
- * The VLM Model to use.
- */
-export enum VLMModel {
-  Claude35Sonnet20241022 = "claude-3-5-sonnet-20241022",
-  Claude37Sonnet20250219 = "claude-3-7-sonnet-20250219",
-  Gpt4o = "gpt-4o",
-  Gemini15Pro = "gemini-1.5-pro",
-  UsAmazonNovaProV10 = "us.amazon.nova-pro-v1:0",
-  UsAmazonNovaLiteV10 = "us.amazon.nova-lite-v1:0",
-  UsAnthropicClaude37Sonnet20250219V10 =
-    "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-  UsAnthropicClaude35Sonnet20241022V20 =
-    "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
-  UsAnthropicClaude3Opus20240229V10 =
-    "us.anthropic.claude-3-opus-20240229-v1:0",
-  UsAnthropicClaude3Haiku20240307V10 =
-    "us.anthropic.claude-3-haiku-20240307-v1:0",
-  UsAnthropicClaude3Sonnet20240229V10 =
-    "us.anthropic.claude-3-sonnet-20240229-v1:0",
-  UsMetaLlama3290bInstructV10 = "us.meta.llama3-2-90b-instruct-v1:0",
-  UsMetaLlama3211bInstructV10 = "us.meta.llama3-2-11b-instruct-v1:0",
-  Gemini20Flash001 = "gemini-2.0-flash-001",
-}
-/**
- * The VLM Model to use.
- */
-export type VLMModelOpen = OpenEnum<typeof VLMModel>;
-
-/**
  * The VLM Model provider to use.
  */
 export enum VLMModelProvider {
@@ -237,7 +208,7 @@ export type PartitionParameters = {
   /**
    * The VLM Model to use.
    */
-  vlmModel?: VLMModelOpen | undefined;
+  vlmModel?: string | undefined;
   /**
    * The VLM Model provider to use.
    */
@@ -373,38 +344,6 @@ export namespace Strategy$ {
 }
 
 /** @internal */
-export const VLMModel$inboundSchema: z.ZodType<
-  VLMModelOpen,
-  z.ZodTypeDef,
-  unknown
-> = z
-  .union([
-    z.nativeEnum(VLMModel),
-    z.string().transform(catchUnrecognizedEnum),
-  ]);
-
-/** @internal */
-export const VLMModel$outboundSchema: z.ZodType<
-  VLMModelOpen,
-  z.ZodTypeDef,
-  VLMModelOpen
-> = z.union([
-  z.nativeEnum(VLMModel),
-  z.string().and(z.custom<Unrecognized<string>>()),
-]);
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace VLMModel$ {
-  /** @deprecated use `VLMModel$inboundSchema` instead. */
-  export const inboundSchema = VLMModel$inboundSchema;
-  /** @deprecated use `VLMModel$outboundSchema` instead. */
-  export const outboundSchema = VLMModel$outboundSchema;
-}
-
-/** @internal */
 export const VLMModelProvider$inboundSchema: z.ZodType<
   VLMModelProviderOpen,
   z.ZodTypeDef,
@@ -479,7 +418,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   strategy: Strategy$inboundSchema.default(Strategy.HiRes),
   table_ocr_agent: z.nullable(z.string()).optional(),
   unique_element_ids: z.boolean().default(false),
-  vlm_model: VLMModel$inboundSchema.optional(),
+  vlm_model: z.string().optional(),
   vlm_model_provider: VLMModelProvider$inboundSchema.optional(),
   xml_keep_tags: z.boolean().default(false),
 }).transform((v) => {
@@ -604,7 +543,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   strategy: Strategy$outboundSchema.default(Strategy.HiRes),
   tableOcrAgent: z.nullable(z.string()).optional(),
   uniqueElementIds: z.boolean().default(false),
-  vlmModel: VLMModel$outboundSchema.optional(),
+  vlmModel: z.string().optional(),
   vlmModelProvider: VLMModelProvider$outboundSchema.optional(),
   xmlKeepTags: z.boolean().default(false),
 }).transform((v) => {

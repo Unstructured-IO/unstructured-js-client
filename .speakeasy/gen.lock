@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 75c4d04b99256e1e68d9940a982e1583
-  docVersion: 1.1.68
-  speakeasyVersion: 1.634.0
-  generationVersion: 2.721.0
-  releaseVersion: 0.27.0
-  configChecksum: 27956e70414cd99591e801c7e4701835
+  docChecksum: f69e063f6bdd37a7b29266aa34bb30a4
+  docVersion: 1.2.0
+  speakeasyVersion: 1.636.3
+  generationVersion: 2.723.11
+  releaseVersion: 0.28.0
+  configChecksum: 2f7d038efc0c06515032eb8b02c062d8
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -53,10 +53,8 @@ generatedFiles:
   - docs/sdk/models/shared/security.md
   - docs/sdk/models/shared/strategy.md
   - docs/sdk/models/shared/validationerror.md
-  - docs/sdk/models/shared/vlmmodel.md
   - docs/sdk/models/shared/vlmmodelprovider.md
   - docs/sdks/general/README.md
-  - docs/sdks/unstructuredclient/README.md
   - eslint.config.mjs
   - examples/.env.template
   - examples/README.md
@@ -141,3 +139,4 @@ examples:
           application/json: {"detail": "An error occurred"}
 examplesVersion: 1.0.2
 generatedTests: {}
+releaseNotes: "## Typescript SDK Changes Detected:\n* `unstructured_client.general.partition()`: \n  *  `request.partitionParameters.vlmModel` **Changed** **Breaking** :warning:\n"
