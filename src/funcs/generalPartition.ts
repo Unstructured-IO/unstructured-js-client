@@ -150,6 +150,16 @@ async function $do(
   if (payload.partition_parameters.coordinates !== undefined) {
     appendForm(body, "coordinates", payload.partition_parameters.coordinates);
   }
+  if (
+    payload.partition_parameters.do_not_break_similarity_on_footer_header
+      !== undefined
+  ) {
+    appendForm(
+      body,
+      "do_not_break_similarity_on_footer_header",
+      payload.partition_parameters.do_not_break_similarity_on_footer_header,
+    );
+  }
   if (payload.partition_parameters.encoding !== undefined) {
     appendForm(body, "encoding", payload.partition_parameters.encoding);
   }
