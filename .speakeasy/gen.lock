@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: a9cd06bdac5fb6851149f5b0e9776c5d
-  docVersion: 1.2.7
-  speakeasyVersion: 1.649.0
-  generationVersion: 2.739.1
-  releaseVersion: 0.29.0
-  configChecksum: a3da09b990d249ff9f5561aee1b535d2
+  docChecksum: 977565cbc407bbb9f442751a237b5f0a
+  docVersion: 1.2.10
+  speakeasyVersion: 1.656.2
+  generationVersion: 2.753.6
+  releaseVersion: 0.29.1
+  configChecksum: fd4b3da7ec98081721e05f14d2904fec
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
@@ -16,7 +16,7 @@ features:
     acceptHeaders: 2.81.2
     additionalDependencies: 0.1.0
     constsAndDefaults: 0.1.12
-    core: 3.26.0
+    core: 3.26.6
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.2
@@ -139,4 +139,3 @@ examples:
           application/json: {"detail": "An error occurred"}
 examplesVersion: 1.0.2
 generatedTests: {}
-releaseNotes: "## Typescript SDK Changes Detected:\n* `unstructured_client.general.partition()`: \n  *  `request.partitionParameters.doNotBreakSimilarityOnFooterHeader` **Added**\n"

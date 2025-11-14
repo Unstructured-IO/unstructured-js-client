@@ -64,16 +64,3 @@ export const ServerError$outboundSchema: z.ZodType<
   .pipe(z.object({
     detail: z.string().optional(),
   }));
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace ServerError$ {
-  /** @deprecated use `ServerError$inboundSchema` instead. */
-  export const inboundSchema = ServerError$inboundSchema;
-  /** @deprecated use `ServerError$outboundSchema` instead. */
-  export const outboundSchema = ServerError$outboundSchema;
-  /** @deprecated use `ServerError$Outbound` instead. */
-  export type Outbound = ServerError$Outbound;
-}

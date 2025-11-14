@@ -6,11 +6,8 @@ import * as z from "zod/v3";
 import { remap as remap$ } from "../../../lib/primitives.js";
 import { safeParse } from "../../../lib/schemas.js";
 import { blobLikeSchema } from "../../types/blobs.js";
-import {
-  catchUnrecognizedEnum,
-  OpenEnum,
-  Unrecognized,
-} from "../../types/enums.js";
+import * as openEnums from "../../types/enums.js";
+import { OpenEnum } from "../../types/enums.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
@@ -234,7 +231,6 @@ export const Files$inboundSchema: z.ZodType<Files, z.ZodTypeDef, unknown> = z
     ]),
     fileName: z.string(),
   });
-
 /** @internal */
 export type Files$Outbound = {
   content: ReadableStream<Uint8Array> | Blob | ArrayBuffer | Uint8Array;
@@ -256,23 +252,9 @@ export const Files$outboundSchema: z.ZodType<
   fileName: z.string(),
 });
 
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace Files$ {
-  /** @deprecated use `Files$inboundSchema` instead. */
-  export const inboundSchema = Files$inboundSchema;
-  /** @deprecated use `Files$outboundSchema` instead. */
-  export const outboundSchema = Files$outboundSchema;
-  /** @deprecated use `Files$Outbound` instead. */
-  export type Outbound = Files$Outbound;
-}
-
 export function filesToJSON(files: Files): string {
   return JSON.stringify(Files$outboundSchema.parse(files));
 }
-
 export function filesFromJSON(
   jsonString: string,
 ): SafeParseResult<Files, SDKValidationError> {
@@ -288,96 +270,39 @@ export const OutputFormat$inboundSchema: z.ZodType<
   OutputFormatOpen,
   z.ZodTypeDef,
   unknown
-> = z
-  .union([
-    z.nativeEnum(OutputFormat),
-    z.string().transform(catchUnrecognizedEnum),
-  ]);
-
+> = openEnums.inboundSchema(OutputFormat);
 /** @internal */
 export const OutputFormat$outboundSchema: z.ZodType<
-  OutputFormatOpen,
+  string,
   z.ZodTypeDef,
   OutputFormatOpen
-> = z.union([
-  z.nativeEnum(OutputFormat),
-  z.string().and(z.custom<Unrecognized<string>>()),
-]);
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace OutputFormat$ {
-  /** @deprecated use `OutputFormat$inboundSchema` instead. */
-  export const inboundSchema = OutputFormat$inboundSchema;
-  /** @deprecated use `OutputFormat$outboundSchema` instead. */
-  export const outboundSchema = OutputFormat$outboundSchema;
-}
+> = openEnums.outboundSchema(OutputFormat);
 
 /** @internal */
 export const Strategy$inboundSchema: z.ZodType<
   StrategyOpen,
   z.ZodTypeDef,
   unknown
-> = z
-  .union([
-    z.nativeEnum(Strategy),
-    z.string().transform(catchUnrecognizedEnum),
-  ]);
-
+> = openEnums.inboundSchema(Strategy);
 /** @internal */
 export const Strategy$outboundSchema: z.ZodType<
-  StrategyOpen,
+  string,
   z.ZodTypeDef,
   StrategyOpen
-> = z.union([
-  z.nativeEnum(Strategy),
-  z.string().and(z.custom<Unrecognized<string>>()),
-]);
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace Strategy$ {
-  /** @deprecated use `Strategy$inboundSchema` instead. */
-  export const inboundSchema = Strategy$inboundSchema;
-  /** @deprecated use `Strategy$outboundSchema` instead. */
-  export const outboundSchema = Strategy$outboundSchema;
-}
+> = openEnums.outboundSchema(Strategy);
 
 /** @internal */
 export const VLMModelProvider$inboundSchema: z.ZodType<
   VLMModelProviderOpen,
   z.ZodTypeDef,
   unknown
-> = z
-  .union([
-    z.nativeEnum(VLMModelProvider),
-    z.string().transform(catchUnrecognizedEnum),
-  ]);
-
+> = openEnums.inboundSchema(VLMModelProvider);
 /** @internal */
 export const VLMModelProvider$outboundSchema: z.ZodType<
-  VLMModelProviderOpen,
+  string,
   z.ZodTypeDef,
   VLMModelProviderOpen
-> = z.union([
-  z.nativeEnum(VLMModelProvider),
-  z.string().and(z.custom<Unrecognized<string>>()),
-]);
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace VLMModelProvider$ {
-  /** @deprecated use `VLMModelProvider$inboundSchema` instead. */
-  export const inboundSchema = VLMModelProvider$inboundSchema;
-  /** @deprecated use `VLMModelProvider$outboundSchema` instead. */
-  export const outboundSchema = VLMModelProvider$outboundSchema;
-}
+> = openEnums.outboundSchema(VLMModelProvider);
 
 /** @internal */
 export const PartitionParameters$inboundSchema: z.ZodType<
@@ -464,7 +389,6 @@ export const PartitionParameters$inboundSchema: z.ZodType<
     "xml_keep_tags": "xmlKeepTags",
   });
 });
-
 /** @internal */
 export type PartitionParameters$Outbound = {
   chunking_strategy?: string | null | undefined;
@@ -594,19 +518,6 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   });
 });
 
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace PartitionParameters$ {
-  /** @deprecated use `PartitionParameters$inboundSchema` instead. */
-  export const inboundSchema = PartitionParameters$inboundSchema;
-  /** @deprecated use `PartitionParameters$outboundSchema` instead. */
-  export const outboundSchema = PartitionParameters$outboundSchema;
-  /** @deprecated use `PartitionParameters$Outbound` instead. */
-  export type Outbound = PartitionParameters$Outbound;
-}
-
 export function partitionParametersToJSON(
   partitionParameters: PartitionParameters,
 ): string {
@@ -614,7 +525,6 @@ export function partitionParametersToJSON(
     PartitionParameters$outboundSchema.parse(partitionParameters),
   );
 }
-
 export function partitionParametersFromJSON(
   jsonString: string,
 ): SafeParseResult<PartitionParameters, SDKValidationError> {

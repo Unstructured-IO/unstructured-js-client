@@ -39,7 +39,6 @@ export class HTTPValidationError extends UnstructuredClientError {
 /** @internal */
 export const Detail$inboundSchema: z.ZodType<Detail, z.ZodTypeDef, unknown> = z
   .union([z.array(shared.ValidationError$inboundSchema), z.string()]);
-
 /** @internal */
 export type Detail$Outbound = Array<shared.ValidationError$Outbound> | string;
 
@@ -50,23 +49,9 @@ export const Detail$outboundSchema: z.ZodType<
   unknown
 > = z.union([z.array(shared.ValidationError$outboundSchema), z.string()]);
 
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace Detail$ {
-  /** @deprecated use `Detail$inboundSchema` instead. */
-  export const inboundSchema = Detail$inboundSchema;
-  /** @deprecated use `Detail$outboundSchema` instead. */
-  export const outboundSchema = Detail$outboundSchema;
-  /** @deprecated use `Detail$Outbound` instead. */
-  export type Outbound = Detail$Outbound;
-}
-
 export function detailToJSON(detail: Detail): string {
   return JSON.stringify(Detail$outboundSchema.parse(detail));
 }
-
 export function detailFromJSON(
   jsonString: string,
 ): SafeParseResult<Detail, SDKValidationError> {
@@ -115,16 +100,3 @@ export const HTTPValidationError$outboundSchema: z.ZodType<
       z.string(),
     ]).optional(),
   }));
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace HTTPValidationError$ {
-  /** @deprecated use `HTTPValidationError$inboundSchema` instead. */
-  export const inboundSchema = HTTPValidationError$inboundSchema;
-  /** @deprecated use `HTTPValidationError$outboundSchema` instead. */
-  export const outboundSchema = HTTPValidationError$outboundSchema;
-  /** @deprecated use `HTTPValidationError$Outbound` instead. */
-  export type Outbound = HTTPValidationError$Outbound;
-}
