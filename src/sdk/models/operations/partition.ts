@@ -30,7 +30,6 @@ export const PartitionRequest$inboundSchema: z.ZodType<
     "unstructured-api-key": "unstructuredApiKey",
   });
 });
-
 /** @internal */
 export type PartitionRequest$Outbound = {
   partition_parameters: shared.PartitionParameters$Outbound;
@@ -52,19 +51,6 @@ export const PartitionRequest$outboundSchema: z.ZodType<
   });
 });
 
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace PartitionRequest$ {
-  /** @deprecated use `PartitionRequest$inboundSchema` instead. */
-  export const inboundSchema = PartitionRequest$inboundSchema;
-  /** @deprecated use `PartitionRequest$outboundSchema` instead. */
-  export const outboundSchema = PartitionRequest$outboundSchema;
-  /** @deprecated use `PartitionRequest$Outbound` instead. */
-  export type Outbound = PartitionRequest$Outbound;
-}
-
 export function partitionRequestToJSON(
   partitionRequest: PartitionRequest,
 ): string {
@@ -72,7 +58,6 @@ export function partitionRequestToJSON(
     PartitionRequest$outboundSchema.parse(partitionRequest),
   );
 }
-
 export function partitionRequestFromJSON(
   jsonString: string,
 ): SafeParseResult<PartitionRequest, SDKValidationError> {
@@ -89,7 +74,6 @@ export const PartitionResponse$inboundSchema: z.ZodType<
   z.ZodTypeDef,
   unknown
 > = z.union([z.string(), z.array(z.record(z.any()))]);
-
 /** @internal */
 export type PartitionResponse$Outbound = string | Array<{ [k: string]: any }>;
 
@@ -100,19 +84,6 @@ export const PartitionResponse$outboundSchema: z.ZodType<
   PartitionResponse
 > = z.union([z.string(), z.array(z.record(z.any()))]);
 
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace PartitionResponse$ {
-  /** @deprecated use `PartitionResponse$inboundSchema` instead. */
-  export const inboundSchema = PartitionResponse$inboundSchema;
-  /** @deprecated use `PartitionResponse$outboundSchema` instead. */
-  export const outboundSchema = PartitionResponse$outboundSchema;
-  /** @deprecated use `PartitionResponse$Outbound` instead. */
-  export type Outbound = PartitionResponse$Outbound;
-}
-
 export function partitionResponseToJSON(
   partitionResponse: PartitionResponse,
 ): string {
@@ -120,7 +91,6 @@ export function partitionResponseToJSON(
     PartitionResponse$outboundSchema.parse(partitionResponse),
   );
 }
-
 export function partitionResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<PartitionResponse, SDKValidationError> {

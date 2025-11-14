@@ -1,6 +1,6 @@
 {
   "name": "unstructured-client",
-  "version": "0.29.0",
+  "version": "0.29.1",
   "author": "Unstructured",
   "type": "module",
   "bin": {
