@@ -2,7 +2,7 @@
 
 {
   "name": "unstructured-client",
-  "version": "0.29.1",
+  "version": "0.30.0",
   "exports": {
     ".": "./src/index.ts",    
     "./sdk/models/errors": "./src/sdk/models/errors/index.ts",    
