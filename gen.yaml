@@ -10,6 +10,7 @@ generation:
     requestResponseComponentNamesFeb2024: false
     securityFeb2025: false
     sharedErrorComponentsApr2025: false
+    sharedNestedComponentsJan2026: false
   auth:
     oAuth2ClientCredentialsEnabled: false
     oAuth2PasswordEnabled: false
@@ -22,8 +23,9 @@ generation:
     generateTests: true
     generateNewTests: false
     skipResponseBodyAssertions: false
+  versioningStrategy: automatic
 typescript:
-  version: 0.30.3
+  version: 0.30.4
   acceptHeaderEnum: true
   additionalDependencies:
     dependencies:
@@ -65,6 +67,7 @@ typescript:
   inputModelSuffix: input
   jsonpath: legacy
   laxMode: strict
+  legacyFileNaming: true
   license: MIT
   maxMethodParams: 0
   methodArguments: require-security-and-request
