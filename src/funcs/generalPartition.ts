@@ -4,7 +4,10 @@
 
 import { UnstructuredClientCore } from "../core.js";
 import { appendForm, encodeSimple } from "../lib/encodings.js";
-import { readableStreamToArrayBuffer } from "../lib/files.js";
+import {
+  getContentTypeFromFileName,
+  readableStreamToArrayBuffer,
+} from "../lib/files.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -19,8 +22,9 @@ import {
   UnexpectedClientError,
 } from "../sdk/models/errors/httpclienterrors.js";
 import * as errors from "../sdk/models/errors/index.js";
-import { SDKError } from "../sdk/models/errors/sdkerror.js";
+import { ResponseValidationError } from "../sdk/models/errors/responsevalidationerror.js";
 import { SDKValidationError } from "../sdk/models/errors/sdkvalidationerror.js";
+import { UnstructuredClientError } from "../sdk/models/errors/unstructuredclienterror.js";
 import * as operations from "../sdk/models/operations/index.js";
 import { APICall, APIPromise } from "../sdk/types/async.js";
 import { isBlobLike } from "../sdk/types/blobs.js";
@@ -47,13 +51,14 @@ export function generalPartition(
     operations.PartitionResponse,
     | errors.HTTPValidationError
     | errors.ServerError
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | UnstructuredClientError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >
 > {
   return new APIPromise($do(
@@ -73,13 +78,14 @@ async function $do(
       operations.PartitionResponse,
       | errors.HTTPValidationError
       | errors.ServerError
-      | SDKError
-      | SDKValidationError
-      | UnexpectedClientError
-      | InvalidRequestError
+      | UnstructuredClientError
+      | ResponseValidationError
+      | ConnectionError
       | RequestAbortedError
       | RequestTimeoutError
-      | ConnectionError
+      | InvalidRequestError
+      | UnexpectedClientError
+      | SDKValidationError
     >,
     APICall,
   ]
@@ -101,14 +107,25 @@ async function $do(
     const buffer = await readableStreamToArrayBuffer(
       payload.partition_parameters.files.content,
     );
-    const blob = new Blob([buffer], { type: "application/octet-stream" });
-    appendForm(body, "files", blob);
+    const contentType =
+      getContentTypeFromFileName(payload.partition_parameters.files.fileName)
+      || "application/octet-stream";
+    const blob = new Blob([buffer], { type: contentType });
+    appendForm(
+      body,
+      "files",
+      blob,
+      payload.partition_parameters.files.fileName,
+    );
   } else {
+    const contentType =
+      getContentTypeFromFileName(payload.partition_parameters.files.fileName)
+      || "application/octet-stream";
     appendForm(
       body,
       "files",
       new Blob([payload.partition_parameters.files.content], {
-        type: "application/octet-stream",
+        type: contentType,
       }),
       payload.partition_parameters.files.fileName,
     );
@@ -132,6 +149,16 @@ async function $do(
   }
   if (payload.partition_parameters.coordinates !== undefined) {
     appendForm(body, "coordinates", payload.partition_parameters.coordinates);
+  }
+  if (
+    payload.partition_parameters.do_not_break_similarity_on_footer_header
+      !== undefined
+  ) {
+    appendForm(
+      body,
+      "do_not_break_similarity_on_footer_header",
+      payload.partition_parameters.do_not_break_similarity_on_footer_header,
+    );
   }
   if (payload.partition_parameters.encoding !== undefined) {
     appendForm(body, "encoding", payload.partition_parameters.encoding);
@@ -360,7 +387,7 @@ async function $do(
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "partition",
-    oAuth2Scopes: [],
+    oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
 
@@ -415,13 +442,14 @@ async function $do(
     operations.PartitionResponse,
     | errors.HTTPValidationError
     | errors.ServerError
-    | SDKError
-    | SDKValidationError
-    | UnexpectedClientError
-    | InvalidRequestError
+    | UnstructuredClientError
+    | ResponseValidationError
+    | ConnectionError
     | RequestAbortedError
     | RequestTimeoutError
-    | ConnectionError
+    | InvalidRequestError
+    | UnexpectedClientError
+    | SDKValidationError
   >(
     M.json(200, operations.PartitionResponse$inboundSchema),
     M.text(200, operations.PartitionResponse$inboundSchema, {
@@ -430,7 +458,7 @@ async function $do(
     M.jsonErr(422, errors.HTTPValidationError$inboundSchema),
     M.fail("4XX"),
     M.jsonErr("5XX", errors.ServerError$inboundSchema),
-  )(response, { extraFields: responseFields });
+  )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
   }

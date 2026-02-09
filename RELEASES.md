@@ -615,3 +615,153 @@ Based on:
 - [typescript v0.25.0] .
 ### Releases
 - [NPM v0.25.0] https://www.npmjs.com/package/unstructured-client/v/0.25.0 - .
+
+## 2025-06-24 00:32:46
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.568.1 (2.634.1) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.25.1] .
+### Releases
+- [NPM v0.25.1] https://www.npmjs.com/package/unstructured-client/v/0.25.1 - .
+
+## 2025-07-02 00:32:42
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.574.1 (2.647.2) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.25.2] .
+### Releases
+- [NPM v0.25.2] https://www.npmjs.com/package/unstructured-client/v/0.25.2 - .
+
+## 2025-07-08 00:33:00
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.576.1 (2.651.2) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.26.0] .
+### Releases
+- [NPM v0.26.0] https://www.npmjs.com/package/unstructured-client/v/0.26.0 - .
+
+## 2025-07-10 00:33:21
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.580.1 (2.656.3) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.26.1] .
+### Releases
+- [NPM v0.26.1] https://www.npmjs.com/package/unstructured-client/v/0.26.1 - .
+
+## 2025-07-21 00:37:04
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.583.0 (2.658.3) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.26.2] .
+### Releases
+- [NPM v0.26.2] https://www.npmjs.com/package/unstructured-client/v/0.26.2 - .
+
+## 2025-08-01 00:40:05
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.595.0 (2.670.1) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.26.3] .
+### Releases
+- [NPM v0.26.3] https://www.npmjs.com/package/unstructured-client/v/0.26.3 - .
+
+## 2025-09-19 00:30:25
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.621.0 (2.707.0) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.26.4] .
+### Releases
+- [NPM v0.26.4] https://www.npmjs.com/package/unstructured-client/v/0.26.4 - .
+
+## 2025-10-03 00:29:19
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.634.0 (2.721.0) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.27.0] .
+### Releases
+- [NPM v0.27.0] https://www.npmjs.com/package/unstructured-client/v/0.27.0 - .
+
+## 2025-10-16 00:31:05
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.636.3 (2.723.11) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.28.0] .
+### Releases
+- [NPM v0.28.0] https://www.npmjs.com/package/unstructured-client/v/0.28.0 - .
+
+## 2025-11-06 00:32:07
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.649.0 (2.739.1) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.29.0] .
+### Releases
+- [NPM v0.29.0] https://www.npmjs.com/package/unstructured-client/v/0.29.0 - .
+
+## 2025-11-14 00:32:40
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.656.2 (2.753.6) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.29.1] .
+### Releases
+- [NPM v0.29.1] https://www.npmjs.com/package/unstructured-client/v/0.29.1 - .
+
+## 2025-12-10 00:34:49
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.674.0 (2.778.0) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.30.0] .
+### Releases
+- [NPM v0.30.0] https://www.npmjs.com/package/unstructured-client/v/0.30.0 - .
+
+## 2025-12-15 00:36:31
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.676.1 (2.781.2) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.30.1] .
+### Releases
+- [NPM v0.30.1] https://www.npmjs.com/package/unstructured-client/v/0.30.1 - .
+
+## 2025-12-17 00:33:18
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.678.0 (2.787.2) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.30.2] .
+### Releases
+- [NPM v0.30.2] https://www.npmjs.com/package/unstructured-client/v/0.30.2 - .
+
+## 2026-01-15 00:33:08
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.678.0 (2.787.2) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [typescript v0.30.3] .
+### Releases
+- [NPM v0.30.3] https://www.npmjs.com/package/unstructured-client/v/0.30.3 - .
