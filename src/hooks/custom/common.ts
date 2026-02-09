@@ -29,8 +29,13 @@ export const MIN_PAGES_PER_THREAD = 2;
 export const MAX_PAGES_PER_THREAD = 20;
 
 export class HTTPClientExtension extends HTTPClient {
-  constructor() {
+  private baseClient?: HTTPClient;
+
+  constructor(baseClient?: HTTPClient) {
     super();
+    if (baseClient) {
+      this.baseClient = baseClient;
+    }
   }
 
   override async request(request: Request): Promise<Response> {
@@ -42,6 +47,10 @@ export class HTTPClientExtension extends HTTPClient {
         status: 200,
         statusText: 'OK_NO_OP'
       });
+    }
+    // Use base client if provided, otherwise use the default implementation
+    if (this.baseClient) {
+      return this.baseClient.request(request);
     }
     return super.request(request);
    }
