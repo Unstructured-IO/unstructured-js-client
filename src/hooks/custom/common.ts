@@ -29,12 +29,15 @@ export const MIN_PAGES_PER_THREAD = 2;
 export const MAX_PAGES_PER_THREAD = 20;
 
 export class HTTPClientExtension extends HTTPClient {
-  private baseClient?: HTTPClient;
-
   constructor(baseClient?: HTTPClient) {
-    super();
     if (baseClient) {
-      this.baseClient = baseClient;
+      // Use the base client's request method as our fetcher
+      // This ensures our hooks execute while delegating to the base client
+      super({
+        fetcher: (input, init) => baseClient.request(new Request(input, init))
+      });
+    } else {
+      super();
     }
   }
 
@@ -47,10 +50,6 @@ export class HTTPClientExtension extends HTTPClient {
         status: 200,
         statusText: 'OK_NO_OP'
       });
-    }
-    // Use base client if provided, otherwise use the default implementation
-    if (this.baseClient) {
-      return this.baseClient.request(request);
     }
     return super.request(request);
    }
