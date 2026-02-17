@@ -7,13 +7,43 @@ import { safeParse } from "../../../lib/schemas.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
+export type Context = {};
+
 export type Loc = string | number;
 
 export type ValidationError = {
+  ctx?: Context | undefined;
+  input?: any | undefined;
   loc: Array<string | number>;
   msg: string;
   type: string;
 };
+
+/** @internal */
+export const Context$inboundSchema: z.ZodType<Context, z.ZodTypeDef, unknown> =
+  z.object({});
+/** @internal */
+export type Context$Outbound = {};
+
+/** @internal */
+export const Context$outboundSchema: z.ZodType<
+  Context$Outbound,
+  z.ZodTypeDef,
+  Context
+> = z.object({});
+
+export function contextToJSON(context: Context): string {
+  return JSON.stringify(Context$outboundSchema.parse(context));
+}
+export function contextFromJSON(
+  jsonString: string,
+): SafeParseResult<Context, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Context$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Context' from JSON`,
+  );
+}
 
 /** @internal */
 export const Loc$inboundSchema: z.ZodType<Loc, z.ZodTypeDef, unknown> = z.union(
@@ -45,12 +75,16 @@ export const ValidationError$inboundSchema: z.ZodType<
   z.ZodTypeDef,
   unknown
 > = z.object({
+  ctx: z.lazy(() => Context$inboundSchema).optional(),
+  input: z.any().optional(),
   loc: z.array(z.union([z.string(), z.number().int()])),
   msg: z.string(),
   type: z.string(),
 });
 /** @internal */
 export type ValidationError$Outbound = {
+  ctx?: Context$Outbound | undefined;
+  input?: any | undefined;
   loc: Array<string | number>;
   msg: string;
   type: string;
@@ -62,6 +96,8 @@ export const ValidationError$outboundSchema: z.ZodType<
   z.ZodTypeDef,
   ValidationError
 > = z.object({
+  ctx: z.lazy(() => Context$outboundSchema).optional(),
+  input: z.any().optional(),
   loc: z.array(z.union([z.string(), z.number().int()])),
   msg: z.string(),
   type: z.string(),
