@@ -34,7 +34,8 @@ export class HTTPClientExtension extends HTTPClient {
       // Use the base client's request method as our fetcher
       // This ensures our hooks execute while delegating to the base client
       super({
-        fetcher: (input, init) => baseClient.request(new Request(input, init))
+        fetcher: (input, init) =>
+          baseClient.request(init != null ? new Request(input, init) : new Request(input))
       });
     } else {
       super();
