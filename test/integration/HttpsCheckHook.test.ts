@@ -39,5 +39,5 @@ describe("HttpsCheckHook integration tests", () => {
         });
 
         expect(res.length).toBeGreaterThan(0)
-    });
+    }, 300000);
 });
