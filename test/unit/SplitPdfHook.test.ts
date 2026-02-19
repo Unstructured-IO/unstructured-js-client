@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { HTTPClient } from '../../src/lib/http.js';
 import { SplitPdfHook } from '../../src/hooks/custom/SplitPdfHook.js';
+import { HTTPClientExtension } from '../../src/hooks/custom/common.js';
 
 describe('SplitPdfHook', () => {
   it('should use custom HTTPClient configuration in sdkInit', () => {
@@ -20,8 +21,8 @@ describe('SplitPdfHook', () => {
     expect(result.client).toBeDefined();
     expect(result.baseURL).toEqual(new URL('https://api.example.com'));
 
-    // Verify the hook's internal client is an HTTPClientExtension
-    expect(hook.client).toBeDefined();
+    // Verify the hook's internal client is an HTTPClientExtension (not the raw base client)
+    expect(hook.client).toBeInstanceOf(HTTPClientExtension);
   });
 
   it('should preserve custom client configuration when making requests', async () => {
