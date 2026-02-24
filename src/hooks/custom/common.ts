@@ -29,8 +29,17 @@ export const MIN_PAGES_PER_THREAD = 2;
 export const MAX_PAGES_PER_THREAD = 20;
 
 export class HTTPClientExtension extends HTTPClient {
-  constructor() {
-    super();
+  constructor(baseClient?: HTTPClient) {
+    if (baseClient) {
+      // Use the base client's request method as our fetcher
+      // This ensures our hooks execute while delegating to the base client
+      super({
+        fetcher: (input, init) =>
+          baseClient.request(init != null ? new Request(input, init) : new Request(input))
+      });
+    } else {
+      super();
+    }
   }
 
   override async request(request: Request): Promise<Response> {
