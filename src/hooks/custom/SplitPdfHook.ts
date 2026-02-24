@@ -69,8 +69,9 @@ export class SplitPdfHook
    * @returns The initialized SDK options.
    */
   sdkInit(opts: SDKInitOptions): SDKInitOptions {
-    const { baseURL } = opts;
-    this.client = new HTTPClientExtension();
+    const { baseURL, client } = opts;
+    // Use the provided client to preserve custom configuration (e.g., socket timeouts)
+    this.client = new HTTPClientExtension(client);
 
     this.client.addHook("response", (res) => {
         if (res.status != 200) {
