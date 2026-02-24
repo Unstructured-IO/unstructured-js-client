@@ -1,20 +1,20 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 6a3ca0e858f68556fc631d0a34a8a67b
-  docVersion: 1.2.28
+  docChecksum: 1abf9a51cd3501e229e3fe9e63861a67
+  docVersion: 1.3.6
   speakeasyVersion: 1.678.0
   generationVersion: 2.787.2
-  releaseVersion: 0.30.3
-  configChecksum: 310f4078a803d43e88370b6dd412a394
+  releaseVersion: 0.31.0
+  configChecksum: 6af45b73e59a2735b0b676a6bcc57bd3
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
   published: true
 persistentEdits:
-  generation_id: 48d69ab5-e5ec-4a8d-ba39-657f9585dcd6
-  pristine_commit_hash: db287829fe7502010364ce6648f9f04445907f20
-  pristine_tree_hash: 579402cfffb530d59df4cbb7daa93e6d3dc5ba54
+  generation_id: 52c06c54-bd7f-4193-ba83-65501b6e1656
+  pristine_commit_hash: 384971a5c339759a78a6c63d1667ff8a3a70d8af
+  pristine_tree_hash: 481a4157b3da84de34c3860c91de67de3b71af5f
 features:
   typescript:
     acceptHeaders: 2.81.2
@@ -83,6 +83,10 @@ trackedFiles:
     id: 7bb221248a15
     last_write_checksum: sha1:5c5df77662c72b6c5cbacc6828444052974b6cec
     pristine_git_object: 83325624615793efbe5df6a3031a765cd8a07440
+  docs/sdk/models/shared/context.md:
+    id: 5fc041516a4f
+    last_write_checksum: sha1:312ac3de8a0bc4578e1c29dae77db5004823bbde
+    pristine_git_object: 2b0d7ae2bd6b38cdbc369e8584cc3b1d14fb0c57
   docs/sdk/models/shared/files.md:
     id: 7ac456c0b0f6
     last_write_checksum: sha1:47e71d3358f473658f95d9c65eceefb824448144
@@ -109,8 +113,8 @@ trackedFiles:
     pristine_git_object: 1da5d448df6b2f2f76526ff9344b71a5ba819f40
   docs/sdk/models/shared/validationerror.md:
     id: 989bdb5b40d4
-    last_write_checksum: sha1:1dea45a8b665d4a82911d47699f685b1ecac0292
-    pristine_git_object: d2f88c599a3be0158ff1ec15bbac85dcf719aa99
+    last_write_checksum: sha1:6eece866ed4154ae91342f4397aea4f7dee812d4
+    pristine_git_object: a119219e8eb4cc45bff0b8dbba3bcf5f7be877a7
   docs/sdk/models/shared/vlmmodelprovider.md:
     id: 7e3b49a6ca60
     last_write_checksum: sha1:aa343a3ae40504355ad0b9002b91cdb700a13a09
@@ -141,12 +145,12 @@ trackedFiles:
     pristine_git_object: efeccceaa1d1dd53d06b2a41bc924e44840eabcf
   jsr.json:
     id: 7f6ab7767282
-    last_write_checksum: sha1:0bdc6cb9fc2b45cef0a5bd363c2010a225b49c5e
-    pristine_git_object: 78319edfd7f6fbc7015e674e1c9c7a8afc92a7bc
+    last_write_checksum: sha1:13cd36933623f0f17591d7d02eb34a0f448ee74e
+    pristine_git_object: 021170d0527180d5636f08c43ffd052b9c7e5b04
   package.json:
     id: 7030d0b2f71b
-    last_write_checksum: sha1:1326dd4921bc6eb2de415bc6ef7bf066c3b2b0ab
-    pristine_git_object: 883e1b390ce4a7a8baf03353e36a627d6f29c7cf
+    last_write_checksum: sha1:57c4537638b4b212a8b2e85e8ac35d81766f2fe3
+    pristine_git_object: e74ebeed0603235ccd14db3130a9201b4a5d0d95
   src/core.ts:
     id: f431fdbcd144
     last_write_checksum: sha1:297af4af5efa6cb40666a18f730640ab4755e8b9
@@ -177,8 +181,8 @@ trackedFiles:
     pristine_git_object: 0aebd8b0a4867e35cb3348fc52921c3c0b4725b7
   src/lib/config.ts:
     id: 320761608fb3
-    last_write_checksum: sha1:5b16b2bbaf9be4ea7430034f9c3866915694f62a
-    pristine_git_object: 55e0858bfe71f5fbdb2e5b0226f7d3c299f8ea01
+    last_write_checksum: sha1:4a6176051ee794739b9ecbc6d30f87ac5c338e8b
+    pristine_git_object: 2f17cc742f29ba8ebcbc913e8bc0763a32235c7c
   src/lib/dlv.ts:
     id: b1988214835a
     last_write_checksum: sha1:1dd3e3fbb4550c4bf31f5ef997faff355d6f3250
@@ -257,8 +261,8 @@ trackedFiles:
     pristine_git_object: 0955a573c2ce989d63c737410ab8cc28706d9f74
   src/mcp-server/mcp-server.ts:
     id: aabbc4ab07c1
-    last_write_checksum: sha1:215e923f09b89ec767ca9d86a9c4bdbb5c00e6f7
-    pristine_git_object: aa4d6ec889220ffccc0ff28d9f0d33eac284bd6f
+    last_write_checksum: sha1:79d95c226b04fb3a0455e22ac5f77e591f27fe42
+    pristine_git_object: e29109b47d3c53117bd176afbcd0e468e76bf2e2
   src/mcp-server/prompts.ts:
     id: 26f3d73cbf31
     last_write_checksum: sha1:d5dce6b3f67089fdf230ae9d4930ce40fc4b7233
@@ -273,8 +277,8 @@ trackedFiles:
     pristine_git_object: c25696d4c4f70e081fa5d87ad6891874c509a577
   src/mcp-server/server.ts:
     id: 2784dd48e82a
-    last_write_checksum: sha1:fa2e7f62f310c86b85501eff8714e88d00a02e78
-    pristine_git_object: a17e42c04af15e6e84bee778a34af8dfcece1325
+    last_write_checksum: sha1:3e8c6faa5665e6e05b43a794a9256bc6d7bda820
+    pristine_git_object: 459cf3c0bc5a9ac0583fe7bcdd360cf0c37effcc
   src/mcp-server/shared.ts:
     id: 074e80d4be1e
     last_write_checksum: sha1:56c73d4429691516e35541825e759a0285747a2b
@@ -349,8 +353,8 @@ trackedFiles:
     pristine_git_object: 86863c0a9694436219f39e572664429ffc097a23
   src/sdk/models/shared/validationerror.ts:
     id: a49cb7aa7a2e
-    last_write_checksum: sha1:8c2d9f47bcc105000f4c2063355ffe6ccde19145
-    pristine_git_object: 1ee6f12eafc1593b17e9385433005fd835a0d7be
+    last_write_checksum: sha1:4f9baf3ee4b983c668c1ec7fb3cc8525321d32df
+    pristine_git_object: bbce60918e5cb1f0acdf7ecd2863110e3a3f1933
   src/sdk/sdk.ts:
     id: 784571af2f69
     last_write_checksum: sha1:574ab3a4a992491d90684bf34689571a503235de
@@ -409,11 +413,14 @@ examples:
           application/json: [{"type": "Title", "element_id": "6aa0ff22f91bbe7e26e8e25ca8052acd", "text": "LayoutParser: A Unified Toolkit for Deep Learning Based Document Image Analysis", "metadata": {"languages": ["eng"], "page_number": 1, "filename": "layout-parser-paper.pdf", "filetype": "application/pdf"}}]
           text/csv: "<value>"
         "422":
-          application/json: {"detail": "<value>"}
+          application/json: {"detail": [{"input": "forty", "loc": ["body", "combine_under_n_chars"], "msg": "Input should be a valid integer, unable to parse string as an integer", "type": "int_parsing"}]}
         5XX:
           application/json: {"detail": "An error occurred"}
 examplesVersion: 1.0.2
 generatedTests: {}
+releaseNotes: |
+  ## Typescript SDK Changes:
+  * `unstructured_client.general.partition()`:  `error.detail.[array].[]` **Changed**
 generatedFiles:
   - .gitattributes
   - .npmignore
