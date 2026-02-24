@@ -38,6 +38,8 @@ describe("HttpsCheckHook integration tests", () => {
             },
         });
 
-        expect(res.length).toBeGreaterThan(0)
-    }, 300000);
+        expect(res.length).toBeGreaterThan(0);
+
+    // 5 minutes — partition requests can be slow in CI
+    }, 5 * 60 * 1000);
 });
