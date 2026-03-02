@@ -1,20 +1,20 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 1abf9a51cd3501e229e3fe9e63861a67
-  docVersion: 1.3.6
+  docChecksum: 0a5c2a611227181b25c657aa81a69546
+  docVersion: 1.5.3
   speakeasyVersion: 1.678.0
   generationVersion: 2.787.2
-  releaseVersion: 0.31.0
-  configChecksum: 6af45b73e59a2735b0b676a6bcc57bd3
+  releaseVersion: 0.32.0
+  configChecksum: 207af709fc1d29edca83e4df8da20483
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
   published: true
 persistentEdits:
-  generation_id: 52c06c54-bd7f-4193-ba83-65501b6e1656
-  pristine_commit_hash: 384971a5c339759a78a6c63d1667ff8a3a70d8af
-  pristine_tree_hash: 481a4157b3da84de34c3860c91de67de3b71af5f
+  generation_id: 328da10a-9430-4b48-8e79-5e83577b1575
+  pristine_commit_hash: f897a3aa026f0939b329d35bf5255c00ccce831f
+  pristine_tree_hash: 7a39cd9d88d5c85cbf2ad9bafb401d899187494d
 features:
   typescript:
     acceptHeaders: 2.81.2
@@ -145,12 +145,12 @@ trackedFiles:
     pristine_git_object: efeccceaa1d1dd53d06b2a41bc924e44840eabcf
   jsr.json:
     id: 7f6ab7767282
-    last_write_checksum: sha1:13cd36933623f0f17591d7d02eb34a0f448ee74e
-    pristine_git_object: 021170d0527180d5636f08c43ffd052b9c7e5b04
+    last_write_checksum: sha1:56185d76735bd76a9f970f6d8ccb878134900e50
+    pristine_git_object: 9c8a89fc306638f3355351be6f67561997a5da77
   package.json:
     id: 7030d0b2f71b
-    last_write_checksum: sha1:57c4537638b4b212a8b2e85e8ac35d81766f2fe3
-    pristine_git_object: e74ebeed0603235ccd14db3130a9201b4a5d0d95
+    last_write_checksum: sha1:b45ded9c92bbdc9bdefba6cfb2c514ff5827e89e
+    pristine_git_object: 1dc2ad5306ad610582622c44622769927edc3c72
   src/core.ts:
     id: f431fdbcd144
     last_write_checksum: sha1:297af4af5efa6cb40666a18f730640ab4755e8b9
@@ -181,8 +181,8 @@ trackedFiles:
     pristine_git_object: 0aebd8b0a4867e35cb3348fc52921c3c0b4725b7
   src/lib/config.ts:
     id: 320761608fb3
-    last_write_checksum: sha1:4a6176051ee794739b9ecbc6d30f87ac5c338e8b
-    pristine_git_object: 2f17cc742f29ba8ebcbc913e8bc0763a32235c7c
+    last_write_checksum: sha1:210e36957fa556beef658c705ed2266a722de41a
+    pristine_git_object: 8e15b689c08323a7feca7e16d94de29d4ed8df59
   src/lib/dlv.ts:
     id: b1988214835a
     last_write_checksum: sha1:1dd3e3fbb4550c4bf31f5ef997faff355d6f3250
@@ -261,8 +261,8 @@ trackedFiles:
     pristine_git_object: 0955a573c2ce989d63c737410ab8cc28706d9f74
   src/mcp-server/mcp-server.ts:
     id: aabbc4ab07c1
-    last_write_checksum: sha1:79d95c226b04fb3a0455e22ac5f77e591f27fe42
-    pristine_git_object: e29109b47d3c53117bd176afbcd0e468e76bf2e2
+    last_write_checksum: sha1:b5ab91a715748dad787bd001cfd65fe14edc5353
+    pristine_git_object: a5d70176a5725fd9fd35b6a480baffece30582ad
   src/mcp-server/prompts.ts:
     id: 26f3d73cbf31
     last_write_checksum: sha1:d5dce6b3f67089fdf230ae9d4930ce40fc4b7233
@@ -277,8 +277,8 @@ trackedFiles:
     pristine_git_object: c25696d4c4f70e081fa5d87ad6891874c509a577
   src/mcp-server/server.ts:
     id: 2784dd48e82a
-    last_write_checksum: sha1:3e8c6faa5665e6e05b43a794a9256bc6d7bda820
-    pristine_git_object: 459cf3c0bc5a9ac0583fe7bcdd360cf0c37effcc
+    last_write_checksum: sha1:0ae8331ac1a3b4cf0d3be7ad53789700b3b10f90
+    pristine_git_object: ffe451f4edded00d4db0263cfddfe26bb0ce39e4
   src/mcp-server/shared.ts:
     id: 074e80d4be1e
     last_write_checksum: sha1:56c73d4429691516e35541825e759a0285747a2b
@@ -418,9 +418,6 @@ examples:
           application/json: {"detail": "An error occurred"}
 examplesVersion: 1.0.2
 generatedTests: {}
-releaseNotes: |
-  ## Typescript SDK Changes:
-  * `unstructured_client.general.partition()`:  `error.detail.[array].[]` **Changed**
 generatedFiles:
   - .gitattributes
   - .npmignore
