@@ -27,7 +27,7 @@ export function createMCPServer(deps: {
 }) {
   const server = new McpServer({
     name: "UnstructuredClient",
-    version: "0.31.0",
+    version: "0.32.0",
   });
 
   const client = new UnstructuredClientCore({
