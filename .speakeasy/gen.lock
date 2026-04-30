@@ -1,20 +1,20 @@
 lockVersion: 2.0.0
 id: f42cb8e6-e2ce-4565-b975-5a9f38b94d5a
 management:
-  docChecksum: 1abf9a51cd3501e229e3fe9e63861a67
-  docVersion: 1.3.6
+  docChecksum: 6b9e514ece38eaefc256083f12528cfb
+  docVersion: 1.5.34
   speakeasyVersion: 1.678.0
   generationVersion: 2.787.2
-  releaseVersion: 0.31.0
-  configChecksum: 6af45b73e59a2735b0b676a6bcc57bd3
+  releaseVersion: 0.32.0
+  configChecksum: 55277e6ad7e8baf3812045fd0c32ac72
   repoURL: https://github.com/Unstructured-IO/unstructured-js-client.git
   repoSubDirectory: .
   installationURL: https://github.com/Unstructured-IO/unstructured-js-client
   published: true
 persistentEdits:
-  generation_id: 52c06c54-bd7f-4193-ba83-65501b6e1656
-  pristine_commit_hash: 384971a5c339759a78a6c63d1667ff8a3a70d8af
-  pristine_tree_hash: 481a4157b3da84de34c3860c91de67de3b71af5f
+  generation_id: 1a0223a2-8fac-4671-8055-24ddd0de893a
+  pristine_commit_hash: 34c57029719c2569e74e15fc89ea3b0a58fb8ef4
+  pristine_tree_hash: 683f907cee060ff1f0ccc6627cc3ab46e4fa3505
 features:
   typescript:
     acceptHeaders: 2.81.2
@@ -101,8 +101,8 @@ trackedFiles:
     pristine_git_object: bc156a084ac9796b5ce9878385a824de5c6c9702
   docs/sdk/models/shared/partitionparameters.md:
     id: 067497bbe4b8
-    last_write_checksum: sha1:1c9f76dfaa17775fb36aafc1ad75f7bccce2cd5c
-    pristine_git_object: d7a8082dd3094cbe711e629a34eeccfd38793592
+    last_write_checksum: sha1:1d9e59d3dbc49a77b54e06210e965012acf35e00
+    pristine_git_object: 7435d44f5a002e6063b61660254f0ca447eefe24
   docs/sdk/models/shared/security.md:
     id: 972729c50a07
     last_write_checksum: sha1:338312ec1404e84cfce9d2b96772453d5ee0bfb3
@@ -145,20 +145,20 @@ trackedFiles:
     pristine_git_object: efeccceaa1d1dd53d06b2a41bc924e44840eabcf
   jsr.json:
     id: 7f6ab7767282
-    last_write_checksum: sha1:13cd36933623f0f17591d7d02eb34a0f448ee74e
-    pristine_git_object: 021170d0527180d5636f08c43ffd052b9c7e5b04
+    last_write_checksum: sha1:56185d76735bd76a9f970f6d8ccb878134900e50
+    pristine_git_object: 9c8a89fc306638f3355351be6f67561997a5da77
   package.json:
     id: 7030d0b2f71b
-    last_write_checksum: sha1:57c4537638b4b212a8b2e85e8ac35d81766f2fe3
-    pristine_git_object: e74ebeed0603235ccd14db3130a9201b4a5d0d95
+    last_write_checksum: sha1:b45ded9c92bbdc9bdefba6cfb2c514ff5827e89e
+    pristine_git_object: 1dc2ad5306ad610582622c44622769927edc3c72
   src/core.ts:
     id: f431fdbcd144
     last_write_checksum: sha1:297af4af5efa6cb40666a18f730640ab4755e8b9
     pristine_git_object: ede1d6dae386c2f8e2708689c9f46b18f9f155e4
   src/funcs/generalPartition.ts:
     id: 39a92c6e103f
-    last_write_checksum: sha1:86826331b05167aed4eb4b28949260ceb26fd5bc
-    pristine_git_object: 2258202758cb47012bd0481fa84cace4e735a82b
+    last_write_checksum: sha1:e55f41f46ab4967521a506d86e9a53be42837c69
+    pristine_git_object: 99d35557e6ac5d15594360e438286c55fabe676f
   src/hooks/hooks.ts:
     id: a2463fc6f69b
     last_write_checksum: sha1:9a569ea8f3177ddcdfe6cd903feaf5c2d2c36a9a
@@ -181,8 +181,8 @@ trackedFiles:
     pristine_git_object: 0aebd8b0a4867e35cb3348fc52921c3c0b4725b7
   src/lib/config.ts:
     id: 320761608fb3
-    last_write_checksum: sha1:4a6176051ee794739b9ecbc6d30f87ac5c338e8b
-    pristine_git_object: 2f17cc742f29ba8ebcbc913e8bc0763a32235c7c
+    last_write_checksum: sha1:7f1ce8c5f0fa5d162e60383078e7c7cfd3d6ef11
+    pristine_git_object: 1a94a7472456dca2e629ba85fe3cb7ff1d01fdf0
   src/lib/dlv.ts:
     id: b1988214835a
     last_write_checksum: sha1:1dd3e3fbb4550c4bf31f5ef997faff355d6f3250
@@ -261,8 +261,8 @@ trackedFiles:
     pristine_git_object: 0955a573c2ce989d63c737410ab8cc28706d9f74
   src/mcp-server/mcp-server.ts:
     id: aabbc4ab07c1
-    last_write_checksum: sha1:79d95c226b04fb3a0455e22ac5f77e591f27fe42
-    pristine_git_object: e29109b47d3c53117bd176afbcd0e468e76bf2e2
+    last_write_checksum: sha1:b5ab91a715748dad787bd001cfd65fe14edc5353
+    pristine_git_object: a5d70176a5725fd9fd35b6a480baffece30582ad
   src/mcp-server/prompts.ts:
     id: 26f3d73cbf31
     last_write_checksum: sha1:d5dce6b3f67089fdf230ae9d4930ce40fc4b7233
@@ -277,8 +277,8 @@ trackedFiles:
     pristine_git_object: c25696d4c4f70e081fa5d87ad6891874c509a577
   src/mcp-server/server.ts:
     id: 2784dd48e82a
-    last_write_checksum: sha1:3e8c6faa5665e6e05b43a794a9256bc6d7bda820
-    pristine_git_object: 459cf3c0bc5a9ac0583fe7bcdd360cf0c37effcc
+    last_write_checksum: sha1:0ae8331ac1a3b4cf0d3be7ad53789700b3b10f90
+    pristine_git_object: ffe451f4edded00d4db0263cfddfe26bb0ce39e4
   src/mcp-server/shared.ts:
     id: 074e80d4be1e
     last_write_checksum: sha1:56c73d4429691516e35541825e759a0285747a2b
@@ -345,8 +345,8 @@ trackedFiles:
     pristine_git_object: 7ab44a86a804d8f7c702c686d1c97d19b2e591e6
   src/sdk/models/shared/partitionparameters.ts:
     id: b626a1108c26
-    last_write_checksum: sha1:0a4a2cf90446d66e13804d715a9b71c4c9a063c4
-    pristine_git_object: 5ea8de1fb92914954e61183406ee5d958d5e0031
+    last_write_checksum: sha1:4ec42d61a081426d46de5aa56be4dce9e920c470
+    pristine_git_object: 66dd787cbedd60e63344ecbfed8c1f7a7e910915
   src/sdk/models/shared/security.ts:
     id: 4a9790ed1c2f
     last_write_checksum: sha1:218236c47c0d7629e1d1d7d743488a15c4ae5094
@@ -407,7 +407,7 @@ examples:
   partition:
     speakeasy-default-partition:
       requestBody:
-        multipart/form-data: {"chunking_strategy": "by_title", "coordinates": false, "do_not_break_similarity_on_footer_header": false, "files": {"": "{\"summary\":\"File to be partitioned\",\"externalValue\":\"https://github.com/Unstructured-IO/unstructured/blob/98d3541909f64290b5efb65a226fc3ee8a7cc5ee/example-docs/layout-parser-paper.pdf\"}"}, "include_page_breaks": false, "include_slide_notes": true, "multipage_sections": true, "output_format": "application/json", "overlap": 0, "overlap_all": false, "pdf_infer_table_structure": true, "split_pdf_allow_failed": false, "split_pdf_concurrency_level": 5, "split_pdf_page": true, "split_pdf_page_range": [1, 10], "strategy": "auto", "unique_element_ids": false, "vlm_model": "gpt-4o", "vlm_model_provider": "openai", "xml_keep_tags": false}
+        multipart/form-data: {"chunking_strategy": "by_title", "coordinates": false, "do_not_break_similarity_on_footer_header": false, "files": {"": "{\"summary\":\"File to be partitioned\",\"externalValue\":\"https://github.com/Unstructured-IO/unstructured/blob/98d3541909f64290b5efb65a226fc3ee8a7cc5ee/example-docs/layout-parser-paper.pdf\"}"}, "include_page_breaks": false, "include_slide_notes": true, "multipage_sections": true, "output_format": "application/json", "overlap": 0, "overlap_all": false, "pdf_infer_table_structure": true, "skip_table_chunking": false, "split_pdf_allow_failed": false, "split_pdf_concurrency_level": 5, "split_pdf_page": true, "split_pdf_page_range": [1, 10], "strategy": "auto", "unique_element_ids": false, "vlm_model": "gpt-4o", "vlm_model_provider": "openai", "xml_keep_tags": false}
       responses:
         "200":
           application/json: [{"type": "Title", "element_id": "6aa0ff22f91bbe7e26e8e25ca8052acd", "text": "LayoutParser: A Unified Toolkit for Deep Learning Based Document Image Analysis", "metadata": {"languages": ["eng"], "page_number": 1, "filename": "layout-parser-paper.pdf", "filetype": "application/pdf"}}]
@@ -418,9 +418,7 @@ examples:
           application/json: {"detail": "An error occurred"}
 examplesVersion: 1.0.2
 generatedTests: {}
-releaseNotes: |
-  ## Typescript SDK Changes:
-  * `unstructured_client.general.partition()`:  `error.detail.[array].[]` **Changed**
+releaseNotes: "## Typescript SDK Changes:\n* `unstructured_client.general.partition()`: \n  *  `request.partitionParameters` **Changed**\n"
 generatedFiles:
   - .gitattributes
   - .npmignore
