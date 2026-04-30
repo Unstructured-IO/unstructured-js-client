@@ -75,6 +75,14 @@ export type PartitionParameters = {
    */
   contentType?: string | null | undefined;
   /**
+   * JSON-encoded auth credentials for the contextual chunking provider. Structure depends on the provider.
+   */
+  contextualChunkingAuth?: string | null | undefined;
+  /**
+   * Pre-resolved prompt service name for contextual chunking (e.g. 'BedrockContextualChunking'). When set, uses this service with the provided auth instead of the default env-var-based model selection.
+   */
+  contextualChunkingServiceName?: string | null | undefined;
+  /**
    * If `True`, return coordinates for each element extracted via OCR. Default: `False`
    */
   coordinates?: boolean | undefined;
@@ -174,6 +182,10 @@ export type PartitionParameters = {
    * The document types that you want to skip table extraction with. Default: []
    */
   skipInferTableTypes?: Array<string> | undefined;
+  /**
+   * When `True`, tables are not chunked and always kept unchanged. Default: False
+   */
+  skipTableChunking?: boolean | undefined;
   /**
    * When `split_pdf_page` is set to `True`, this parameter defines the behavior when some of the parallel requests fail. By default `split_pdf_allow_failed` is set to `False` and any failed request send to the API will make the whole process break and raise an Exception. If `split_pdf_allow_failed` is set to `True`, the errors encountered while sending parallel requests will not break the processing - the resuling list of Elements will miss the data from errored pages.
    */
@@ -313,6 +325,8 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   chunking_strategy: z.nullable(z.string()).optional(),
   combine_under_n_chars: z.nullable(z.number().int()).optional(),
   content_type: z.nullable(z.string()).optional(),
+  contextual_chunking_auth: z.nullable(z.string()).optional(),
+  contextual_chunking_service_name: z.nullable(z.string()).optional(),
   coordinates: z.boolean().default(false),
   do_not_break_similarity_on_footer_header: z.boolean().default(false),
   encoding: z.nullable(z.string()).optional(),
@@ -340,6 +354,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   pdfminer_word_margin: z.nullable(z.number()).optional(),
   similarity_threshold: z.nullable(z.number()).optional(),
   skip_infer_table_types: z.array(z.string()).optional(),
+  skip_table_chunking: z.boolean().default(false),
   split_pdf_allow_failed: z.boolean().default(false),
   split_pdf_concurrency_level: z.number().int().default(5),
   split_pdf_page: z.boolean().default(true),
@@ -356,6 +371,8 @@ export const PartitionParameters$inboundSchema: z.ZodType<
     "chunking_strategy": "chunkingStrategy",
     "combine_under_n_chars": "combineUnderNChars",
     "content_type": "contentType",
+    "contextual_chunking_auth": "contextualChunkingAuth",
+    "contextual_chunking_service_name": "contextualChunkingServiceName",
     "do_not_break_similarity_on_footer_header":
       "doNotBreakSimilarityOnFooterHeader",
     "extract_image_block_types": "extractImageBlockTypes",
@@ -377,6 +394,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
     "pdfminer_word_margin": "pdfminerWordMargin",
     "similarity_threshold": "similarityThreshold",
     "skip_infer_table_types": "skipInferTableTypes",
+    "skip_table_chunking": "skipTableChunking",
     "split_pdf_allow_failed": "splitPdfAllowFailed",
     "split_pdf_concurrency_level": "splitPdfConcurrencyLevel",
     "split_pdf_page": "splitPdfPage",
@@ -394,6 +412,8 @@ export type PartitionParameters$Outbound = {
   chunking_strategy?: string | null | undefined;
   combine_under_n_chars?: number | null | undefined;
   content_type?: string | null | undefined;
+  contextual_chunking_auth?: string | null | undefined;
+  contextual_chunking_service_name?: string | null | undefined;
   coordinates: boolean;
   do_not_break_similarity_on_footer_header: boolean;
   encoding?: string | null | undefined;
@@ -419,6 +439,7 @@ export type PartitionParameters$Outbound = {
   pdfminer_word_margin?: number | null | undefined;
   similarity_threshold?: number | null | undefined;
   skip_infer_table_types?: Array<string> | undefined;
+  skip_table_chunking: boolean;
   split_pdf_allow_failed: boolean;
   split_pdf_concurrency_level: number;
   split_pdf_page: boolean;
@@ -441,6 +462,8 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   chunkingStrategy: z.nullable(z.string()).optional(),
   combineUnderNChars: z.nullable(z.number().int()).optional(),
   contentType: z.nullable(z.string()).optional(),
+  contextualChunkingAuth: z.nullable(z.string()).optional(),
+  contextualChunkingServiceName: z.nullable(z.string()).optional(),
   coordinates: z.boolean().default(false),
   doNotBreakSimilarityOnFooterHeader: z.boolean().default(false),
   encoding: z.nullable(z.string()).optional(),
@@ -468,6 +491,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   pdfminerWordMargin: z.nullable(z.number()).optional(),
   similarityThreshold: z.nullable(z.number()).optional(),
   skipInferTableTypes: z.array(z.string()).optional(),
+  skipTableChunking: z.boolean().default(false),
   splitPdfAllowFailed: z.boolean().default(false),
   splitPdfConcurrencyLevel: z.number().int().default(5),
   splitPdfPage: z.boolean().default(true),
@@ -484,6 +508,8 @@ export const PartitionParameters$outboundSchema: z.ZodType<
     chunkingStrategy: "chunking_strategy",
     combineUnderNChars: "combine_under_n_chars",
     contentType: "content_type",
+    contextualChunkingAuth: "contextual_chunking_auth",
+    contextualChunkingServiceName: "contextual_chunking_service_name",
     doNotBreakSimilarityOnFooterHeader:
       "do_not_break_similarity_on_footer_header",
     extractImageBlockTypes: "extract_image_block_types",
@@ -505,6 +531,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
     pdfminerWordMargin: "pdfminer_word_margin",
     similarityThreshold: "similarity_threshold",
     skipInferTableTypes: "skip_infer_table_types",
+    skipTableChunking: "skip_table_chunking",
     splitPdfAllowFailed: "split_pdf_allow_failed",
     splitPdfConcurrencyLevel: "split_pdf_concurrency_level",
     splitPdfPage: "split_pdf_page",

@@ -147,6 +147,22 @@ async function $do(
   if (payload.partition_parameters.content_type !== undefined) {
     appendForm(body, "content_type", payload.partition_parameters.content_type);
   }
+  if (payload.partition_parameters.contextual_chunking_auth !== undefined) {
+    appendForm(
+      body,
+      "contextual_chunking_auth",
+      payload.partition_parameters.contextual_chunking_auth,
+    );
+  }
+  if (
+    payload.partition_parameters.contextual_chunking_service_name !== undefined
+  ) {
+    appendForm(
+      body,
+      "contextual_chunking_service_name",
+      payload.partition_parameters.contextual_chunking_service_name,
+    );
+  }
   if (payload.partition_parameters.coordinates !== undefined) {
     appendForm(body, "coordinates", payload.partition_parameters.coordinates);
   }
@@ -296,6 +312,13 @@ async function $do(
       body,
       "skip_infer_table_types",
       payload.partition_parameters.skip_infer_table_types,
+    );
+  }
+  if (payload.partition_parameters.skip_table_chunking !== undefined) {
+    appendForm(
+      body,
+      "skip_table_chunking",
+      payload.partition_parameters.skip_table_chunking,
     );
   }
   if (payload.partition_parameters.split_pdf_allow_failed !== undefined) {
