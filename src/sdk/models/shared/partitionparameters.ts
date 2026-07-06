@@ -123,6 +123,10 @@ export type PartitionParameters = {
    */
   includeSlideNotes?: boolean | undefined;
   /**
+   * When `True`, tables are never chunked together with other elements. Default: True
+   */
+  isolateTable?: boolean | null | undefined;
+  /**
    * The languages present in the document, for use in partitioning and/or OCR. See the Tesseract documentation for a full list of languages.
    */
   languages?: Array<string> | undefined;
@@ -337,6 +341,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
   include_orig_elements: z.nullable(z.boolean()).optional(),
   include_page_breaks: z.boolean().default(false),
   include_slide_notes: z.boolean().default(true),
+  isolate_table: z.nullable(z.boolean()).optional(),
   languages: z.array(z.string()).optional(),
   max_characters: z.nullable(z.number().int()).optional(),
   multipage_sections: z.boolean().default(true),
@@ -381,6 +386,7 @@ export const PartitionParameters$inboundSchema: z.ZodType<
     "include_orig_elements": "includeOrigElements",
     "include_page_breaks": "includePageBreaks",
     "include_slide_notes": "includeSlideNotes",
+    "isolate_table": "isolateTable",
     "max_characters": "maxCharacters",
     "multipage_sections": "multipageSections",
     "new_after_n_chars": "newAfterNChars",
@@ -424,6 +430,7 @@ export type PartitionParameters$Outbound = {
   include_orig_elements?: boolean | null | undefined;
   include_page_breaks: boolean;
   include_slide_notes: boolean;
+  isolate_table?: boolean | null | undefined;
   languages?: Array<string> | undefined;
   max_characters?: number | null | undefined;
   multipage_sections: boolean;
@@ -474,6 +481,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
   includeOrigElements: z.nullable(z.boolean()).optional(),
   includePageBreaks: z.boolean().default(false),
   includeSlideNotes: z.boolean().default(true),
+  isolateTable: z.nullable(z.boolean()).optional(),
   languages: z.array(z.string()).optional(),
   maxCharacters: z.nullable(z.number().int()).optional(),
   multipageSections: z.boolean().default(true),
@@ -518,6 +526,7 @@ export const PartitionParameters$outboundSchema: z.ZodType<
     includeOrigElements: "include_orig_elements",
     includePageBreaks: "include_page_breaks",
     includeSlideNotes: "include_slide_notes",
+    isolateTable: "isolate_table",
     maxCharacters: "max_characters",
     multipageSections: "multipage_sections",
     newAfterNChars: "new_after_n_chars",
