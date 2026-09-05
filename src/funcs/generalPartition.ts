@@ -221,6 +221,13 @@ async function $do(
       payload.partition_parameters.include_slide_notes,
     );
   }
+  if (payload.partition_parameters.isolate_table !== undefined) {
+    appendForm(
+      body,
+      "isolate_table",
+      payload.partition_parameters.isolate_table,
+    );
+  }
   if (payload.partition_parameters.languages !== undefined) {
     appendForm(body, "languages", payload.partition_parameters.languages);
   }
