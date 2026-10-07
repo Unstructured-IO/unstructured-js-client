@@ -309,13 +309,13 @@ export class SplitPdfHook
     response: Response
   ): Promise<Response> {
     const { operationID } = hookCtx;
-    const responses = await this.awaitAllRequests(operationID);
-    const successfulResponses = responses?.get("success") ?? [];
-    const failedResponses = responses?.get("failed") ?? [];
-    if (!successfulResponses) {
+    if (!this.partitionRequests[operationID]) {
       return response;
     }
 
+    const responses = await this.awaitAllRequests(operationID);
+    const successfulResponses = responses?.get("success") ?? [];
+    const failedResponses = responses?.get("failed") ?? [];
     const finalResponse = await this.formFinalResponse(response, successfulResponses, failedResponses);
 
     this.clearOperation(operationID);
