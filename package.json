@@ -2,6 +2,7 @@
   "name": "unstructured-client",
   "version": "0.32.0",
   "author": "Unstructured",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "mcp": "bin/mcp-server.js"
